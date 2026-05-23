@@ -23,3 +23,119 @@ body {
     transform: translateX(220%);
   }
 }
+
+@keyframes heroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroRuleGrow {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes softPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hero-kicker,
+.hero-title,
+.hero-copy,
+.hero-actions {
+  animation: heroFadeUp 0.75s ease both;
+}
+
+.hero-title {
+  animation-delay: 0.12s;
+}
+
+.hero-rule {
+  animation: heroRuleGrow 0.65s ease 0.28s both;
+  transform-origin: left;
+}
+
+.hero-copy {
+  animation-delay: 0.34s;
+}
+
+.hero-actions {
+  animation-delay: 0.46s;
+}
+
+.highlight-flip {
+  animation: softPopIn 0.65s ease both;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.45s ease,
+    background-color 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+.highlight-flip:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.highlight-flip:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.highlight-flip:nth-child(4) {
+  animation-delay: 0.24s;
+}
+
+.highlight-flip:hover {
+  background-color: #ffffff;
+  box-shadow: 0 22px 45px rgb(15 23 42 / 14%);
+  transform: perspective(900px) rotateY(-8deg) translateY(-6px);
+}
+
+.stat-card,
+.result-card {
+  animation: softPopIn 0.7s ease both;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.stat-card:hover,
+.result-card:hover {
+  box-shadow: 0 24px 50px rgb(15 23 42 / 16%);
+  transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-kicker,
+  .hero-title,
+  .hero-rule,
+  .hero-copy,
+  .hero-actions,
+  .highlight-flip,
+  .stat-card,
+  .result-card {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}

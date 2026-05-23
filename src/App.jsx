@@ -178,6 +178,14 @@ const resultImages = [
   [resultFive, 'Pragya school result achievement 6'],
 ]
 
+const fallbackResults = resultImages.map(([image, alt], index) => ({
+  id: `fallback-result-${index}`,
+  title: alt,
+  image_url: image,
+  result_year: '',
+  sort_order: index,
+}))
+
 const contactDetails = [
   ['Main Branch', 'Pragya Road, Bijainagar (Ajmer) Raj. +91-1462-230201'],
   ['Junior Wing', 'Infront of Mahaveer Bhawan, Bijainagar (Ajmer) Raj. +91-1462-230451'],
@@ -186,6 +194,8 @@ const contactDetails = [
   ['Girls Hostel', 'Shri Pragya Mahavidyalaya, Pragya Road Bijainagar (Ajmer) Raj. +91 9799861201'],
   ['Email id', 'officepragyaschool@gmail.com, shripragyaschool@gmail.com'],
 ]
+
+const getActivePageFromPath = () => window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase()
 
 const contentPages = {
   about: {
@@ -740,7 +750,43 @@ function ContactForm({ onSubmit, message }) {
   )
 }
 
-function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [] }) {
+function CountUpStat({ value, label }) {
+  const [displayValue, setDisplayValue] = useState(value)
+
+  useEffect(() => {
+    const match = String(value).match(/^(\d+)(.*)$/)
+
+    if (!match) {
+      return undefined
+    }
+
+    const target = Number(match[1])
+    const suffix = match[2] || ''
+    const duration = 1100
+    const startedAt = performance.now()
+    let frameId = 0
+
+    const tick = (now) => {
+      const progress = Math.min((now - startedAt) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplayValue(`${Math.round(target * eased)}${suffix}`)
+
+      if (progress < 1) frameId = requestAnimationFrame(tick)
+    }
+
+    frameId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frameId)
+  }, [value])
+
+  return (
+    <div className="stat-card rounded-lg bg-white p-6 shadow-sm">
+      <p className="text-4xl font-black text-[#a8171d]">{displayValue}</p>
+      <p className="mt-2 font-semibold text-slate-700">{label}</p>
+    </div>
+  )
+}
+
+function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [], resultPhotos = [] }) {
   const galleryFolders = galleryPhotos.reduce((folders, photo) => {
     const folderName = photo.folder_title || 'Gallery'
     return {
@@ -835,7 +881,21 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
           </div>
         ) : null}
 
-        {page.gallery ? (
+        {activePage === 'academic-calendar' ? (
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {(resultPhotos.length ? resultPhotos : fallbackResults).map((result) => (
+              <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 shadow-md">
+                <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-80 w-full rounded-md object-contain" />
+                {(result.title || result.result_year) ? (
+                  <div className="px-2 pb-2 pt-4">
+                    <h2 className="text-xl font-black text-[#102344]">{result.title}</h2>
+                    {result.result_year ? <p className="mt-1 font-bold text-[#a8171d]">{result.result_year}</p> : null}
+                  </div>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        ) : page.gallery ? (
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {page.gallery.map(([image, alt]) => (
               <img key={alt} src={image} alt={alt} className="h-80 w-full rounded-lg object-contain bg-white p-3 shadow-md" />
@@ -928,7 +988,7 @@ function AdminLogin() {
   )
 }
 
-function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved }) {
+function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved, onResultsChanged }) {
   const [adminSection, setAdminSection] = useState('pages')
   const [editingPage, setEditingPage] = useState(null)
   const [editorForm, setEditorForm] = useState({ title: '', href: '', group: '', eyebrow: '', content: '', is_published: true })
@@ -938,7 +998,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
   const [adminSearch, setAdminSearch] = useState('')
   const [galleryForm, setGalleryForm] = useState({ folder: '', selectedFolder: '', photoTitle: '', photoUrl: '' })
   const [galleryFile, setGalleryFile] = useState(null)
-  const [resultForm, setResultForm] = useState({ title: '', year: '', imageUrl: '' })
+  const [resultForm, setResultForm] = useState({ title: '', year: '', imageUrl: '', sortOrder: '0', isActive: true })
   const [resultFile, setResultFile] = useState(null)
   const [houseForm, setHouseForm] = useState({ houseName: 'Blue House', houseColor: '#1d4ed8', captain: '', viceCaptain: '', juniorCaptain: '' })
   const [principalForm, setPrincipalForm] = useState({ name: '', role: '', detail: '', photoUrl: '' })
@@ -987,7 +1047,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
   }
   const filteredManagedPages = managedPages.filter((page) => matchesSearch(page.label, page.group, page.href))
   const filteredGalleryRecords = galleryRecords.filter((record) => matchesSearch(record.folder_title, record.title, record.image_url))
-  const filteredResultRecords = resultRecords.filter((record) => matchesSearch(record.title, record.result_year, record.image_url))
+  const filteredResultRecords = resultRecords.filter((record) => matchesSearch(record.title, record.result_year, record.image_url, record.is_active ? 'shown' : 'hidden'))
   const filteredHouseRecords = houseRecords.filter((record) => matchesSearch(record.house_name, record.captain_name, record.vice_captain_name, record.junior_captain_name))
   const filteredPrincipalRecords = principalRecords.filter((record) => matchesSearch(record.name, record.role, record.detail))
   const filteredAdmissionSubmissions = admissionSubmissions.filter((item) => matchesSearch(item.student_name, item.class_applied, item.father_name, item.mother_name, item.phone, item.address, item.message))
@@ -1000,7 +1060,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
     supabase.from('contact_enquiries').select('*').order('created_at', { ascending: false }).then(({ data }) => setContactSubmissions(data || []))
     supabase.from('principal_teachers').select('*').order('sort_order', { ascending: true }).then(({ data }) => setPrincipalRecords(data || []))
     supabase.from('house_system').select('*').order('sort_order', { ascending: true }).then(({ data }) => setHouseRecords(data || []))
-    supabase.from('results').select('*').order('created_at', { ascending: false }).then(({ data }) => setResultRecords(data || []))
+    supabase.from('results').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setResultRecords(data || []))
     supabase.from('gallery_folders').select('*').order('created_at', { ascending: false }).then(({ data }) => setGalleryFolders(data || []))
     supabase.from('gallery_photos').select('*').order('created_at', { ascending: false }).then(({ data }) => setGalleryRecords(data || []))
   }, [])
@@ -1084,7 +1144,13 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
 
     try {
       const uploadedUrl = resultForm.imageUrl.trim() || await uploadAdminImage(resultFile, 'results')
-      const payload = { title: resultForm.title, result_year: resultForm.year, image_url: uploadedUrl }
+      const payload = {
+        title: resultForm.title,
+        result_year: resultForm.year,
+        image_url: uploadedUrl,
+        sort_order: Number(resultForm.sortOrder) || 0,
+        is_active: resultForm.isActive,
+      }
       const query = editingResultId
         ? supabase.from('results').update(payload).eq('id', editingResultId).select()
         : supabase.from('results').insert(payload).select()
@@ -1093,9 +1159,17 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
       if (error) throw error
 
       const record = data?.[0]
-      setResultRecords((records) => editingResultId ? records.map((item) => item.id === editingResultId ? record : item) : [record, ...records])
+      setResultRecords((records) => {
+        const nextRecords = editingResultId ? records.map((item) => item.id === editingResultId ? record : item) : [record, ...records]
+        return nextRecords.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+      })
+      onResultsChanged((records) => {
+        const withoutCurrent = records.filter((item) => item.id !== record.id)
+        const nextRecords = record.is_active === false ? withoutCurrent : [record, ...withoutCurrent]
+        return nextRecords.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+      })
       setEditingResultId(null)
-      setResultForm({ title: '', year: '', imageUrl: '' })
+      setResultForm({ title: '', year: '', imageUrl: '', sortOrder: '0', isActive: true })
       setResultFile(null)
       setCollectionMessage('Result photo saved.')
     } catch (error) {
@@ -1107,8 +1181,24 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
 
   const editResult = (record) => {
     setEditingResultId(record.id)
-    setResultForm({ title: record.title || '', year: record.result_year || '', imageUrl: record.image_url || '' })
+    setResultForm({
+      title: record.title || '',
+      year: record.result_year || '',
+      imageUrl: record.image_url || '',
+      sortOrder: String(record.sort_order || 0),
+      isActive: record.is_active !== false,
+    })
     setResultFile(null)
+  }
+
+  const deleteResult = async (record) => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    const { error } = await supabase.from('results').delete().eq('id', record.id)
+    if (error) return setCollectionMessage(error.message)
+
+    setResultRecords((records) => records.filter((item) => item.id !== record.id))
+    onResultsChanged((records) => records.filter((item) => item.id !== record.id))
+    setCollectionMessage('Result photo removed.')
   }
 
   const createGalleryFolder = async () => {
@@ -1273,7 +1363,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
         <div className="grid gap-5 md:grid-cols-4">
           {[
             ['Pages', managedPages.length],
-            ['Results', resultImages.length],
+            ['Results', resultRecords.length],
             ['Facilities', facilities.length],
             ['Classes', classOptions.length],
           ].map(([label, value]) => (
@@ -1436,19 +1526,24 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
           <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Results</p>
             <h2 className="mt-2 text-3xl font-black text-[#102344]">Add Result Photo</h2>
-            <div className="mt-6 grid gap-4 lg:grid-cols-4">
+            <div className="mt-6 grid gap-4 lg:grid-cols-5">
               <input value={resultForm.title} onChange={(event) => setResultForm({ ...resultForm, title: event.target.value })} placeholder="Result title" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
               <input value={resultForm.year} onChange={(event) => setResultForm({ ...resultForm, year: event.target.value })} placeholder="Year" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="number" value={resultForm.sortOrder} onChange={(event) => setResultForm({ ...resultForm, sortOrder: event.target.value })} placeholder="Display order" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
               <input value={resultForm.imageUrl} onChange={(event) => setResultForm({ ...resultForm, imageUrl: event.target.value })} placeholder="Image URL" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
               <input type="file" accept="image/*" onChange={(event) => setResultFile(event.target.files?.[0] || null)} className="rounded-md border border-slate-300 px-4 py-3 text-sm font-semibold outline-none file:mr-3 file:rounded file:border-0 file:bg-[#ffc400] file:px-3 file:py-2 file:font-bold file:text-[#102344] focus:border-[#a8171d]" />
             </div>
-            <p className="mt-3 text-sm font-semibold text-slate-600">Image URL optional hai. URL blank hoga to selected image Supabase Storage me upload hogi.</p>
+            <label className="mt-4 flex w-fit items-center gap-3 rounded-md bg-[#fffaf0] px-4 py-3 font-bold text-[#102344]">
+              <input type="checkbox" checked={resultForm.isActive} onChange={(event) => setResultForm({ ...resultForm, isActive: event.target.checked })} className="h-5 w-5 accent-[#a8171d]" />
+              Show this image on website
+            </label>
+            <p className="mt-3 text-sm font-semibold text-slate-600">Image URL optional hai. URL blank hoga to selected image Supabase Storage me upload hogi. Sirf checked images public Result section me show hongi.</p>
             <button type="button" onClick={saveResult} disabled={uploadingResult} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">{uploadingResult ? 'Saving...' : editingResultId ? 'Update Result' : 'Save Result'}</button>
             <div className="mt-8 overflow-x-auto">
-              <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+              <table className="w-full min-w-[920px] border-collapse text-left text-sm">
                 <thead className="bg-[#06284d] text-white">
                   <tr>
-                    {['Photo', 'Title', 'Year', 'Image Link', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                    {['Photo', 'Title', 'Year', 'Order', 'Website', 'Image Link', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
                   </tr>
                 </thead>
                 <tbody>
@@ -1459,8 +1554,19 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
                       </td>
                       <td className="p-3 font-bold">{record.title}</td>
                       <td className="p-3">{record.result_year || '-'}</td>
+                      <td className="p-3">{record.sort_order || 0}</td>
+                      <td className="p-3">
+                        <span className={`rounded-full px-3 py-1 text-xs font-black ${record.is_active === false ? 'bg-slate-200 text-slate-600' : 'bg-green-100 text-green-700'}`}>
+                          {record.is_active === false ? 'Hidden' : 'Shown'}
+                        </span>
+                      </td>
                       <td className="max-w-[260px] truncate p-3">{record.image_url}</td>
-                      <td className="p-3"><button type="button" onClick={() => editResult(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button></td>
+                      <td className="p-3">
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => editResult(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button>
+                          <button type="button" onClick={() => deleteResult(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Remove</button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -1612,12 +1718,13 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [openMobileMenu, setOpenMobileMenu] = useState(null)
-  const [activePage, setActivePage] = useState(() => window.location.pathname.replace(/^\/|\/$/g, ''))
+  const [activePage, setActivePage] = useState(getActivePageFromPath)
   const [loading, setLoading] = useState(true)
   const [adminSession, setAdminSession] = useState(null)
   const [adminLoading, setAdminLoading] = useState(() => Boolean(supabase))
   const [cmsPages, setCmsPages] = useState({})
   const [publicGalleryPhotos, setPublicGalleryPhotos] = useState([])
+  const [publicResults, setPublicResults] = useState([])
   const [formMessage, setFormMessage] = useState('')
 
   useEffect(() => {
@@ -1629,7 +1736,7 @@ function App() {
   }, [menuOpen])
 
   useEffect(() => {
-    const syncPage = () => setActivePage(window.location.pathname.replace(/^\/|\/$/g, ''))
+    const syncPage = () => setActivePage(getActivePageFromPath())
 
     window.addEventListener('popstate', syncPage)
     return () => window.removeEventListener('popstate', syncPage)
@@ -1672,6 +1779,14 @@ function App() {
       .select('*')
       .order('created_at', { ascending: false })
       .then(({ data }) => setPublicGalleryPhotos(data || []))
+
+    supabase
+      .from('results')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setPublicResults(data || []))
   }, [])
 
   useEffect(() => {
@@ -1721,7 +1836,7 @@ function App() {
 
     event.preventDefault()
     window.history.pushState({}, '', href)
-    setActivePage(href.replace(/^\/|\/$/g, ''))
+    setActivePage(href.replace(/^\/+|\/+$/g, '').toLowerCase())
     closeMenu()
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -1782,7 +1897,7 @@ function App() {
         <div className="bg-[#fffaf0]">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 lg:px-8">
             <a href="/" onClick={(event) => handleInternalLink(event, '/')} className="flex min-w-0 items-center gap-4">
-              <img src={logo} alt="Shri Pragya Public School logo" className="h-16 w-16 flex-none rounded-sm object-cover sm:h-20 sm:w-20" />
+              <img src={logo} alt="Shri Pragya Public School logo" className="h-20 w-20 flex-none rounded-sm object-contain sm:h-24 sm:w-24" />
               <div className="min-w-0">
                 <p className="text-xl font-extrabold uppercase leading-tight text-[#a8171d] sm:text-3xl">Shri Pragya Public School</p>
                 <p className="mt-1 text-sm font-medium text-slate-900 sm:text-lg">Bijainagar, Rajasthan 305624</p>
@@ -1858,7 +1973,7 @@ function App() {
         <div className="fixed inset-0 z-[9999] bg-slate-950/75 lg:hidden" onClick={closeMenu}>
           <aside id="primary-menu" className="ml-auto flex h-full w-[88vw] max-w-sm flex-col overflow-y-auto bg-[#082f5f] px-4 py-4 text-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between border-b border-white/15 pb-4">
-              <img src={logo} alt="Shri Pragya Public School logo" className="h-14 w-14 rounded-sm bg-white object-contain p-1" />
+              <img src={logo} alt="Shri Pragya Public School logo" className="h-[4.5rem] w-[4.5rem] rounded-sm bg-white object-contain p-1" />
               <button
                 type="button"
                 className="grid h-10 w-10 place-items-center rounded-md border border-white/20 bg-white/10 text-white"
@@ -1920,10 +2035,10 @@ function App() {
         ) : !adminSession ? (
           <AdminLogin />
         ) : (
-          <AdminPanel adminProfile={{ email: adminSession.user.email }} cmsPages={cmsPages} onLogout={handleAdminLogout} onNavigate={handleInternalLink} onPageSaved={handlePageSaved} />
+          <AdminPanel adminProfile={{ email: adminSession.user.email }} cmsPages={cmsPages} onLogout={handleAdminLogout} onNavigate={handleInternalLink} onPageSaved={handlePageSaved} onResultsChanged={setPublicResults} />
         )
       ) : page ? (
-        <ContentPage page={page} activePage={activePage} onFormSubmit={handlePublicFormSubmit} formMessage={formMessage} galleryPhotos={publicGalleryPhotos} />
+        <ContentPage page={page} activePage={activePage} onFormSubmit={handlePublicFormSubmit} formMessage={formMessage} galleryPhotos={publicGalleryPhotos} resultPhotos={publicResults} />
       ) : (
       <main id="home">
         <section className="relative min-h-[460px] overflow-hidden bg-[#06284d] lg:min-h-[520px]">
@@ -1931,11 +2046,14 @@ function App() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#06284d]/95 via-[#06284d]/60 to-transparent" />
           <div className="relative mx-auto flex min-h-[460px] max-w-7xl items-center px-4 py-12 lg:min-h-[520px] lg:px-8">
             <div className="max-w-2xl text-white">
-              <p className="mb-4 text-base font-bold text-[#ffc400] sm:text-lg">Nurturing Minds. Building Futures.</p>
-              <h1 className="max-w-xl text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl">Welcome to Shri Pragya Public School</h1>
-              <div className="mt-5 h-1 w-20 bg-[#ffc400]" />
-              <p className="mt-5 max-w-lg text-base leading-7 text-white/95 sm:text-lg">Empowering students with knowledge, values, confidence and skills to excel in life and create a better tomorrow.</p>
-              <div className="mt-6 flex flex-wrap gap-4">
+              <p className="hero-kicker mb-4 text-base font-bold text-[#ffc400] sm:text-lg">Nurturing Minds. Building Futures.</p>
+              <h1 className="hero-title max-w-3xl text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl">
+                <span className="block">Welcome to</span>
+                <span className="mt-2 block text-[#ffc400]">Shri Pragya Public School</span>
+              </h1>
+              <div className="hero-rule mt-5 h-1 w-20 bg-[#ffc400]" />
+              <p className="hero-copy mt-5 max-w-lg text-base leading-7 text-white/95 sm:text-lg">Empowering students with knowledge, values, confidence and skills to excel in life and create a better tomorrow.</p>
+              <div className="hero-actions mt-6 flex flex-wrap gap-4">
                 <a href="/about/" onClick={(event) => handleInternalLink(event, '/about/')} className="inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#101827] shadow-xl shadow-black/20 transition hover:bg-white">
                   Explore More <Icon name="arrow" />
                 </a>
@@ -1948,7 +2066,7 @@ function App() {
         <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 lg:px-8">
           <div className="grid overflow-hidden rounded-lg bg-[#fffaf0] shadow-2xl shadow-slate-950/15 sm:grid-cols-2 lg:grid-cols-4">
             {highlights.map(([title, text, icon], index) => (
-              <div key={title} className={`flex items-center gap-5 p-7 ${index > 0 ? 'lg:border-l lg:border-slate-300' : ''}`}>
+              <div key={title} className={`highlight-flip group flex items-center gap-5 p-7 ${index > 0 ? 'lg:border-l lg:border-slate-300' : ''}`}>
                 <span className="grid h-16 w-16 flex-none place-items-center rounded-full bg-[#a8171d] text-white"><Icon name={icon} className="h-8 w-8" /></span>
                 <div>
                   <h2 className="text-xl font-extrabold text-[#16172b]">{title}</h2>
@@ -1973,10 +2091,7 @@ function App() {
           <div className="grid content-start gap-5">
             <div className="grid grid-cols-2 gap-4">
               {stats.map(([value, label]) => (
-                <div key={label} className="rounded-lg bg-white p-6 shadow-sm">
-                  <p className="text-4xl font-black text-[#a8171d]">{value}</p>
-                  <p className="mt-2 font-semibold text-slate-700">{label}</p>
-                </div>
+                <CountUpStat key={label} value={value} label={label} />
               ))}
             </div>
             <img src={campusHero} alt="School campus buildings and courtyard" className="h-72 w-full rounded-lg object-cover shadow-xl" />
@@ -2030,8 +2145,16 @@ function App() {
               <a href="/academic-calendar/" onClick={(event) => handleInternalLink(event, '/academic-calendar/')} className="inline-flex w-fit items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">View All Results <Icon name="arrow" /></a>
             </div>
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {resultImages.slice(0, 3).map(([image, alt]) => (
-                <img key={alt} src={image} alt={alt} className="h-72 w-full rounded-lg bg-white object-contain p-3 shadow-xl" />
+              {(publicResults.length ? publicResults : fallbackResults).slice(0, 3).map((result) => (
+                <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 text-[#102344] shadow-xl">
+                  <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-72 w-full rounded-md object-contain" />
+                  {(result.title || result.result_year) ? (
+                    <div className="px-2 pb-2 pt-4">
+                      <h3 className="text-lg font-black">{result.title}</h3>
+                      {result.result_year ? <p className="mt-1 text-sm font-bold text-[#a8171d]">{result.result_year}</p> : null}
+                    </div>
+                  ) : null}
+                </article>
               ))}
             </div>
           </div>
@@ -2118,7 +2241,7 @@ function App() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] lg:px-8">
           <div>
             <div className="flex items-center gap-4">
-              <img src={logo} alt="Shri Pragya Public School logo" className="h-16 w-16 rounded-sm bg-white object-contain p-1" />
+              <img src={logo} alt="Shri Pragya Public School logo" className="h-20 w-20 rounded-sm bg-white object-contain p-1" />
               <div>
                 <h2 className="text-xl font-black uppercase leading-tight">Shri Pragya Public School</h2>
                 <p className="mt-1 text-sm text-white/75">Bijainagar, Rajasthan 305624</p>
