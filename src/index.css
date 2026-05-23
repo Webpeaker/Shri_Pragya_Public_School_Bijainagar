@@ -125,6 +125,119 @@ body {
   transform: translateY(-6px);
 }
 
+.facility-card {
+  animation: softPopIn 0.7s ease both;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.facility-card:hover {
+  border-color: #ffc400;
+  box-shadow: 0 24px 55px rgb(15 23 42 / 18%);
+  transform: translateY(-8px);
+}
+
+.facility-overlay {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.facility-card:hover .facility-overlay,
+.facility-card:focus-visible .facility-overlay {
+  opacity: 1;
+}
+
+.facility-overlay-content {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.facility-card:hover .facility-overlay-content,
+.facility-card:focus-visible .facility-overlay-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cms-html-content {
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.cms-html-content h1,
+.cms-html-content h2,
+.cms-html-content h3 {
+  color: #102344;
+  font-weight: 900;
+  line-height: 1.15;
+  margin: 1.25rem 0 0.75rem;
+}
+
+.cms-html-content h1 {
+  font-size: 2.5rem;
+}
+
+.cms-html-content h2 {
+  font-size: 2rem;
+}
+
+.cms-html-content h3 {
+  font-size: 1.5rem;
+}
+
+.cms-html-content p,
+.cms-html-content ul,
+.cms-html-content ol,
+.cms-html-content table,
+.cms-html-content img {
+  margin-top: 1rem;
+}
+
+.cms-html-content ul,
+.cms-html-content ol {
+  padding-left: 1.5rem;
+}
+
+.cms-html-content ul {
+  list-style: disc;
+}
+
+.cms-html-content ol {
+  list-style: decimal;
+}
+
+.cms-html-content a {
+  color: #a8171d;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.cms-html-content img {
+  border-radius: 0.5rem;
+  max-width: 100%;
+}
+
+.cms-html-content table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.cms-html-content th,
+.cms-html-content td {
+  border: 1px solid #cbd5e1;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.cms-html-content th {
+  background: #06284d;
+  color: #ffffff;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-kicker,
   .hero-title,
@@ -133,9 +246,17 @@ body {
   .hero-actions,
   .highlight-flip,
   .stat-card,
-  .result-card {
+  .result-card,
+  .facility-card,
+  .facility-overlay,
+  .facility-overlay-content {
     animation: none;
     transition: none;
     transform: none;
+  }
+
+  .facility-overlay,
+  .facility-overlay-content {
+    opacity: 1;
   }
 }

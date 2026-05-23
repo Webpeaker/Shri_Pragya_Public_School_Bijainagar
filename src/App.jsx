@@ -2,12 +2,6 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import logo from './assets/pragya_school_logo.png'
 import campusHero from './assets/Pragya_school_hero_section_image.jpg'
-import resultOne from './assets/1_result.webp'
-import resultTwo from './assets/2_result.webp'
-import resultThree from './assets/3_result.webp'
-import resultFour from './assets/4_result.webp'
-import resultFourTwo from './assets/4_2_result.webp'
-import resultFive from './assets/5_result.webp'
 import boysReading from './assets/boys_reading_book.JPG'
 import boyHostel from './assets/boy_hostel.webp'
 import busImage from './assets/bus_image.jpg'
@@ -23,6 +17,13 @@ import sportsImage from './assets/sports.jpg'
 import studentLibrary from './assets/Student_library_image.JPG'
 import teacherImage from './assets/teacher.JPG'
 import digitalBoard from './assets/Teaching_With_digital_board.JPG'
+import drNavalSingh from './assets/Dr_NavalSingh_Jain.jpg'
+import manjeetSingh from './assets/Manjeet_singh_Sir.jpg'
+import nidhiMathur from './assets/Nidhi_Mathur_Maam.jpg'
+import sunitaMaam from './assets/Sunita_Maam.jpg'
+import drakshiGarg from './assets/Drakshi_Garg_Maam.webp'
+
+const storageBucket = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET || 'school-media'
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -78,6 +79,7 @@ const navItems = [
     ],
   },
   { label: 'Gallery', href: '/gallery/' },
+  { label: 'Student Council', href: '/student-council/' },
   { label: 'Online Admission', href: '/admission-form/' },
   { label: 'Careers', href: '/careers/' },
   { label: 'Contact Us', href: '/contact-us/' },
@@ -99,12 +101,12 @@ const stats = [
 ]
 
 const facilities = [
-  ['Digital Classrooms', 'Interactive teaching rooms built for attentive, visual learning.', 'Smart classroom learning space', digitalBoard],
-  ['Science Labs', 'Practical physics, chemistry and biology labs for inquiry-led study.', 'Science laboratory facility', chemistryLab],
-  ['Library', 'A calm reading environment with reference books, journals and story collections.', 'School library and reading space', studentLibrary],
-  ['Sports Grounds', 'Outdoor games, athletics and structured physical education every week.', 'School sports and activity ground', sportsImage],
-  ['Transport', 'Managed bus routes for safe and punctual daily travel.', 'School transport facility', busImage],
-  ['Day Boarding', 'Supervised study, meals and activity time for extended learning support.', 'Day boarding facility', boyHostel],
+  ['Digital Classrooms', 'Interactive teaching rooms built for attentive, visual learning.', 'Smart classroom learning space', digitalBoard, '/interactive-classroom/'],
+  ['Science Labs', 'Practical physics, chemistry and biology labs for inquiry-led study.', 'Science laboratory facility', chemistryLab, '/laboratories/'],
+  ['Library', 'A calm reading environment with reference books, journals and story collections.', 'School library and reading space', studentLibrary, '/facilities/'],
+  ['Sports Grounds', 'Outdoor games, athletics and structured physical education every week.', 'School sports and activity ground', sportsImage, '/music-sports-facilities/'],
+  ['Transport', 'Managed bus routes for safe and punctual daily travel.', 'School transport facility', busImage, '/transportation/'],
+  ['Day Boarding', 'Supervised study, meals and activity time for extended learning support.', 'Day boarding facility', boyHostel, '/hostel/'],
 ]
 
 const programs = [
@@ -169,22 +171,13 @@ const galleryImages = [
   [studentLibrary, 'Library reading space'],
 ]
 
-const resultImages = [
-  [resultOne, 'Pragya school result achievement 1'],
-  [resultTwo, 'Pragya school result achievement 2'],
-  [resultThree, 'Pragya school result achievement 3'],
-  [resultFour, 'Pragya school result achievement 4'],
-  [resultFourTwo, 'Pragya school result achievement 5'],
-  [resultFive, 'Pragya school result achievement 6'],
-]
-
-const fallbackResults = resultImages.map(([image, alt], index) => ({
-  id: `fallback-result-${index}`,
-  title: alt,
-  image_url: image,
-  result_year: '',
-  sort_order: index,
-}))
+const staffPhotosByName = {
+  'Dr. Navalsingh Jain': drNavalSingh,
+  'Mr. Manjeet Singh': manjeetSingh,
+  'Mrs Nidhi Mathur': nidhiMathur,
+  'Mrs. Sunita Sharma': sunitaMaam,
+  'Mrs. Drakshi Garg': drakshiGarg,
+}
 
 const contactDetails = [
   ['Main Branch', 'Pragya Road, Bijainagar (Ajmer) Raj. +91-1462-230201'],
@@ -196,6 +189,11 @@ const contactDetails = [
 ]
 
 const getActivePageFromPath = () => window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase()
+const getSlug = (value) => String(value || '')
+  .toLowerCase()
+  .trim()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '')
 
 const contentPages = {
   about: {
@@ -280,11 +278,11 @@ const contentPages = {
     eyebrow: 'About',
     title: 'Principal & Teachers Details',
     people: [
-      ['Dr. Navalsingh Jain', 'Director', 'Pragya Group of Institute'],
-      ['Mr. Manjeet Singh', 'Head & Deputy Director', 'IIT JEE NEET'],
-      ['Mrs Nidhi Mathur', 'Principal', 'Head Academics'],
-      ['Mrs. Sunita Sharma', 'Head', 'Transportation'],
-      ['Mrs. Drakshi Garg', 'Head', 'Pre School'],
+      ['Dr. Navalsingh Jain', 'Director', 'Pragya Group of Institute', drNavalSingh],
+      ['Mr. Manjeet Singh', 'Head & Deputy Director', 'IIT JEE NEET', manjeetSingh],
+      ['Mrs Nidhi Mathur', 'Principal', 'Head Academics', nidhiMathur],
+      ['Mrs. Sunita Sharma', 'Head', 'Transportation', sunitaMaam],
+      ['Mrs. Drakshi Garg', 'Head', 'Pre School', drakshiGarg],
     ],
   },
   overview: {
@@ -450,12 +448,21 @@ const contentPages = {
   },
   'academic-calendar': {
     eyebrow: 'Academics',
-    title: 'Result',
+    title: 'Academic Calendar',
+    image: classStudentsTwo,
+    paragraphs: [
+      'The academic calendar keeps students and parents informed about important school dates, assessments, activities, holidays and academic milestones.',
+      'Please contact the school office for the latest detailed calendar and any date-specific updates.',
+    ],
+    bullets: ['Assessment schedule', 'Activity dates', 'Parent communication', 'Holiday updates'],
+  },
+  results: {
+    eyebrow: 'Academics',
+    title: 'Results',
     image: classStudentsTwo,
     paragraphs: [
       'Our students continue to make the school proud through dedicated effort, consistent guidance and excellent academic performance.',
     ],
-    gallery: resultImages,
   },
   'academic-report-co-curricular': {
     eyebrow: 'Academics',
@@ -549,11 +556,9 @@ const contentPages = {
   },
   'annual-award': {
     eyebrow: 'Activities',
-    title: 'Annual Award',
-    image: classStudentsTwo,
-    paragraphs: [
-      'The annual award program celebrates academic excellence, discipline, sportsmanship, creativity, leadership and consistent effort.',
-    ],
+        paragraphs: [
+          'The annual award program celebrates academic excellence, discipline, sportsmanship, creativity, leadership and consistent effort.',
+        ],
   },
   'interschool-co-curricular-activity': {
     eyebrow: 'Activities',
@@ -587,14 +592,28 @@ const contentPages = {
     image: classStudentsTwo,
     paragraphs: [
       'The house system builds leadership, team spirit, healthy competition and responsibility among students.',
+      'At Shri Pragya Public School, we follow a vibrant 4-house system where every student is allocated to one of the four houses: Blue, Green, Red, or Yellow. This system divides the school community into smaller sub-units, fostering a strong sense of belonging, sisterhood/brotherhood, and healthy competition throughout the academic term.',
     ],
     bullets: ['House competitions', 'Student leadership roles', 'Sports participation', 'Cultural activities', 'Discipline and teamwork'],
-    houses: [
-      ['Blue House', '#1d4ed8'],
-      ['Green House', '#15803d'],
-      ['Red House', '#b91c1c'],
-      ['Yellow House', '#ca8a04'],
-    ],
+    sections: [
+      {
+        heading: 'The 4 Houses at SPPS',
+        paragraphs: [
+          'Each of the four houses is associated with unique values, elements, and brand identities:',
+          '• Blue House (Water & Depth): Symbolizes intelligence, depth of knowledge, tranquility, and endless potential. Students in the Blue House strive for stability, conceptual clarity, and high ethical values.',
+          '• Green House (Growth & Ecology): Symbolizes prosperity, continuous growth, nature, and youthfulness. Green House members focus on sustainability, environmental consciousness, sportsmanship, and creative expression.',
+          '• Red House (Passion & Strength): Symbolizes passion, courage, vital energy, and strength of character. Members of the Red House demonstrate high enthusiasm, determination, and strong action-oriented leadership.',
+          '• Yellow House (Intellect & Brightness): Symbolizes wisdom, optimistic energy, intellectual brightness, and joy. Yellow House students represent logical reasoning, mental alertness, cheerfulness, and positive communication.'
+        ],
+      },
+      {
+        heading: 'House Activities & Competitions',
+        paragraphs: [
+          'Under this structure, houses compete actively in a wide array of co-curricular activities, including inter-house debates, quizzes, sports tournaments, archery, band performances, art exhibitions, and special national celebrations.',
+          'Points are earned throughout the academic term based on student achievements in academics, sportsmanship, discipline, co-curricular awards, and leadership roles, motivating every student to contribute their best efforts to their house.'
+        ]
+      }
+    ]
   },
   excursions: {
     eyebrow: 'Activities',
@@ -625,7 +644,16 @@ const contentPages = {
     title: 'Careers',
     image: teacherImage,
     paragraphs: [
+      'Join our teaching community.',
       'We welcome passionate educators who believe in discipline, care and student-centered learning. Share your profile with the school office for current vacancies.',
+    ],
+  },
+  'student-council': {
+    eyebrow: 'Student Council',
+    title: 'Student Council',
+    image: classStudentsTwo,
+    paragraphs: [
+      'Student Council gives learners a formal space to lead, organize activities and represent student voices with responsibility.',
     ],
   },
   'contact-us': {
@@ -750,6 +778,48 @@ function ContactForm({ onSubmit, message }) {
   )
 }
 
+function CareerForm({ onSubmit, message }) {
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    position: '',
+    qualification: '',
+    experience: '',
+    message: '',
+  })
+  const update = (key, value) => setForm({ ...form, [key]: value })
+
+  return (
+    <div className="mt-10">
+      <button
+        type="button"
+        onClick={() => setShowForm(true)}
+        className="inline-flex items-center gap-3 rounded-md bg-[#a8171d] px-7 py-4 font-black text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-[#06284d]"
+      >
+        Join Now <Icon name="arrow" />
+      </button>
+
+      {showForm ? (
+        <form onSubmit={(event) => onSubmit(event, form, 'career')} className="mt-6 grid gap-4 rounded-lg bg-white p-6 shadow-sm">
+          <div className="grid gap-4 md:grid-cols-2">
+            <input value={form.name} onChange={(event) => update('name', event.target.value)} required placeholder="Full name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+            <input value={form.phone} onChange={(event) => update('phone', event.target.value)} required placeholder="Phone number" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+            <input value={form.email} onChange={(event) => update('email', event.target.value)} type="email" placeholder="Email address" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+            <input value={form.position} onChange={(event) => update('position', event.target.value)} required placeholder="Position applied for" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+            <input value={form.qualification} onChange={(event) => update('qualification', event.target.value)} placeholder="Highest qualification" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+            <input value={form.experience} onChange={(event) => update('experience', event.target.value)} placeholder="Experience" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+          </div>
+          <textarea value={form.message} onChange={(event) => update('message', event.target.value)} rows="4" placeholder="Subject expertise / message" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+          {message ? <p className="rounded-md bg-[#fffaf0] p-3 text-sm font-bold text-slate-700">{message}</p> : null}
+          <button className="rounded-md bg-[#a8171d] px-6 py-4 font-bold text-white">Submit Application</button>
+        </form>
+      ) : null}
+    </div>
+  )
+}
+
 function CountUpStat({ value, label }) {
   const [displayValue, setDisplayValue] = useState(value)
 
@@ -786,7 +856,8 @@ function CountUpStat({ value, label }) {
   )
 }
 
-function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [], resultPhotos = [] }) {
+function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [], resultPhotos = [], houseRecords = [], studentCouncilRecords = [] }) {
+  const [openGalleryPhoto, setOpenGalleryPhoto] = useState(null)
   const galleryFolders = galleryPhotos.reduce((folders, photo) => {
     const folderName = photo.folder_title || 'Gallery'
     return {
@@ -794,6 +865,9 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
       [folderName]: [...(folders[folderName] || []), photo],
     }
   }, {})
+  const galleryFolderEntries = Object.entries(galleryFolders)
+  const galleryRouteSlug = activePage.startsWith('gallery/') ? activePage.split('/')[1] : ''
+  const activeGalleryFolder = galleryFolderEntries.find(([folderName]) => getSlug(folderName) === galleryRouteSlug)
 
   return (
     <main>
@@ -807,7 +881,9 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
       </section>
 
       <section className="mx-auto max-w-5xl px-4 py-10 lg:px-8 lg:py-14">
-        {page.paragraphs ? (
+        {page.contentMode === 'html' && page.html ? (
+          <div className="cms-html-content rounded-lg bg-white p-6 text-slate-700 shadow-sm" dangerouslySetInnerHTML={{ __html: page.html }} />
+        ) : page.paragraphs ? (
           <div className="grid gap-5 text-lg leading-8 text-slate-700">
             {page.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -828,73 +904,125 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
 
         {page.people ? (
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {page.people.map(([name, role, detail]) => (
-              <article key={name} className="rounded-lg bg-white p-6 shadow-sm">
-                <h2 className="text-2xl font-black text-[#102344]">{name}</h2>
-                <p className="mt-2 font-bold text-[#a8171d]">{role}</p>
-                <p className="mt-1 text-slate-700">{detail}</p>
-              </article>
-            ))}
+            {page.people.map(([name, role, detail, photo]) => {
+              const staffPhoto = photo || staffPhotosByName[name]
+
+              return (
+                <article key={name} className="overflow-hidden rounded-lg bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                  {staffPhoto ? (
+                    <img src={staffPhoto} alt={name} className="h-72 w-full object-cover object-top" />
+                  ) : (
+                    <div className="grid h-72 place-items-center bg-[#fffaf0] text-5xl font-black text-[#a8171d]">{name.charAt(0)}</div>
+                  )}
+                  <div className="p-6">
+                    <h2 className="text-2xl font-black text-[#102344]">{name}</h2>
+                    <p className="mt-2 font-bold text-[#a8171d]">{role}</p>
+                    <p className="mt-1 text-slate-700">{detail}</p>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         ) : null}
 
-        {page.houses ? (
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {page.houses.map(([houseName, color]) => (
-              <article key={houseName} className="overflow-hidden rounded-lg bg-white shadow-sm">
-                <div className="p-5 text-white" style={{ backgroundColor: color }}>
-                  <h2 className="text-2xl font-black">{houseName}</h2>
-                </div>
-                <div className="grid gap-3 p-5 text-slate-700">
-                  {['Captain', 'Vice Captain', 'Junior Captain'].map((role) => (
-                    <div key={role} className="rounded-md bg-[#fffaf0] p-3">
-                      <p className="text-sm font-bold uppercase tracking-wide text-[#a8171d]">{role}</p>
-                      <p className="mt-1 font-semibold">Student name</p>
-                    </div>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : null}
 
-        {page.title === 'Gallery' ? (
+
+        {(page.title === 'Gallery' || activePage.startsWith('gallery/')) ? (
           <div className="mt-10 grid gap-8">
-            {Object.keys(galleryFolders).length > 0 ? (
-              Object.entries(galleryFolders).map(([folderName, photos]) => (
-                <section key={folderName} className="rounded-lg bg-white p-5 shadow-sm">
-                  <h2 className="text-2xl font-black text-[#102344]">{folderName}</h2>
+            {galleryRouteSlug ? (
+              activeGalleryFolder ? (
+                <section className="rounded-lg bg-white p-5 shadow-sm">
+                  <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                    <div>
+                      <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Gallery Folder</p>
+                      <h2 className="mt-2 text-3xl font-black text-[#102344]">{activeGalleryFolder[0]}</h2>
+                    </div>
+                  </div>
+                  <a href="/gallery/" onClick={(event) => {
+                    event.preventDefault()
+                    window.history.pushState({}, '', '/gallery/')
+                    window.dispatchEvent(new PopStateEvent('popstate'))
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }} className="mt-4 inline-flex w-fit rounded-md bg-[#ffc400] px-4 py-2 text-sm font-black text-[#102344]">Back to folders</a>
                   <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    {photos.map((photo) => (
-                      <img key={photo.id} src={photo.image_url} alt={photo.title} className="h-72 w-full rounded-lg object-cover shadow-md" />
+                    {activeGalleryFolder[1].map((photo) => (
+                      <button key={photo.id} type="button" onClick={() => setOpenGalleryPhoto(photo)} className="group overflow-hidden rounded-lg bg-[#fffaf0] text-left shadow-md">
+                        <img src={photo.image_url} alt={photo.title} className="h-72 w-full object-cover transition duration-500 group-hover:scale-105" />
+                        <p className="p-4 font-black text-[#102344]">{photo.title}</p>
+                      </button>
                     ))}
                   </div>
                 </section>
-              ))
+              ) : (
+                <p className="rounded-lg bg-white p-6 text-lg font-bold text-slate-700 shadow-sm">Gallery folder not found.</p>
+              )
+            ) : galleryFolderEntries.length > 0 ? (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {galleryFolderEntries.map(([folderName, photos]) => (
+                  <a
+                    key={folderName}
+                    href={`/gallery/${getSlug(folderName)}/`}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      window.history.pushState({}, '', `/gallery/${getSlug(folderName)}/`)
+                      window.dispatchEvent(new PopStateEvent('popstate'))
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
+                    className="group overflow-hidden rounded-lg bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <img src={photos[0]?.image_url} alt={folderName} className="h-56 w-full object-cover transition duration-500 group-hover:scale-105" />
+                    <div className="p-5">
+                      <h2 className="text-2xl font-black text-[#102344]">{folderName}</h2>
+                      <p className="mt-2 font-semibold text-slate-600">{photos.length} photos</p>
+                      <span className="mt-4 inline-flex items-center gap-2 rounded-md bg-[#a8171d] px-4 py-2 text-sm font-black text-white">
+                        Open Folder <Icon name="arrow" className="h-4 w-4" />
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
             ) : (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {galleryImages.map(([image, alt]) => (
-                  <img key={alt} src={image} alt={alt} className="h-72 w-full rounded-lg object-cover shadow-md" />
+                  <button key={alt} type="button" onClick={() => setOpenGalleryPhoto({ title: alt, image_url: image })} className="overflow-hidden rounded-lg shadow-md">
+                    <img src={image} alt={alt} className="h-72 w-full object-cover" />
+                  </button>
                 ))}
               </div>
             )}
           </div>
         ) : null}
 
-        {activePage === 'academic-calendar' ? (
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {(resultPhotos.length ? resultPhotos : fallbackResults).map((result) => (
-              <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 shadow-md">
-                <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-80 w-full rounded-md object-contain" />
-                {(result.title || result.result_year) ? (
-                  <div className="px-2 pb-2 pt-4">
-                    <h2 className="text-xl font-black text-[#102344]">{result.title}</h2>
-                    {result.result_year ? <p className="mt-1 font-bold text-[#a8171d]">{result.result_year}</p> : null}
-                  </div>
-                ) : null}
-              </article>
-            ))}
+        {openGalleryPhoto ? (
+          <div className="fixed inset-0 z-[10000] grid place-items-center bg-slate-950/85 p-4" onClick={() => setOpenGalleryPhoto(null)}>
+            <div className="max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-lg bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
+              <div className="flex items-center justify-between gap-4 border-b border-slate-200 p-4">
+                <h2 className="text-xl font-black text-[#102344]">{openGalleryPhoto.title}</h2>
+                <button type="button" onClick={() => setOpenGalleryPhoto(null)} className="rounded-md bg-[#a8171d] px-4 py-2 text-sm font-black text-white">Close</button>
+              </div>
+              <img src={openGalleryPhoto.image_url} alt={openGalleryPhoto.title} className="max-h-[78vh] w-full object-contain" />
+            </div>
           </div>
+        ) : null}
+
+        {activePage === 'results' ? (
+          resultPhotos.length > 0 ? (
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {resultPhotos.map((result) => (
+                <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 shadow-md">
+                  <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-80 w-full rounded-md object-contain" />
+                  {(result.title || result.result_year) ? (
+                    <div className="px-2 pb-2 pt-4">
+                      <h2 className="text-xl font-black text-[#102344]">{result.title}</h2>
+                      {result.result_year ? <p className="mt-1 font-bold text-[#a8171d]">{result.result_year}</p> : null}
+                    </div>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-10 rounded-lg bg-white p-6 text-lg font-bold text-slate-700 shadow-sm">No result photos added yet.</p>
+          )
         ) : page.gallery ? (
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {page.gallery.map(([image, alt]) => (
@@ -905,6 +1033,33 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
 
         {activePage === 'admission-form' ? <AdmissionForm onSubmit={onFormSubmit} message={formMessage} /> : null}
         {activePage === 'contact-us' ? <ContactForm onSubmit={onFormSubmit} message={formMessage} /> : null}
+        {activePage === 'careers' ? <CareerForm onSubmit={onFormSubmit} message={formMessage} /> : null}
+
+        {activePage === 'student-council' ? (
+          studentCouncilRecords.length > 0 ? (
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {studentCouncilRecords.map((member) => (
+                <article key={member.id} className="overflow-hidden rounded-lg bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                  {member.photo_url ? (
+                    <img src={member.photo_url} alt={member.name} className="h-64 w-full object-cover" />
+                  ) : (
+                    <div className="grid h-64 place-items-center bg-[#fffaf0] text-5xl font-black text-[#a8171d]">{member.name.charAt(0)}</div>
+                  )}
+                  <div className="p-6">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-[#a8171d]">{member.role}</p>
+                    <h2 className="mt-2 text-2xl font-black text-[#102344]">{member.name}</h2>
+                    <div className="mt-3 grid gap-1 text-sm font-semibold text-slate-600">
+                      <p><span className="text-[#102344]">Class:</span> {member.class_name || '-'}</p>
+                      <p><span className="text-[#102344]">House:</span> {member.house_name || '-'}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-10 rounded-lg bg-white p-6 text-lg font-bold text-slate-700 shadow-sm">Student council details will be updated soon.</p>
+          )
+        ) : null}
 
         {page.sections ? (
           <div className="mt-10 grid gap-6">
@@ -988,30 +1143,40 @@ function AdminLogin() {
   )
 }
 
-function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved, onResultsChanged }) {
-  const [adminSection, setAdminSection] = useState('pages')
+function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved, onResultsChanged, onHousesChanged, onNoticesChanged, onGalleryChanged, onStudentCouncilChanged }) {
+  const [adminSection, setAdminSection] = useState('contacts')
   const [editingPage, setEditingPage] = useState(null)
-  const [editorForm, setEditorForm] = useState({ title: '', href: '', group: '', eyebrow: '', content: '', is_published: true })
+  const [editorForm, setEditorForm] = useState({ title: '', href: '', group: '', eyebrow: '', content: '', contentMode: 'text', homeGalleryEyebrow: 'Gallery', homeGalleryTitle: 'Campus glimpses', is_published: true })
   const [editorMessage, setEditorMessage] = useState('')
   const [savingPage, setSavingPage] = useState(false)
   const [collectionMessage, setCollectionMessage] = useState('')
   const [adminSearch, setAdminSearch] = useState('')
-  const [galleryForm, setGalleryForm] = useState({ folder: '', selectedFolder: '', photoTitle: '', photoUrl: '' })
-  const [galleryFile, setGalleryFile] = useState(null)
+  const [galleryForm, setGalleryForm] = useState({ folder: '', selectedFolder: '', photoTitle: '' })
+  const [galleryFiles, setGalleryFiles] = useState([])
+  const [campusGlimpsesTitle, setCampusGlimpsesTitle] = useState('')
+  const [campusGlimpsesFiles, setCampusGlimpsesFiles] = useState([])
   const [resultForm, setResultForm] = useState({ title: '', year: '', imageUrl: '', sortOrder: '0', isActive: true })
   const [resultFile, setResultFile] = useState(null)
+  const [noticeForm, setNoticeForm] = useState({ text: '', linkUrl: '', sortOrder: '0', isActive: true })
+  const [studentCouncilForm, setStudentCouncilForm] = useState({ name: '', role: '', className: '', houseName: '', photoUrl: '', isActive: true })
+  const [studentCouncilFile, setStudentCouncilFile] = useState(null)
+  const [uploadingStudentCouncil, setUploadingStudentCouncil] = useState(false)
   const [houseForm, setHouseForm] = useState({ houseName: 'Blue House', houseColor: '#1d4ed8', captain: '', viceCaptain: '', juniorCaptain: '' })
   const [principalForm, setPrincipalForm] = useState({ name: '', role: '', detail: '', photoUrl: '' })
   const [admissionSubmissions, setAdmissionSubmissions] = useState([])
   const [contactSubmissions, setContactSubmissions] = useState([])
+  const [careerSubmissions, setCareerSubmissions] = useState([])
   const [principalRecords, setPrincipalRecords] = useState([])
   const [houseRecords, setHouseRecords] = useState([])
   const [resultRecords, setResultRecords] = useState([])
-  const [galleryFolders, setGalleryFolders] = useState([])
+  const [noticeRecords, setNoticeRecords] = useState([])
   const [galleryRecords, setGalleryRecords] = useState([])
+  const [studentCouncilRecords, setStudentCouncilRecords] = useState([])
   const [editingPrincipalId, setEditingPrincipalId] = useState(null)
   const [editingHouseId, setEditingHouseId] = useState(null)
   const [editingResultId, setEditingResultId] = useState(null)
+  const [editingNoticeId, setEditingNoticeId] = useState(null)
+  const [editingStudentCouncilId, setEditingStudentCouncilId] = useState(null)
   const [uploadingResult, setUploadingResult] = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
 
@@ -1031,13 +1196,14 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
     })
 
   const adminTabs = [
-    ['pages', 'Pages'],
-    ['gallery', 'Gallery Folders'],
+    ['contacts', 'Contact Form Data'],
+    ['careers', 'Career'],
+    ['admissions', 'Student Admission Data'],
+    ['student-council', 'Student Council Page'],
+    ['campus-glimpses', 'Campus Glimpses'],
+    ['gallery', 'Gallery'],
     ['results', 'Results'],
-    ['houses', 'House Captains'],
-    ['principal', 'Principal & Teachers'],
-    ['admissions', 'Admission Forms'],
-    ['contacts', 'Contact Enquiries'],
+    ['notices', 'Notice Board'],
   ]
 
   const normalizedSearch = adminSearch.trim().toLowerCase()
@@ -1047,22 +1213,30 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
   }
   const filteredManagedPages = managedPages.filter((page) => matchesSearch(page.label, page.group, page.href))
   const filteredGalleryRecords = galleryRecords.filter((record) => matchesSearch(record.folder_title, record.title, record.image_url))
+  const campusGlimpsesRecords = galleryRecords.filter((record) => getSlug(record.folder_title) === 'campus-glimpses')
+  const filteredCampusGlimpsesRecords = campusGlimpsesRecords.filter((record) => matchesSearch(record.title, record.image_url, record.is_active ? 'shown' : 'hidden'))
   const filteredResultRecords = resultRecords.filter((record) => matchesSearch(record.title, record.result_year, record.image_url, record.is_active ? 'shown' : 'hidden'))
+  const filteredNoticeRecords = noticeRecords.filter((record) => matchesSearch(record.notice_text, record.link_url, record.is_active ? 'active' : 'hidden'))
+  const filteredStudentCouncilRecords = studentCouncilRecords.filter((record) => matchesSearch(record.name, record.role, record.class_name, record.house_name, record.is_active ? 'active' : 'hidden'))
   const filteredHouseRecords = houseRecords.filter((record) => matchesSearch(record.house_name, record.captain_name, record.vice_captain_name, record.junior_captain_name))
   const filteredPrincipalRecords = principalRecords.filter((record) => matchesSearch(record.name, record.role, record.detail))
   const filteredAdmissionSubmissions = admissionSubmissions.filter((item) => matchesSearch(item.student_name, item.class_applied, item.father_name, item.mother_name, item.phone, item.address, item.message))
+  const filteredCareerSubmissions = careerSubmissions.filter((item) => matchesSearch(item.name, item.phone, item.email, item.position, item.qualification, item.experience, item.message))
   const filteredContactSubmissions = contactSubmissions.filter((item) => matchesSearch(item.name, item.phone, item.email, item.subject, item.message))
+  const galleryFolderTitles = [...new Set(galleryRecords.map((record) => record.folder_title).filter(Boolean))]
 
   useEffect(() => {
     if (!supabase) return
 
     supabase.from('admission_enquiries').select('*').order('created_at', { ascending: false }).then(({ data }) => setAdmissionSubmissions(data || []))
+    supabase.from('career_applications').select('*').order('created_at', { ascending: false }).then(({ data }) => setCareerSubmissions(data || []))
     supabase.from('contact_enquiries').select('*').order('created_at', { ascending: false }).then(({ data }) => setContactSubmissions(data || []))
     supabase.from('principal_teachers').select('*').order('sort_order', { ascending: true }).then(({ data }) => setPrincipalRecords(data || []))
     supabase.from('house_system').select('*').order('sort_order', { ascending: true }).then(({ data }) => setHouseRecords(data || []))
     supabase.from('results').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setResultRecords(data || []))
-    supabase.from('gallery_folders').select('*').order('created_at', { ascending: false }).then(({ data }) => setGalleryFolders(data || []))
+    supabase.from('notices').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setNoticeRecords(data || []))
     supabase.from('gallery_photos').select('*').order('created_at', { ascending: false }).then(({ data }) => setGalleryRecords(data || []))
+    supabase.from('student_council').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setStudentCouncilRecords(data || []))
   }, [])
 
   const openEditor = (page) => {
@@ -1076,7 +1250,10 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
       href: page.href,
       group: page.group,
       eyebrow: existingPage?.eyebrow || page.group,
-      content: existingPage?.paragraphs?.join('\n\n') || '',
+      content: existingPage?.contentMode === 'html' ? existingPage?.html || '' : existingPage?.paragraphs?.join('\n\n') || '',
+      contentMode: existingPage?.contentMode || (existingPage?.html ? 'html' : 'text'),
+      homeGalleryEyebrow: existingPage?.homeGalleryEyebrow || 'Gallery',
+      homeGalleryTitle: existingPage?.homeGalleryTitle || 'Campus glimpses',
       is_published: true,
     })
   }
@@ -1093,6 +1270,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
     setEditorMessage('')
 
     const slug = editorForm.href.replace(/^\/|\/$/g, '') || 'home'
+    const isHtmlMode = editorForm.contentMode === 'html'
     const pageRecord = {
       slug,
       title: editorForm.title,
@@ -1100,7 +1278,11 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
       body: {
         group: editorForm.group,
         href: editorForm.href,
-        paragraphs: editorForm.content.split('\n').map((line) => line.trim()).filter(Boolean),
+        content_mode: editorForm.contentMode,
+        html: isHtmlMode ? editorForm.content : '',
+        paragraphs: isHtmlMode ? [] : editorForm.content.split('\n').map((line) => line.trim()).filter(Boolean),
+        home_gallery_eyebrow: slug === 'home' ? editorForm.homeGalleryEyebrow : undefined,
+        home_gallery_title: slug === 'home' ? editorForm.homeGalleryTitle : undefined,
       },
       is_published: editorForm.is_published,
     }
@@ -1115,7 +1297,11 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
     onPageSaved(slug, {
       title: pageRecord.title,
       eyebrow: pageRecord.eyebrow,
+      contentMode: pageRecord.body.content_mode,
+      html: pageRecord.body.html,
       paragraphs: pageRecord.body.paragraphs,
+      homeGalleryEyebrow: pageRecord.body.home_gallery_eyebrow,
+      homeGalleryTitle: pageRecord.body.home_gallery_title,
     })
     setEditorMessage('Saved successfully. Website page updated.')
   }
@@ -1125,25 +1311,32 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
 
     const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-')
     const filePath = `${folder}/${Date.now()}-${safeName}`
-    const { error } = await supabase.storage.from('school-media').upload(filePath, file, {
+    const { error } = await supabase.storage.from(storageBucket).upload(filePath, file, {
       cacheControl: '3600',
       contentType: file.type,
     })
 
-    if (error) throw error
+    if (error) {
+      if (error.message?.toLowerCase().includes('bucket not found')) {
+        throw new Error(`Supabase Storage bucket "${storageBucket}" nahi mila. Supabase me "${storageBucket}" public bucket create karo ya supabase_schema.sql run karo.`)
+      }
 
-    return supabase.storage.from('school-media').getPublicUrl(filePath).data.publicUrl
+      throw error
+    }
+
+    return supabase.storage.from(storageBucket).getPublicUrl(filePath).data.publicUrl
   }
 
   const saveResult = async () => {
     if (!supabase) return setCollectionMessage('Supabase env missing.')
-    if (!resultForm.imageUrl.trim() && !resultFile) return setCollectionMessage('Image URL add karo ya image upload karo.')
+    if (!editingResultId && !resultFile) return setCollectionMessage('Result photo upload karo.')
+    if (editingResultId && !resultForm.imageUrl.trim() && !resultFile) return setCollectionMessage('Result photo upload karo.')
 
     setUploadingResult(true)
     setCollectionMessage('')
 
     try {
-      const uploadedUrl = resultForm.imageUrl.trim() || await uploadAdminImage(resultFile, 'results')
+      const uploadedUrl = resultFile ? await uploadAdminImage(resultFile, 'results') : resultForm.imageUrl.trim()
       const payload = {
         title: resultForm.title,
         result_year: resultForm.year,
@@ -1201,45 +1394,199 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
     setCollectionMessage('Result photo removed.')
   }
 
-  const createGalleryFolder = async () => {
+  const saveNotice = async () => {
     if (!supabase) return setCollectionMessage('Supabase env missing.')
-    if (!galleryForm.folder.trim()) return setCollectionMessage('Folder name add karo.')
+    if (!noticeForm.text.trim()) return setCollectionMessage('Notice text add karo.')
 
-    const folderTitle = galleryForm.folder.trim()
-    const { data, error } = await supabase.from('gallery_folders').upsert({ title: folderTitle }, { onConflict: 'title' }).select()
+    const payload = {
+      notice_text: noticeForm.text.trim(),
+      link_url: noticeForm.linkUrl.trim() || null,
+      sort_order: Number(noticeForm.sortOrder) || 0,
+      is_active: noticeForm.isActive,
+    }
+    const query = editingNoticeId
+      ? supabase.from('notices').update(payload).eq('id', editingNoticeId).select()
+      : supabase.from('notices').insert(payload).select()
+    const { data, error } = await query
     if (error) return setCollectionMessage(error.message)
 
-    const folder = data?.[0]
-    setGalleryFolders((folders) => folders.some((item) => item.title === folderTitle) ? folders : [folder, ...folders])
-    setGalleryForm((form) => ({ ...form, folder: '', selectedFolder: folderTitle }))
-    setCollectionMessage('Gallery folder created.')
+    const record = data?.[0]
+    setNoticeRecords((records) => {
+      const nextRecords = editingNoticeId ? records.map((item) => item.id === editingNoticeId ? record : item) : [record, ...records]
+      return nextRecords.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+    })
+    onNoticesChanged((records) => {
+      const withoutCurrent = records.filter((item) => item.id !== record.id)
+      const nextRecords = record.is_active === false ? withoutCurrent : [record, ...withoutCurrent]
+      return nextRecords.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+    })
+    setEditingNoticeId(null)
+    setNoticeForm({ text: '', linkUrl: '', sortOrder: '0', isActive: true })
+    setCollectionMessage('Notice saved.')
   }
 
-  const saveGalleryPhoto = async () => {
+  const editNotice = (record) => {
+    setEditingNoticeId(record.id)
+    setNoticeForm({
+      text: record.notice_text || '',
+      linkUrl: record.link_url || '',
+      sortOrder: String(record.sort_order || 0),
+      isActive: record.is_active !== false,
+    })
+  }
+
+  const deleteNotice = async (record) => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    const { error } = await supabase.from('notices').delete().eq('id', record.id)
+    if (error) return setCollectionMessage(error.message)
+
+    setNoticeRecords((records) => records.filter((item) => item.id !== record.id))
+    onNoticesChanged((records) => records.filter((item) => item.id !== record.id))
+    if (editingNoticeId === record.id) {
+      setEditingNoticeId(null)
+      setNoticeForm({ text: '', linkUrl: '', sortOrder: '0', isActive: true })
+    }
+    setCollectionMessage('Notice removed.')
+  }
+
+  const saveStudentCouncil = async () => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    if (!studentCouncilForm.name.trim() || !studentCouncilForm.role.trim()) return setCollectionMessage('Name and role are required.')
+
+    setUploadingStudentCouncil(true)
+    setCollectionMessage('')
+
+    try {
+      const uploadedUrl = studentCouncilFile ? await uploadAdminImage(studentCouncilFile, 'student-council') : studentCouncilForm.photoUrl.trim()
+      
+      const payload = {
+        name: studentCouncilForm.name.trim(),
+        role: studentCouncilForm.role.trim(),
+        class_name: studentCouncilForm.className.trim() || null,
+        house_name: studentCouncilForm.houseName.trim() || null,
+        photo_url: uploadedUrl || null,
+        is_active: studentCouncilForm.isActive,
+      }
+      const query = editingStudentCouncilId
+        ? supabase.from('student_council').update(payload).eq('id', editingStudentCouncilId).select()
+        : supabase.from('student_council').insert(payload).select()
+      const { data, error } = await query
+      if (error) throw error
+
+      const record = data?.[0]
+      setStudentCouncilRecords((records) => {
+        const nextRecords = editingStudentCouncilId ? records.map((item) => item.id === editingStudentCouncilId ? record : item) : [record, ...records]
+        return nextRecords.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+      })
+      onStudentCouncilChanged((records) => {
+        const withoutCurrent = records.filter((item) => item.id !== record.id)
+        const nextRecords = record.is_active === false ? withoutCurrent : [record, ...withoutCurrent]
+        return nextRecords.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+      })
+      setEditingStudentCouncilId(null)
+      setStudentCouncilForm({ name: '', role: '', className: '', houseName: '', photoUrl: '', isActive: true })
+      setStudentCouncilFile(null)
+      setCollectionMessage('Student council detail saved.')
+    } catch (error) {
+      setCollectionMessage(error.message)
+    } finally {
+      setUploadingStudentCouncil(false)
+    }
+  }
+
+  const editStudentCouncil = (record) => {
+    setEditingStudentCouncilId(record.id)
+    setStudentCouncilForm({
+      name: record.name || '',
+      role: record.role || '',
+      className: record.class_name || '',
+      houseName: record.house_name || '',
+      photoUrl: record.photo_url || '',
+      isActive: record.is_active !== false,
+    })
+    setStudentCouncilFile(null)
+  }
+
+  const deleteStudentCouncil = async (record) => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    const { error } = await supabase.from('student_council').delete().eq('id', record.id)
+    if (error) return setCollectionMessage(error.message)
+
+    setStudentCouncilRecords((records) => records.filter((item) => item.id !== record.id))
+    onStudentCouncilChanged((records) => records.filter((item) => item.id !== record.id))
+    if (editingStudentCouncilId === record.id) {
+      setEditingStudentCouncilId(null)
+      setStudentCouncilForm({ name: '', role: '', className: '', houseName: '', sortOrder: '0', isActive: true })
+    }
+    setCollectionMessage('Student council detail removed.')
+  }
+
+  const saveGalleryPhotos = async () => {
     if (!supabase) return setCollectionMessage('Supabase env missing.')
     const folderTitle = galleryForm.selectedFolder || galleryForm.folder
     if (!folderTitle.trim()) return setCollectionMessage('Folder select karo ya new folder name add karo.')
-    if (!galleryForm.photoUrl.trim() && !galleryFile) return setCollectionMessage('Photo URL add karo ya image upload karo.')
+    if (galleryFiles.length === 0) return setCollectionMessage('Ek ya multiple photos select karo.')
 
     setUploadingGallery(true)
     setCollectionMessage('')
 
     try {
-      const imageUrl = galleryForm.photoUrl.trim() || await uploadAdminImage(galleryFile, `gallery/${folderTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`)
-      await supabase.from('gallery_folders').upsert({ title: folderTitle.trim() }, { onConflict: 'title' })
-      const { data, error } = await supabase.from('gallery_photos').insert({
-        folder_title: folderTitle.trim(),
-        title: galleryForm.photoTitle || folderTitle.trim(),
-        image_url: imageUrl,
-      }).select()
+      const safeFolder = folderTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+      const uploadedRecords = await Promise.all(galleryFiles.map(async (file, index) => {
+        const imageUrl = await uploadAdminImage(file, `gallery/${safeFolder}`)
+        const baseTitle = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ')
+
+        return {
+          folder_title: folderTitle.trim(),
+          title: galleryForm.photoTitle ? `${galleryForm.photoTitle}${galleryFiles.length > 1 ? ` ${index + 1}` : ''}` : baseTitle,
+          image_url: imageUrl,
+        }
+      }))
+
+      const { data, error } = await supabase.from('gallery_photos').insert(uploadedRecords).select()
 
       if (error) throw error
 
-      setGalleryRecords((records) => [data[0], ...records])
-      setGalleryFolders((folders) => folders.some((item) => item.title === folderTitle.trim()) ? folders : [{ id: folderTitle.trim(), title: folderTitle.trim() }, ...folders])
-      setGalleryForm({ folder: '', selectedFolder: folderTitle.trim(), photoTitle: '', photoUrl: '' })
-      setGalleryFile(null)
-      setCollectionMessage('Gallery photo saved.')
+      setGalleryRecords((records) => [...(data || []), ...records])
+      onGalleryChanged((records) => [...(data || []), ...records])
+      setGalleryForm({ folder: '', selectedFolder: folderTitle.trim(), photoTitle: '' })
+      setGalleryFiles([])
+      setCollectionMessage(`${data?.length || 0} gallery photo saved.`)
+    } catch (error) {
+      setCollectionMessage(error.message)
+    } finally {
+      setUploadingGallery(false)
+    }
+  }
+
+  const saveCampusGlimpsesPhotos = async () => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    if (campusGlimpsesFiles.length === 0) return setCollectionMessage('Campus glimpses ke liye photos select karo.')
+
+    setUploadingGallery(true)
+    setCollectionMessage('')
+
+    try {
+      const uploadedRecords = await Promise.all(campusGlimpsesFiles.map(async (file, index) => {
+        const imageUrl = await uploadAdminImage(file, 'gallery/campus-glimpses')
+        const baseTitle = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ')
+
+        return {
+          folder_title: 'Campus glimpses',
+          title: campusGlimpsesTitle ? `${campusGlimpsesTitle}${campusGlimpsesFiles.length > 1 ? ` ${index + 1}` : ''}` : baseTitle,
+          image_url: imageUrl,
+        }
+      }))
+
+      const { data, error } = await supabase.from('gallery_photos').insert(uploadedRecords).select()
+
+      if (error) throw error
+
+      setGalleryRecords((records) => [...(data || []), ...records])
+      onGalleryChanged((records) => [...(data || []), ...records])
+      setCampusGlimpsesTitle('')
+      setCampusGlimpsesFiles([])
+      setCollectionMessage(`${data?.length || 0} campus glimpses photo saved.`)
     } catch (error) {
       setCollectionMessage(error.message)
     } finally {
@@ -1253,19 +1600,17 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
     if (error) return setCollectionMessage(error.message)
 
     setGalleryRecords((records) => records.filter((item) => item.id !== record.id))
+    onGalleryChanged((records) => records.filter((item) => item.id !== record.id))
     setCollectionMessage('Gallery photo removed.')
   }
 
-  const deleteGalleryFolder = async (folder) => {
+  const deleteGalleryFolder = async (folderTitle) => {
     if (!supabase) return setCollectionMessage('Supabase env missing.')
-    const { error: photoError } = await supabase.from('gallery_photos').delete().eq('folder_title', folder.title)
-    if (photoError) return setCollectionMessage(photoError.message)
-
-    const { error } = await supabase.from('gallery_folders').delete().eq('id', folder.id)
+    const { error } = await supabase.from('gallery_photos').delete().eq('folder_title', folderTitle)
     if (error) return setCollectionMessage(error.message)
 
-    setGalleryFolders((folders) => folders.filter((item) => item.id !== folder.id))
-    setGalleryRecords((records) => records.filter((item) => item.folder_title !== folder.title))
+    setGalleryRecords((records) => records.filter((item) => item.folder_title !== folderTitle))
+    onGalleryChanged((records) => records.filter((item) => item.folder_title !== folderTitle))
     setCollectionMessage('Gallery folder removed.')
   }
 
@@ -1291,6 +1636,20 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
     setPrincipalForm({ name: record.name || '', role: record.role || '', detail: record.detail || '', photoUrl: record.photo_url || '' })
   }
 
+  const deletePrincipal = async (record) => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+
+    const { error } = await supabase.from('principal_teachers').delete().eq('id', record.id)
+    if (error) return setCollectionMessage(error.message)
+
+    setPrincipalRecords((records) => records.filter((item) => item.id !== record.id))
+    if (editingPrincipalId === record.id) {
+      setEditingPrincipalId(null)
+      setPrincipalForm({ name: '', role: '', detail: '', photoUrl: '' })
+    }
+    setCollectionMessage('Staff detail removed.')
+  }
+
   const saveHouse = async () => {
     if (!supabase) return setCollectionMessage('Supabase env missing.')
 
@@ -1309,6 +1668,10 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
 
     const record = data?.[0]
     setHouseRecords((records) => editingHouseId ? records.map((item) => item.id === editingHouseId ? record : item) : [record, ...records])
+    onHousesChanged((records) => {
+      const withoutCurrent = records.filter((item) => item.id !== record.id)
+      return [record, ...withoutCurrent].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+    })
     setEditingHouseId(null)
     setHouseForm({ houseName: 'Blue House', houseColor: '#1d4ed8', captain: '', viceCaptain: '', juniorCaptain: '' })
     setCollectionMessage('House captains saved.')
@@ -1326,24 +1689,31 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
   }
 
   return (
-    <main className="bg-[#f8f3e9]">
-      <section className="bg-[#06284d] py-10 text-white">
+    <main className="min-h-screen bg-[#eef2f7]">
+      <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <p className="text-sm font-extrabold uppercase tracking-[0.22em] text-[#ffc400]">Admin</p>
-          <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-4 py-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <h1 className="text-4xl font-black">School Website Admin Panel</h1>
-              <p className="mt-2 text-white/75">Logged in as {adminProfile.email}</p>
+              <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-[#a8171d]">Admin Workspace</p>
+              <h1 className="mt-2 text-3xl font-black text-[#102344]">School Website Admin Panel</h1>
+              <p className="mt-1 text-sm font-semibold text-slate-500">Logged in as {adminProfile.email}</p>
             </div>
-            <button type="button" onClick={onLogout} className="w-fit rounded-md bg-[#ffc400] px-5 py-3 font-bold text-[#102344]">Logout</button>
+            <div className="flex flex-wrap gap-3">
+              <a href="/" onClick={(event) => onNavigate(event, '/')} className="rounded-md bg-[#ffc400] px-5 py-3 text-sm font-black text-[#102344] shadow-sm">Open Website</a>
+              <button type="button" onClick={onLogout} className="rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-black text-slate-700 transition hover:border-[#a8171d] hover:text-[#a8171d]">Logout</button>
+            </div>
           </div>
-          <p className="mt-3 max-w-3xl text-white/75">Manage and access website pages, navigation sections, contact blocks, results, facilities and activity content from one container.</p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
-        <div className="mb-8 overflow-x-auto rounded-lg bg-white p-2 shadow-sm">
-          <div className="flex min-w-max gap-2">
+      <section className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+        <div className="grid gap-6 lg:grid-cols-[270px_1fr] lg:items-start">
+          <aside className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm lg:sticky lg:top-4">
+            <div className="border-b border-slate-200 px-3 py-3">
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Manage</p>
+              <p className="mt-1 text-lg font-black text-[#102344]">Website CMS</p>
+            </div>
+            <div className="mt-3 grid gap-1">
             {adminTabs.map(([key, label]) => (
               <button
                 key={key}
@@ -1352,61 +1722,142 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
                   setAdminSection(key)
                   setCollectionMessage('')
                 }}
-                className={`rounded-md px-5 py-3 text-sm font-black transition ${adminSection === key ? 'bg-[#a8171d] text-white' : 'bg-[#fffaf0] text-[#102344] hover:bg-[#ffc400]'}`}
+                className={`flex items-center justify-between rounded-md px-4 py-3 text-left text-sm font-black transition ${adminSection === key ? 'bg-[#a8171d] text-white shadow-sm' : 'text-slate-700 hover:bg-[#fffaf0] hover:text-[#a8171d]'}`}
               >
-                {label}
+                <span>{label}</span>
+                <Icon name="chevron" className={`h-4 w-4 -rotate-90 ${adminSection === key ? 'text-white' : 'text-slate-400'}`} />
               </button>
             ))}
+            </div>
+          </aside>
+
+          <div className="min-w-0">
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#a8171d]">Dashboard</p>
+              <h2 className="mt-1 text-2xl font-black text-[#102344]">{adminTabs.find(([key]) => key === adminSection)?.[1] || 'Pages'}</h2>
+            </div>
+            <input
+              value={adminSearch}
+              onChange={(event) => setAdminSearch(event.target.value)}
+              placeholder="Search admin data..."
+              className="w-full rounded-md border border-slate-300 px-4 py-3 font-semibold outline-none focus:border-[#a8171d] lg:max-w-sm"
+            />
           </div>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-4">
+        <div className="mt-5 grid gap-4 md:grid-cols-4">
           {[
             ['Pages', managedPages.length],
             ['Results', resultRecords.length],
             ['Facilities', facilities.length],
             ['Classes', classOptions.length],
           ].map(([label, value]) => (
-            <div key={label} className="rounded-lg bg-white p-6 shadow-sm">
+            <div key={label} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
               <p className="text-sm font-bold uppercase tracking-wide text-[#a8171d]">{label}</p>
               <p className="mt-2 text-4xl font-black text-[#102344]">{value}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 rounded-lg bg-white p-4 shadow-sm">
-          <input
-            value={adminSearch}
-            onChange={(event) => setAdminSearch(event.target.value)}
-            placeholder="Search admin data..."
-            className="w-full rounded-md border border-slate-300 px-4 py-3 font-semibold outline-none focus:border-[#a8171d]"
-          />
-        </div>
-
         {adminSection === 'pages' ? (
-        <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+        <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div>
-              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Page Access</p>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Page Manager</p>
               <h2 className="mt-2 text-3xl font-black text-[#102344]">All Website Pages</h2>
+              <p className="mt-1 text-sm font-semibold text-slate-500">Edit page text, HTML content and publishing status from one list.</p>
             </div>
-            <a href="/" onClick={(event) => onNavigate(event, '/')} className="inline-flex w-fit rounded-md bg-[#ffc400] px-5 py-3 font-bold text-[#102344]">Open Website</a>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filteredManagedPages.map((page) => (
-              <article key={`${page.group}-${page.href}`} className="rounded-lg border border-slate-200 bg-[#fffaf0] p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-[#a8171d]">{page.group}</p>
-                <h3 className="mt-2 text-xl font-black text-[#102344]">{page.label}</h3>
-                <p className="mt-1 text-sm font-semibold text-slate-500">{page.href}</p>
-                <div className="mt-4 flex gap-3">
-                  <a href={page.href} onClick={(event) => onNavigate(event, page.href)} className="rounded-md bg-[#06284d] px-4 py-2 text-sm font-bold text-white">View</a>
-                  <button type="button" onClick={() => openEditor(page)} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-[#a8171d] hover:text-[#a8171d]">Edit</button>
-                </div>
-              </article>
-            ))}
+          <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
+            <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+              <thead className="bg-slate-50 text-slate-600">
+                <tr>
+                  {['Page', 'Section', 'Route', 'Status', 'Actions'].map((head) => <th key={head} className="border-b border-slate-200 p-4 font-black uppercase tracking-wide">{head}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredManagedPages.map((page) => {
+                  const slug = page.href.replace(/^\/|\/$/g, '') || 'home'
+                  const pageData = cmsPages[slug] || contentPages[slug]
+
+                  return (
+                    <tr key={`${page.group}-${page.href}`} className="border-b border-slate-100 last:border-b-0 hover:bg-[#fffaf0]">
+                      <td className="p-4">
+                        <p className="font-black text-[#102344]">{page.label}</p>
+                        <p className="mt-1 text-xs font-semibold text-slate-500">{pageData?.title || page.label}</p>
+                      </td>
+                      <td className="p-4">
+                        <span className="rounded-full bg-[#fffaf0] px-3 py-1 text-xs font-black text-[#a8171d]">{page.group}</span>
+                      </td>
+                      <td className="p-4 font-mono text-xs font-semibold text-slate-600">{page.href}</td>
+                      <td className="p-4">
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-black text-green-700">Published</span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex flex-wrap gap-2">
+                          <a href={page.href} onClick={(event) => onNavigate(event, page.href)} className="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-black text-slate-700 transition hover:border-[#06284d] hover:text-[#06284d]">View</a>
+                          <button type="button" onClick={() => openEditor(page)} className="rounded-md bg-[#a8171d] px-3 py-2 text-xs font-black text-white transition hover:bg-[#06284d]">Edit</button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+            {filteredManagedPages.length === 0 ? <p className="p-5 font-semibold text-slate-600">No pages found.</p> : null}
           </div>
         </div>
+        ) : null}
+
+        {adminSection === 'notices' ? (
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Notice Board</p>
+            <h2 className="mt-2 text-3xl font-black text-[#102344]">Add Notice</h2>
+            <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_1fr_0.45fr]">
+              <input value={noticeForm.text} onChange={(event) => setNoticeForm({ ...noticeForm, text: event.target.value })} placeholder="Notice text" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input value={noticeForm.linkUrl} onChange={(event) => setNoticeForm({ ...noticeForm, linkUrl: event.target.value })} placeholder="Optional clickable link URL" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="number" value={noticeForm.sortOrder} onChange={(event) => setNoticeForm({ ...noticeForm, sortOrder: event.target.value })} placeholder="Order" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+            </div>
+            <label className="mt-4 flex w-fit items-center gap-3 rounded-md bg-[#fffaf0] px-4 py-3 font-bold text-[#102344]">
+              <input type="checkbox" checked={noticeForm.isActive} onChange={(event) => setNoticeForm({ ...noticeForm, isActive: event.target.checked })} className="h-5 w-5 accent-[#a8171d]" />
+              Show this notice
+            </label>
+            <button type="button" onClick={saveNotice} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white">{editingNoticeId ? 'Update Notice' : 'Add Notice'}</button>
+
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full min-w-[820px] border-collapse text-left text-sm">
+                <thead className="bg-[#06284d] text-white">
+                  <tr>
+                    {['Notice', 'Link', 'Order', 'Status', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredNoticeRecords.map((record) => (
+                    <tr key={record.id} className="border-b border-slate-200">
+                      <td className="p-3 font-bold text-[#102344]">{record.notice_text}</td>
+                      <td className="max-w-[260px] truncate p-3">{record.link_url || '-'}</td>
+                      <td className="p-3">{record.sort_order || 0}</td>
+                      <td className="p-3">
+                        <span className={`rounded-full px-3 py-1 text-xs font-black ${record.is_active === false ? 'bg-slate-200 text-slate-600' : 'bg-green-100 text-green-700'}`}>
+                          {record.is_active === false ? 'Hidden' : 'Shown'}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => editNotice(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button>
+                          <button type="button" onClick={() => deleteNotice(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredNoticeRecords.length === 0 ? <p className="mt-4 font-semibold text-slate-600">No notices found.</p> : null}
+            </div>
+          </div>
         ) : null}
 
         {editingPage ? (
@@ -1438,10 +1889,45 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
                   Group
                   <input value={editorForm.group} onChange={(event) => setEditorForm({ ...editorForm, group: event.target.value })} className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
                 </label>
+                {(editorForm.href.replace(/^\/|\/$/g, '') || 'home') === 'home' ? (
+                  <div className="grid gap-4 rounded-lg bg-[#fffaf0] p-4 lg:col-span-2 lg:grid-cols-2">
+                    <label className="grid gap-2 font-semibold text-slate-800">
+                      Home Gallery Label
+                      <input value={editorForm.homeGalleryEyebrow} onChange={(event) => setEditorForm({ ...editorForm, homeGalleryEyebrow: event.target.value })} className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+                    </label>
+                    <label className="grid gap-2 font-semibold text-slate-800">
+                      Home Gallery Title
+                      <input value={editorForm.homeGalleryTitle} onChange={(event) => setEditorForm({ ...editorForm, homeGalleryTitle: event.target.value })} className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+                    </label>
+                  </div>
+                ) : null}
+                <div className="grid gap-2 font-semibold text-slate-800 lg:col-span-2">
+                  Content Type
+                  <div className="flex w-fit overflow-hidden rounded-md border border-slate-300 bg-white p-1">
+                    {[
+                      ['text', 'Text'],
+                      ['html', 'HTML Code'],
+                    ].map(([mode, label]) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        onClick={() => setEditorForm({ ...editorForm, contentMode: mode })}
+                        className={`rounded px-4 py-2 text-sm font-black transition ${editorForm.contentMode === mode ? 'bg-[#a8171d] text-white' : 'text-[#102344] hover:bg-[#fffaf0]'}`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <label className="grid gap-2 font-semibold text-slate-800 lg:col-span-2">
-                  Page Content
-                  <textarea value={editorForm.content} onChange={(event) => setEditorForm({ ...editorForm, content: event.target.value })} rows="9" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+                  {editorForm.contentMode === 'html' ? 'Page HTML Code' : 'Page Content'}
+                  <textarea value={editorForm.content} onChange={(event) => setEditorForm({ ...editorForm, content: event.target.value })} rows="9" className={`rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d] ${editorForm.contentMode === 'html' ? 'font-mono text-sm' : ''}`} />
                 </label>
+                {editorForm.contentMode === 'html' ? (
+                  <p className="rounded-md bg-[#fffaf0] p-3 text-sm font-semibold text-slate-600 lg:col-span-2">
+                    HTML mode me headings, paragraphs, lists, links, tables aur images ka markup paste kar sakte ho. Admin trusted content hi paste kare.
+                  </p>
+                ) : null}
                 <label className="flex items-center gap-3 font-semibold text-slate-800">
                   <input type="checkbox" checked={editorForm.is_published} onChange={(event) => setEditorForm({ ...editorForm, is_published: event.target.checked })} className="h-5 w-5 accent-[#a8171d]" />
                   Published
@@ -1460,39 +1946,152 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
           </div>
         ) : null}
 
+        {adminSection === 'student-council' ? (
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Student Council</p>
+            <h2 className="mt-2 text-3xl font-black text-[#102344]">Manage Student Council Page</h2>
+            <div className="mt-6 grid gap-4 lg:grid-cols-3">
+              <input value={studentCouncilForm.name} onChange={(event) => setStudentCouncilForm({ ...studentCouncilForm, name: event.target.value })} placeholder="Student name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <select value={studentCouncilForm.role} onChange={(event) => setStudentCouncilForm({ ...studentCouncilForm, role: event.target.value })} required className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]">
+                <option value="" disabled>Select Role</option>
+                <option>Head Boy</option>
+                <option>Head Girl</option>
+                <option>Captain</option>
+                <option>Vice Captain</option>
+                <option>Junior Captain</option>
+                <option>President</option>
+                <option>Vice President</option>
+                <option>Sports Secretary</option>
+                <option>Cultural Secretary</option>
+                <option>Literary Secretary</option>
+                <option>Discipline Incharge</option>
+              </select>
+              <input value={studentCouncilForm.className} onChange={(event) => setStudentCouncilForm({ ...studentCouncilForm, className: event.target.value })} placeholder="Class" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <select value={studentCouncilForm.houseName || ''} onChange={(event) => setStudentCouncilForm({ ...studentCouncilForm, houseName: event.target.value })} className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]">
+                <option value="">Select House (Optional)</option>
+                <option value="Blue House">Blue House</option>
+                <option value="Green House">Green House</option>
+                <option value="Red House">Red House</option>
+                <option value="Yellow House">Yellow House</option>
+              </select>
+              <label className="grid gap-1 font-semibold text-slate-800">
+                <span className="text-xs text-slate-500">Student Photo (Optional)</span>
+                <input type="file" accept="image/*" onChange={(event) => setStudentCouncilFile(event.target.files?.[0] || null)} className="rounded-md border border-slate-300 px-4 py-1 text-sm font-semibold outline-none file:mr-2 file:rounded file:border-0 file:bg-[#ffc400] file:px-2 file:py-1 file:font-bold file:text-[#102344] focus:border-[#a8171d]" />
+              </label>
+              <label className="flex items-center gap-3 rounded-md border border-slate-300 px-4 py-3 font-semibold text-slate-700">
+                <input type="checkbox" checked={studentCouncilForm.isActive} onChange={(event) => setStudentCouncilForm({ ...studentCouncilForm, isActive: event.target.checked })} />
+                Show on website
+              </label>
+            </div>
+            <button type="button" onClick={saveStudentCouncil} disabled={uploadingStudentCouncil} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">
+              {uploadingStudentCouncil ? 'Saving...' : editingStudentCouncilId ? 'Update Member' : 'Add Member'}
+            </button>
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+                <thead className="bg-[#06284d] text-white">
+                  <tr>
+                    {['Photo', 'Name', 'Role', 'Class', 'House', 'Status', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStudentCouncilRecords.map((record) => (
+                    <tr key={record.id} className="border-b border-slate-200">
+                      <td className="p-3">
+                        {record.photo_url ? (
+                          <img src={record.photo_url} alt="" className="h-10 w-10 rounded-full object-cover" />
+                        ) : (
+                          <div className="grid h-10 w-10 place-items-center rounded-full bg-[#fffaf0] text-sm font-bold text-[#a8171d]">
+                            {record.name.charAt(0)}
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-3 font-bold">{record.name}</td>
+                      <td className="p-3">{record.role}</td>
+                      <td className="p-3">{record.class_name || '-'}</td>
+                      <td className="p-3">{record.house_name || '-'}</td>
+                      <td className="p-3">
+                        <span className={`rounded-full px-3 py-1 text-xs font-black ${record.is_active === false ? 'bg-slate-200 text-slate-600' : 'bg-green-100 text-green-700'}`}>
+                          {record.is_active === false ? 'Hidden' : 'Shown'}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => editStudentCouncil(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button>
+                          <button type="button" onClick={() => deleteStudentCouncil(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredStudentCouncilRecords.length === 0 ? <p className="mt-4 font-semibold text-slate-600">No student council records found.</p> : null}
+            </div>
+          </div>
+        ) : null}
+
+        {adminSection === 'campus-glimpses' ? (
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Homepage Gallery</p>
+            <h2 className="mt-2 text-3xl font-black text-[#102344]">Campus Glimpses Photos</h2>
+            <p className="mt-2 text-sm font-semibold text-slate-600">Ye photos home page ke Gallery / Campus glimpses section me show hongi.</p>
+            <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1.2fr]">
+              <input value={campusGlimpsesTitle} onChange={(event) => setCampusGlimpsesTitle(event.target.value)} placeholder="Photo title" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="file" accept="image/*" multiple onChange={(event) => setCampusGlimpsesFiles(Array.from(event.target.files || []))} className="rounded-md border border-slate-300 px-4 py-3 text-sm font-semibold outline-none file:mr-3 file:rounded file:border-0 file:bg-[#ffc400] file:px-3 file:py-2 file:font-bold file:text-[#102344] focus:border-[#a8171d]" />
+            </div>
+            <button type="button" onClick={saveCampusGlimpsesPhotos} disabled={uploadingGallery} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">{uploadingGallery ? 'Uploading...' : `Upload ${campusGlimpsesFiles.length || ''} Campus Photo${campusGlimpsesFiles.length > 1 ? 's' : ''}`}</button>
+
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+                <thead className="bg-[#06284d] text-white">
+                  <tr>
+                    {['Preview', 'Title', 'Folder', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredCampusGlimpsesRecords.map((record) => (
+                    <tr key={record.id} className="border-b border-slate-200">
+                      <td className="p-3"><img src={record.image_url} alt={record.title} className="h-14 w-20 rounded object-cover" /></td>
+                      <td className="p-3 font-bold">{record.title}</td>
+                      <td className="p-3">{record.folder_title}</td>
+                      <td className="p-3"><button type="button" onClick={() => deleteGalleryPhoto(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Delete</button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredCampusGlimpsesRecords.length === 0 ? <p className="mt-4 font-semibold text-slate-600">No campus glimpses photos found.</p> : null}
+            </div>
+          </div>
+        ) : null}
+
         {adminSection === 'gallery' ? (
-          <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Gallery</p>
             <h2 className="mt-2 text-3xl font-black text-[#102344]">Folders & Event Photos</h2>
-
-            <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto]">
-              <input value={galleryForm.folder} onChange={(event) => setGalleryForm({ ...galleryForm, folder: event.target.value })} placeholder="New folder name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-              <button type="button" onClick={createGalleryFolder} className="rounded-md bg-[#06284d] px-6 py-3 font-bold text-white">Create Folder</button>
-            </div>
+            <p className="mt-2 text-sm font-semibold text-slate-600">Home page ke Gallery / Campus glimpses section me photo dikhane ke liye folder name <span className="font-black text-[#a8171d]">Campus glimpses</span> rakho.</p>
 
             <div className="mt-6 grid gap-4 lg:grid-cols-4">
               <select value={galleryForm.selectedFolder} onChange={(event) => setGalleryForm({ ...galleryForm, selectedFolder: event.target.value })} className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]">
-                <option value="">Select folder</option>
-                {[...new Set([...galleryFolders.map((folder) => folder.title), ...galleryRecords.map((record) => record.folder_title)])].filter(Boolean).map((folderTitle) => (
+                <option value="">Select existing folder</option>
+                {galleryFolderTitles.map((folderTitle) => (
                   <option key={folderTitle}>{folderTitle}</option>
                 ))}
               </select>
+              <input value={galleryForm.folder} onChange={(event) => setGalleryForm({ ...galleryForm, folder: event.target.value, selectedFolder: '' })} placeholder="Or new folder name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
               <input value={galleryForm.photoTitle} onChange={(event) => setGalleryForm({ ...galleryForm, photoTitle: event.target.value })} placeholder="Photo title" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-              <input value={galleryForm.photoUrl} onChange={(event) => setGalleryForm({ ...galleryForm, photoUrl: event.target.value })} placeholder="Photo URL" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-              <input type="file" accept="image/*" onChange={(event) => setGalleryFile(event.target.files?.[0] || null)} className="rounded-md border border-slate-300 px-4 py-3 text-sm font-semibold outline-none file:mr-3 file:rounded file:border-0 file:bg-[#ffc400] file:px-3 file:py-2 file:font-bold file:text-[#102344] focus:border-[#a8171d]" />
+              <input type="file" accept="image/*" multiple onChange={(event) => setGalleryFiles(Array.from(event.target.files || []))} className="rounded-md border border-slate-300 px-4 py-3 text-sm font-semibold outline-none file:mr-3 file:rounded file:border-0 file:bg-[#ffc400] file:px-3 file:py-2 file:font-bold file:text-[#102344] focus:border-[#a8171d]" />
             </div>
-            <p className="mt-3 text-sm font-semibold text-slate-600">Folder select karo, phir URL paste karo ya image upload karo.</p>
-            <button type="button" onClick={saveGalleryPhoto} disabled={uploadingGallery} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">{uploadingGallery ? 'Uploading...' : 'Save Gallery Photo'}</button>
+            <p className="mt-3 text-sm font-semibold text-slate-600">Existing folder select karo ya new folder name add karo, phir browser se ek ya multiple photos upload karo.</p>
+            <button type="button" onClick={saveGalleryPhotos} disabled={uploadingGallery} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">{uploadingGallery ? 'Uploading...' : `Upload ${galleryFiles.length || ''} Gallery Photo${galleryFiles.length > 1 ? 's' : ''}`}</button>
 
             <div className="mt-8 grid gap-5 lg:grid-cols-2">
-              {galleryFolders.map((folder) => (
-                <article key={folder.id} className="rounded-lg border border-slate-200 bg-[#fffaf0] p-5">
+              {galleryFolderTitles.map((folderTitle) => (
+                <article key={folderTitle} className="rounded-lg border border-slate-200 bg-[#fffaf0] p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-xl font-black text-[#102344]">{folder.title}</h3>
-                      <p className="mt-1 text-sm font-semibold text-slate-600">{galleryRecords.filter((record) => record.folder_title === folder.title).length} photos</p>
+                      <h3 className="text-xl font-black text-[#102344]">{folderTitle}</h3>
+                      <p className="mt-1 text-sm font-semibold text-slate-600">{galleryRecords.filter((record) => record.folder_title === folderTitle).length} photos</p>
                     </div>
-                    <button type="button" onClick={() => deleteGalleryFolder(folder)} className="rounded bg-red-600 px-3 py-2 text-sm font-bold text-white">Remove Folder</button>
+                    <button type="button" onClick={() => deleteGalleryFolder(folderTitle)} className="rounded bg-red-600 px-3 py-2 text-sm font-bold text-white">Remove Folder</button>
                   </div>
                 </article>
               ))}
@@ -1502,7 +2101,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
               <table className="w-full min-w-[850px] border-collapse text-left text-sm">
                 <thead className="bg-[#06284d] text-white">
                   <tr>
-                    {['Photo', 'Folder', 'Title', 'Image Link', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                    {['Photo', 'Folder', 'Title', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
                   </tr>
                 </thead>
                 <tbody>
@@ -1511,7 +2110,6 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
                       <td className="p-3"><img src={record.image_url} alt={record.title} className="h-14 w-20 rounded object-cover" /></td>
                       <td className="p-3 font-bold">{record.folder_title}</td>
                       <td className="p-3">{record.title}</td>
-                      <td className="max-w-[260px] truncate p-3">{record.image_url}</td>
                       <td className="p-3"><button type="button" onClick={() => deleteGalleryPhoto(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Remove</button></td>
                     </tr>
                   ))}
@@ -1523,27 +2121,26 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
         ) : null}
 
         {adminSection === 'results' ? (
-          <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Results</p>
             <h2 className="mt-2 text-3xl font-black text-[#102344]">Add Result Photo</h2>
-            <div className="mt-6 grid gap-4 lg:grid-cols-5">
+            <div className="mt-6 grid gap-4 lg:grid-cols-4">
               <input value={resultForm.title} onChange={(event) => setResultForm({ ...resultForm, title: event.target.value })} placeholder="Result title" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
               <input value={resultForm.year} onChange={(event) => setResultForm({ ...resultForm, year: event.target.value })} placeholder="Year" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
               <input type="number" value={resultForm.sortOrder} onChange={(event) => setResultForm({ ...resultForm, sortOrder: event.target.value })} placeholder="Display order" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-              <input value={resultForm.imageUrl} onChange={(event) => setResultForm({ ...resultForm, imageUrl: event.target.value })} placeholder="Image URL" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
               <input type="file" accept="image/*" onChange={(event) => setResultFile(event.target.files?.[0] || null)} className="rounded-md border border-slate-300 px-4 py-3 text-sm font-semibold outline-none file:mr-3 file:rounded file:border-0 file:bg-[#ffc400] file:px-3 file:py-2 file:font-bold file:text-[#102344] focus:border-[#a8171d]" />
             </div>
             <label className="mt-4 flex w-fit items-center gap-3 rounded-md bg-[#fffaf0] px-4 py-3 font-bold text-[#102344]">
               <input type="checkbox" checked={resultForm.isActive} onChange={(event) => setResultForm({ ...resultForm, isActive: event.target.checked })} className="h-5 w-5 accent-[#a8171d]" />
               Show this image on website
             </label>
-            <p className="mt-3 text-sm font-semibold text-slate-600">Image URL optional hai. URL blank hoga to selected image Supabase Storage me upload hogi. Sirf checked images public Result section me show hongi.</p>
-            <button type="button" onClick={saveResult} disabled={uploadingResult} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">{uploadingResult ? 'Saving...' : editingResultId ? 'Update Result' : 'Save Result'}</button>
+            <p className="mt-3 text-sm font-semibold text-slate-600">Browser se result photo upload karo. Edit mode me new file select karoge to old photo replace ho jayegi. Sirf checked images public Result section me show hongi.</p>
+            <button type="button" onClick={saveResult} disabled={uploadingResult} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">{uploadingResult ? 'Saving...' : editingResultId ? 'Update Result Photo' : 'Add Result Photo'}</button>
             <div className="mt-8 overflow-x-auto">
               <table className="w-full min-w-[920px] border-collapse text-left text-sm">
                 <thead className="bg-[#06284d] text-white">
                   <tr>
-                    {['Photo', 'Title', 'Year', 'Order', 'Website', 'Image Link', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                    {['Photo', 'Title', 'Year', 'Order', 'Website', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
                   </tr>
                 </thead>
                 <tbody>
@@ -1560,7 +2157,6 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
                           {record.is_active === false ? 'Hidden' : 'Shown'}
                         </span>
                       </td>
-                      <td className="max-w-[260px] truncate p-3">{record.image_url}</td>
                       <td className="p-3">
                         <div className="flex gap-2">
                           <button type="button" onClick={() => editResult(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button>
@@ -1577,7 +2173,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
         ) : null}
 
         {adminSection === 'houses' ? (
-          <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">House System</p>
             <h2 className="mt-2 text-3xl font-black text-[#102344]">Update House Captains</h2>
             <div className="mt-6 grid gap-4 lg:grid-cols-3">
@@ -1614,7 +2210,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
         ) : null}
 
         {adminSection === 'principal' ? (
-          <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Principal & Teachers</p>
             <h2 className="mt-2 text-3xl font-black text-[#102344]">Add Staff Detail</h2>
             <div className="mt-6 grid gap-4 lg:grid-cols-4">
@@ -1638,7 +2234,12 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
                       <td className="p-3">{record.role}</td>
                       <td className="p-3">{record.detail || '-'}</td>
                       <td className="p-3">{record.photo_url ? 'Added' : '-'}</td>
-                      <td className="p-3"><button type="button" onClick={() => editPrincipal(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button></td>
+                      <td className="p-3">
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => editPrincipal(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button>
+                          <button type="button" onClick={() => deletePrincipal(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Delete</button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -1648,7 +2249,7 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
         ) : null}
 
         {adminSection === 'admissions' ? (
-          <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Submissions</p>
             <h2 className="mt-2 text-3xl font-black text-[#102344]">Admission Forms</h2>
             <div className="mt-6 overflow-x-auto">
@@ -1680,8 +2281,39 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
           </div>
         ) : null}
 
+        {adminSection === 'careers' ? (
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Submissions</p>
+            <h2 className="mt-2 text-3xl font-black text-[#102344]">Career Applications</h2>
+            <div className="mt-6 overflow-x-auto">
+              <table className="w-full min-w-[1050px] border-collapse text-left text-sm">
+                <thead className="bg-[#06284d] text-white">
+                  <tr>
+                    {['Date', 'Name', 'Position', 'Qualification', 'Experience', 'Phone', 'Email', 'Message'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredCareerSubmissions.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-200">
+                      <td className="p-3">{new Date(item.created_at).toLocaleDateString()}</td>
+                      <td className="p-3 font-bold">{item.name}</td>
+                      <td className="p-3">{item.position}</td>
+                      <td className="p-3">{item.qualification || '-'}</td>
+                      <td className="p-3">{item.experience || '-'}</td>
+                      <td className="p-3">{item.phone}</td>
+                      <td className="p-3">{item.email || '-'}</td>
+                      <td className="p-3">{item.message || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredCareerSubmissions.length === 0 ? <p className="mt-4 font-semibold text-slate-600">No career applications found.</p> : null}
+            </div>
+          </div>
+        ) : null}
+
         {adminSection === 'contacts' ? (
-          <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Submissions</p>
             <h2 className="mt-2 text-3xl font-black text-[#102344]">Contact Enquiries</h2>
             <div className="mt-6 overflow-x-auto">
@@ -1709,7 +2341,9 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
           </div>
         ) : null}
 
-        {collectionMessage ? <p className="mt-5 rounded-md bg-white p-4 text-sm font-bold text-slate-700 shadow-sm">{collectionMessage}</p> : null}
+        {collectionMessage ? <p className="mt-5 rounded-md border border-slate-200 bg-white p-4 text-sm font-bold text-slate-700 shadow-sm">{collectionMessage}</p> : null}
+          </div>
+        </div>
       </section>
     </main>
   )
@@ -1725,6 +2359,9 @@ function App() {
   const [cmsPages, setCmsPages] = useState({})
   const [publicGalleryPhotos, setPublicGalleryPhotos] = useState([])
   const [publicResults, setPublicResults] = useState([])
+  const [publicHouseRecords, setPublicHouseRecords] = useState([])
+  const [publicNotices, setPublicNotices] = useState([])
+  const [publicStudentCouncilRecords, setPublicStudentCouncilRecords] = useState([])
   const [formMessage, setFormMessage] = useState('')
 
   useEffect(() => {
@@ -1758,20 +2395,36 @@ function App() {
       .then(({ data }) => {
         if (!data) return
 
-        setCmsPages(Object.fromEntries(data.map((pageItem) => [
-          pageItem.slug,
-          {
-            title: pageItem.title,
-            eyebrow: pageItem.eyebrow,
-            paragraphs: pageItem.body?.paragraphs || [],
-            bullets: pageItem.body?.bullets,
-            sections: pageItem.body?.sections,
-            people: pageItem.body?.people,
-            houses: pageItem.body?.houses,
-            gallery: pageItem.body?.gallery,
-            image: pageItem.hero_image_url,
-          },
-        ])))
+        setCmsPages(Object.fromEntries(data.map((pageItem) => {
+          if (pageItem.slug === 'academic-calendar' && pageItem.title === 'Result') {
+            return [
+              pageItem.slug,
+              {
+                ...contentPages['academic-calendar'],
+                image: pageItem.hero_image_url || contentPages['academic-calendar'].image,
+              },
+            ]
+          }
+
+          return [
+            pageItem.slug,
+            {
+              title: pageItem.title,
+              eyebrow: pageItem.eyebrow,
+              contentMode: pageItem.body?.content_mode || (pageItem.body?.html ? 'html' : 'text'),
+              html: pageItem.body?.html || '',
+              paragraphs: pageItem.body?.paragraphs || [],
+              homeGalleryEyebrow: pageItem.body?.home_gallery_eyebrow,
+              homeGalleryTitle: pageItem.body?.home_gallery_title,
+              bullets: pageItem.body?.bullets,
+              sections: pageItem.body?.sections,
+              people: pageItem.body?.people,
+              houses: pageItem.body?.houses,
+              gallery: pageItem.body?.gallery,
+              image: pageItem.hero_image_url,
+            },
+          ]
+        })))
       })
 
     supabase
@@ -1787,6 +2440,29 @@ function App() {
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false })
       .then(({ data }) => setPublicResults(data || []))
+
+    supabase
+      .from('notices')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setPublicNotices(data || []))
+
+    supabase
+      .from('house_system')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data }) => setPublicHouseRecords(data || []))
+
+    supabase
+      .from('student_council')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setPublicStudentCouncilRecords(data || []))
   }, [])
 
   useEffect(() => {
@@ -1866,12 +2542,40 @@ function App() {
       return
     }
 
-    const table = type === 'admission' ? 'admission_enquiries' : 'contact_enquiries'
+    const tables = {
+      admission: 'admission_enquiries',
+      contact: 'contact_enquiries',
+      career: 'career_applications',
+    }
+    const table = tables[type] || 'contact_enquiries'
     const { error } = await supabase.from(table).insert(form)
     setFormMessage(error ? error.message : 'Thank you. Your form has been submitted successfully.')
   }
 
-  const page = cmsPages[activePage] || contentPages[activePage]
+  const activeGallerySlug = activePage.startsWith('gallery/') ? activePage.split('/')[1] : ''
+  const activeGalleryFolderName = activeGallerySlug
+    ? [...new Set(publicGalleryPhotos.map((photo) => photo.folder_title || 'Gallery'))].find((folderName) => getSlug(folderName) === activeGallerySlug)
+    : ''
+  const dbPage = cmsPages[activePage]
+  const defaultPage = contentPages[activePage]
+  const page = activeGallerySlug
+    ? {
+        ...(cmsPages.gallery || contentPages.gallery),
+        title: activeGalleryFolderName || 'Gallery',
+      }
+    : dbPage
+      ? {
+          ...defaultPage,
+          ...dbPage,
+          paragraphs: dbPage.paragraphs && dbPage.paragraphs.length > 0 && dbPage.paragraphs[0].includes('The house system builds leadership') && dbPage.paragraphs.length < 2
+            ? defaultPage?.paragraphs || dbPage.paragraphs
+            : dbPage.paragraphs,
+          sections: dbPage.sections || defaultPage?.sections,
+        }
+      : defaultPage
+  const homePageSettings = cmsPages.home || contentPages.home || {}
+  const campusGlimpsesPhotos = publicGalleryPhotos.filter((photo) => getSlug(photo.folder_title) === 'campus-glimpses')
+  const homeGalleryPhotos = campusGlimpsesPhotos.slice(0, 3)
 
   return (
     <div className="min-h-screen bg-[#f8f3e9]">
@@ -1904,28 +2608,19 @@ function App() {
                 <p className="mt-1 hidden text-base font-bold text-[#a8171d] sm:block">Pragya Deep: Always Shining</p>
               </div>
             </a>
-            <div className="hidden items-center gap-3 lg:flex">
-              <span className="text-lg font-medium text-slate-900">Follow Us :</span>
-              {socials.map(([name, label, color]) => (
-                <a
-                  key={name}
-                  href="/contact-us/"
-                  onClick={(event) => handleInternalLink(event, '/contact-us/')}
-                  aria-label={label}
-                  title={label}
-                  className="grid h-10 w-10 place-items-center rounded-full text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
-                  style={{ backgroundColor: color }}
-                >
-                  <SocialIcon name={name} />
-                </a>
-              ))}
-            </div>
+            <a
+              href="/admission-form/"
+              onClick={(event) => handleInternalLink(event, '/admission-form/')}
+              className="hidden shrink-0 items-center gap-3 rounded-md bg-[#a8171d] px-6 py-3 font-black text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-[#06284d] lg:inline-flex"
+            >
+              Admission Now <Icon name="arrow" />
+            </a>
           </div>
         </div>
 
         <nav className="sticky top-0 z-50 bg-[#082f5f]/95 text-white shadow-lg shadow-slate-950/15 backdrop-blur" itemScope itemType="http://schema.org/SiteNavigationElement" role="navigation">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 lg:hidden">
-            <span className="text-sm font-extrabold uppercase tracking-wide text-[#ffc400]">Menu</span>
+            <a href="/admission-form/" onClick={(event) => handleInternalLink(event, '/admission-form/')} className="rounded-md bg-[#ffc400] px-4 py-2 text-sm font-black text-[#102344]">Admission Now</a>
             <button
               type="button"
               className="grid h-11 w-11 place-items-center rounded-md border border-white/20 bg-white/10 text-white"
@@ -2035,10 +2730,10 @@ function App() {
         ) : !adminSession ? (
           <AdminLogin />
         ) : (
-          <AdminPanel adminProfile={{ email: adminSession.user.email }} cmsPages={cmsPages} onLogout={handleAdminLogout} onNavigate={handleInternalLink} onPageSaved={handlePageSaved} onResultsChanged={setPublicResults} />
+          <AdminPanel adminProfile={{ email: adminSession.user.email }} cmsPages={cmsPages} onLogout={handleAdminLogout} onNavigate={handleInternalLink} onPageSaved={handlePageSaved} onResultsChanged={setPublicResults} onHousesChanged={setPublicHouseRecords} onNoticesChanged={setPublicNotices} onGalleryChanged={setPublicGalleryPhotos} onStudentCouncilChanged={setPublicStudentCouncilRecords} />
         )
       ) : page ? (
-        <ContentPage page={page} activePage={activePage} onFormSubmit={handlePublicFormSubmit} formMessage={formMessage} galleryPhotos={publicGalleryPhotos} resultPhotos={publicResults} />
+        <ContentPage page={page} activePage={activePage} onFormSubmit={handlePublicFormSubmit} formMessage={formMessage} galleryPhotos={publicGalleryPhotos} resultPhotos={publicResults} houseRecords={publicHouseRecords} studentCouncilRecords={publicStudentCouncilRecords} />
       ) : (
       <main id="home">
         <section className="relative min-h-[460px] overflow-hidden bg-[#06284d] lg:min-h-[520px]">
@@ -2049,7 +2744,7 @@ function App() {
               <p className="hero-kicker mb-4 text-base font-bold text-[#ffc400] sm:text-lg">Nurturing Minds. Building Futures.</p>
               <h1 className="hero-title max-w-3xl text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl">
                 <span className="block">Welcome to</span>
-                <span className="mt-2 block text-[#ffc400]">Shri Pragya Public School</span>
+                <span className="mt-2 block whitespace-nowrap text-[1.7rem] text-[#ffc400] sm:text-5xl lg:text-6xl">Shri Pragya Public School</span>
               </h1>
               <div className="hero-rule mt-5 h-1 w-20 bg-[#ffc400]" />
               <p className="hero-copy mt-5 max-w-lg text-base leading-7 text-white/95 sm:text-lg">Empowering students with knowledge, values, confidence and skills to excel in life and create a better tomorrow.</p>
@@ -2057,7 +2752,7 @@ function App() {
                 <a href="/about/" onClick={(event) => handleInternalLink(event, '/about/')} className="inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#101827] shadow-xl shadow-black/20 transition hover:bg-white">
                   Explore More <Icon name="arrow" />
                 </a>
-                <a href="/contact-us/" onClick={(event) => handleInternalLink(event, '/contact-us/')} className="inline-flex items-center gap-3 rounded-md border border-white/50 px-6 py-3 font-bold text-white transition hover:bg-white hover:text-[#06284d]">Admission Enquiry</a>
+                <a href="/admission-form/" onClick={(event) => handleInternalLink(event, '/admission-form/')} className="inline-flex items-center gap-3 rounded-md border border-white/50 px-6 py-3 font-bold text-white transition hover:bg-white hover:text-[#06284d]">Admission Enquiry</a>
               </div>
             </div>
           </div>
@@ -2076,6 +2771,8 @@ function App() {
             ))}
           </div>
         </section>
+
+
 
         <section id="about" className="mx-auto grid max-w-7xl gap-12 px-4 py-24 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div>
@@ -2105,14 +2802,25 @@ function App() {
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Spaces designed for learning, discipline and discovery.</h2>
             </div>
             <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {facilities.map(([title, text, imageAlt, image]) => (
-                <article key={title} className="overflow-hidden rounded-lg border border-slate-200 bg-[#fffaf0] shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-                  <img src={image} alt={imageAlt} className="h-44 w-full object-cover" />
+              {facilities.map(([title, text, imageAlt, image, href]) => (
+                <a key={title} href={href} onClick={(event) => handleInternalLink(event, href)} className="facility-card group block overflow-hidden rounded-lg border border-slate-200 bg-[#fffaf0] shadow-sm">
+                  <div className="relative overflow-hidden">
+                    <img src={image} alt={imageAlt} className="h-44 w-full object-cover transition duration-500 group-hover:scale-110" />
+                    <div className="facility-overlay absolute inset-0 flex items-end bg-gradient-to-t from-[#06284d]/95 via-[#06284d]/60 to-transparent p-5 text-white">
+                      <div className="facility-overlay-content">
+                        <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ffc400]">Explore Facility</p>
+                        <p className="mt-2 text-base font-semibold leading-6">{text}</p>
+                        <span className="mt-4 inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-4 py-2 text-sm font-black text-[#102344]">
+                          View Details <Icon name="arrow" className="h-4 w-4" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                   <div className="p-6">
                     <h3 className="text-2xl font-extrabold text-[#102344]">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-700">{text}</p>
                   </div>
-                </article>
+                </a>
               ))}
             </div>
           </div>
@@ -2142,23 +2850,59 @@ function App() {
                 <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Academics</p>
                 <h2 className="mt-3 text-4xl font-black">Result</h2>
               </div>
-              <a href="/academic-calendar/" onClick={(event) => handleInternalLink(event, '/academic-calendar/')} className="inline-flex w-fit items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">View All Results <Icon name="arrow" /></a>
+              <a href="/results/" onClick={(event) => handleInternalLink(event, '/results/')} className="inline-flex w-fit items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">View All Results <Icon name="arrow" /></a>
             </div>
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {(publicResults.length ? publicResults : fallbackResults).slice(0, 3).map((result) => (
-                <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 text-[#102344] shadow-xl">
-                  <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-72 w-full rounded-md object-contain" />
-                  {(result.title || result.result_year) ? (
-                    <div className="px-2 pb-2 pt-4">
-                      <h3 className="text-lg font-black">{result.title}</h3>
-                      {result.result_year ? <p className="mt-1 text-sm font-bold text-[#a8171d]">{result.result_year}</p> : null}
-                    </div>
-                  ) : null}
-                </article>
-              ))}
-            </div>
+            {publicResults.length > 0 ? (
+              <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {publicResults.slice(0, 3).map((result) => (
+                  <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 text-[#102344] shadow-xl">
+                    <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-72 w-full rounded-md object-contain" />
+                    {(result.title || result.result_year) ? (
+                      <div className="px-2 pb-2 pt-4">
+                        <h3 className="text-lg font-black">{result.title}</h3>
+                        {result.result_year ? <p className="mt-1 text-sm font-bold text-[#a8171d]">{result.result_year}</p> : null}
+                      </div>
+                    ) : null}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-10 rounded-lg bg-white/10 p-5 text-base font-bold text-white/80">No result photos added yet.</p>
+            )}
           </div>
         </section>
+
+        {publicNotices.length > 0 ? (
+          <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
+            <div className="overflow-hidden rounded-lg border border-[#ffc400]/50 bg-white shadow-sm">
+              <div className="flex items-center gap-3 bg-[#06284d] px-5 py-4 text-white">
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-[#ffc400] text-[#102344]"><Icon name="book" className="h-5 w-5" /></span>
+                <div>
+                  <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ffc400]">Updates</p>
+                  <h2 className="text-2xl font-black">Notice Board</h2>
+                </div>
+              </div>
+              <div className="grid divide-y divide-slate-200">
+                {publicNotices.map((notice) => {
+                  const content = (
+                    <>
+                      <span className="mt-1 h-2 w-2 flex-none rounded-full bg-[#a8171d]" />
+                      <span>{notice.notice_text}</span>
+                    </>
+                  )
+
+                  return notice.link_url ? (
+                    <a key={notice.id} href={notice.link_url} target="_blank" rel="noreferrer" className="flex gap-3 px-5 py-4 font-bold text-[#102344] transition hover:bg-[#fffaf0] hover:text-[#a8171d]">
+                      {content}
+                    </a>
+                  ) : (
+                    <p key={notice.id} className="flex gap-3 px-5 py-4 font-bold text-[#102344]">{content}</p>
+                  )
+                })}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section id="activities" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -2178,12 +2922,18 @@ function App() {
 
         <section id="gallery" className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Gallery</p>
-            <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Campus glimpses</h2>
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">{homePageSettings.homeGalleryEyebrow || 'Gallery'}</p>
+            <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">{homePageSettings.homeGalleryTitle || 'Campus glimpses'}</h2>
             <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {galleryImages.slice(0, 3).map(([image, alt]) => (
-                <img key={alt} src={image} alt={alt} className="h-72 w-full rounded-lg object-cover shadow-md" />
-              ))}
+              {homeGalleryPhotos.length > 0 ? (
+                homeGalleryPhotos.map((photo) => (
+                  <img key={photo.id || photo.image_url} src={photo.image_url} alt={photo.title || 'Campus glimpse'} className="h-72 w-full rounded-lg object-cover shadow-md" />
+                ))
+              ) : (
+                galleryImages.slice(0, 3).map(([image, alt]) => (
+                  <img key={alt} src={image} alt={alt} className="h-72 w-full rounded-lg object-cover shadow-md" />
+                ))
+              )}
             </div>
           </div>
         </section>
@@ -2248,20 +2998,23 @@ function App() {
               </div>
             </div>
             <p className="mt-5 leading-7 text-white/75">Education with knowledge, discipline and values. Nurturing young minds for confident, responsible and meaningful lives.</p>
-            <div className="mt-5 flex gap-3">
-              {socials.map(([name, label, color]) => (
-                <a
-                  key={name}
-                  href="/contact-us/"
-                  onClick={(event) => handleInternalLink(event, '/contact-us/')}
-                  aria-label={label}
-                  title={label}
-                  className="grid h-9 w-9 place-items-center rounded-full text-white transition hover:-translate-y-0.5"
-                  style={{ backgroundColor: color }}
-                >
-                  <SocialIcon name={name} className="h-4 w-4" />
-                </a>
-              ))}
+            <div className="mt-5">
+              <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ffc400]">Follow Us :</p>
+              <div className="mt-3 flex gap-3">
+                {socials.map(([name, label, color]) => (
+                  <a
+                    key={name}
+                    href="/contact-us/"
+                    onClick={(event) => handleInternalLink(event, '/contact-us/')}
+                    aria-label={label}
+                    title={label}
+                    className="grid h-9 w-9 place-items-center rounded-full text-white transition hover:-translate-y-0.5"
+                    style={{ backgroundColor: color }}
+                  >
+                    <SocialIcon name={name} className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -2285,7 +3038,7 @@ function App() {
             <div className="mt-4 grid gap-3 text-sm font-semibold text-white/80">
               {[
                 ['Admission', '/admission-form/'],
-                ['Result', '/academic-calendar/'],
+                ['Result', '/results/'],
                 ['Careers', '/careers/'],
                 ['Transport', '/transportation/'],
                 ['Hostel', '/hostel/'],
