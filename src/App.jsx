@@ -34,25 +34,12 @@ const navItems = [
       {
         label: 'About School',
         children: [
-          ['School Introduction', '/school-introduction/'],
-          ['Educational Philosophy', '/educational-philosophy/'],
-          ['Academic Environment', '/academic-environment/'],
-        ],
-      },
-      {
-        label: 'Our Legacy',
-        children: [
-          ['History of Institution', '/origin-history/'],
-          ['Shri Pragya Jain Smarak Samiti', '/samiti/'],
-          ['Achievements Through Years', '/legacy-achievements/'],
-        ],
-      },
-      {
-        label: 'Vision & Mission',
-        children: [
-          ['Vision Statement', '/vision-statement/'],
-          ['Mission Statement', '/mission-statement/'],
-          ['Core Values', '/core-values/'],
+          ['School Overview', '/about/'],
+          ['Our Legacy', '/origin-history/'],
+          ['Vision/Mission', '/origin-mission/'],
+          ['Why Pragya School', '/why-pragya-school/'],
+          ['Our Motto', '/our-motto/'],
+          ['Our Branches', '/our-branches/'],
         ],
       },
       {
@@ -61,7 +48,6 @@ const navItems = [
           ['Chairman Message', '/chairman-message/'],
           ['Director Message', '/director-message/'],
           ['Principal Message', '/principal-message/'],
-          ['Management Committee', '/management-committee/'],
         ],
       },
       {
@@ -69,7 +55,6 @@ const navItems = [
         children: [
           ['Campus Overview', '/campus-overview/'],
           ['Safety & Security', '/safety-security/'],
-          ['Digital Campus', '/digital-campus/'],
         ],
       },
     ],
@@ -77,55 +62,11 @@ const navItems = [
   {
     label: 'Academics',
     href: '/academics/',
-    groups: [
-      {
-        label: 'Pre Primary Wing',
-        children: [
-          ['Play Based Learning', '/play-based-learning/'],
-          ['Activity Learning', '/activity-learning/'],
-          ['Foundational Skills', '/foundational-skills/'],
-        ],
-      },
-      {
-        label: 'Primary Wing',
-        children: [
-          ['Academic Curriculum', '/academic-curriculum/'],
-          ['Concept Learning', '/concept-learning/'],
-          ['Creative Activities', '/creative-activities/'],
-        ],
-      },
-      {
-        label: 'Middle Wing',
-        children: [
-          ['Subject Enrichment', '/subject-enrichment/'],
-          ['Skill Development', '/skill-development/'],
-          ['Practical Learning', '/practical-learning/'],
-        ],
-      },
-      {
-        label: 'Secondary & Sr. Secondary',
-        children: [
-          ['Science Stream', '/science-stream/'],
-          ['Commerce Stream', '/commerce-stream/'],
-          ['Humanities Stream', '/humanities-stream/'],
-          ['Board Preparation', '/board-preparation/'],
-        ],
-      },
-    ],
-  },
-  {
-    label: 'IIT-JEE & NEET',
-    href: '/iit-jee-neet-program/',
     children: [
-      ['Program Overview', '/iit-jee-neet-program/'],
-      ['Faculty Team', '/competitive-faculty/'],
-      ['Study Material', '/study-material/'],
-      ['Test Series', '/test-series/'],
-      ['Performance Tracking', '/performance-tracking/'],
-      ['Doubt Sessions', '/doubt-sessions/'],
-      ['Mentorship Program', '/mentorship-program/'],
-      ['Results & Selections', '/competitive-results/'],
-      ['Career Counseling', '/career-counseling/'],
+      ['PG Section', '/pg-section/'],
+      ['Primary Section', '/primary-section/'],
+      ['Senior Section', '/senior-section/'],
+      ['IIT-JEE & NEET Integrated Program', '/iit-jee-neet-program/'],
     ],
   },
   { label: 'Admission', href: '/admission-form/' },
@@ -142,18 +83,29 @@ const navItems = [
       ['Transport Facility', '/transportation/'],
     ],
   },
+  { label: 'Gallery', href: '/gallery/' },
   {
-    label: 'Gallery',
-    href: '/gallery/',
+    label: 'Beyond the Classroom',
+    href: '/activities/',
     children: [
-      ['Campus Gallery', '/campus-gallery/'],
-      ['Classroom Activities', '/classroom-gallery/'],
-      ['Sports Gallery', '/sports-gallery/'],
-      ['Events & Celebrations', '/events-gallery/'],
-      ['Cultural Programs', '/cultural-gallery/'],
-      ['Hostel Life', '/hostel-gallery/'],
-      ['Educational Tours', '/tours-gallery/'],
-      ['Videos Gallery', '/videos-gallery/'],
+      ['Annual Function', '/annual-function/'],
+      ['Sports', '/music-sports-facilities/'],
+      ['House System', '/house-system/'],
+      ['Music', '/music/'],
+      ['Dance', '/dance/'],
+    ],
+  },
+  {
+    label: 'More',
+    href: '/academic-report-co-curricular/',
+    children: [
+      ['Academic Report', '/academic-report-co-curricular/'],
+      ['Curriculum', '/curriculum/'],
+      ['Fee Structure', '/fee-structure/'],
+      ['Activity Calendar', '/academic-calendar/'],
+      ['Achievement', '/achievments/'],
+      ['Students Timing', '/students-timing/'],
+      ['PTM', '/ptm/'],
     ],
   },
   {
@@ -351,6 +303,34 @@ const contentPages = {
       'Our classrooms encourage attentive learning, regular practice, healthy discussion and meaningful teacher support at every stage.',
     ],
     bullets: ['Qualified faculty', 'Smart classrooms', 'Practical labs', 'Regular assessments'],
+  },
+  'why-pragya-school': {
+    eyebrow: 'About Us',
+    title: 'Why Pragya School',
+    image: classStudentsTwo,
+    paragraphs: [
+      'Pragya School combines disciplined learning, committed teachers, modern facilities and opportunities for children to grow in confidence and character.',
+    ],
+    bullets: ['Value-based education', 'Academic guidance', 'Safe and caring campus', 'Holistic development'],
+  },
+  'our-motto': {
+    eyebrow: 'About Us',
+    title: 'Our Motto',
+    image: logo,
+    paragraphs: [
+      'Pragya Deep: Always Shining.',
+      'Our motto reflects the light of knowledge, values and purpose that guides each student through school and beyond.',
+    ],
+  },
+  'our-branches': {
+    eyebrow: 'About Us',
+    title: 'Our Branches',
+    image: campusHero,
+    paragraphs: [
+      'Shri Pragya Public School supports learners through its main campus and junior wing in Bijainagar, Rajasthan.',
+      'Main Branch: Pragya Road, Bijainagar (Ajmer), Rajasthan. Phone: +91-1462-230201',
+      'Junior Wing: Infront of Mahaveer Bhawan, Bijainagar (Ajmer), Rajasthan. Phone: +91-1462-230451',
+    ],
   },
   'origin-history': {
     eyebrow: 'About',
@@ -706,6 +686,33 @@ const contentPages = {
     ],
     bullets: ['Primary Wing', 'Middle School', 'Secondary School', 'Exam Scheme', 'Syllabus', 'Curriculum'],
   },
+  'pg-section': {
+    eyebrow: 'Academics',
+    title: 'PG Section',
+    image: classStudentsTwo,
+    paragraphs: [
+      'Our early learning section supports young children with a joyful, caring beginning built around play, communication and foundational habits.',
+    ],
+    bullets: ['Play-based learning', 'Language readiness', 'Number readiness', 'Creative activities'],
+  },
+  'primary-section': {
+    eyebrow: 'Academics',
+    title: 'Primary Section',
+    image: boysReading,
+    paragraphs: [
+      'Primary classes build confident reading, writing, mathematics and curiosity through concept-based classroom learning and activities.',
+    ],
+    bullets: ['Strong foundations', 'Concept learning', 'Projects and creativity', 'Values and confidence'],
+  },
+  'senior-section': {
+    eyebrow: 'Academics',
+    title: 'Senior Section',
+    image: chemistryLab,
+    paragraphs: [
+      'Senior learners are supported with subject depth, practical exposure, board preparation and informed career guidance.',
+    ],
+    bullets: ['Science learning', 'Commerce learning', 'Board preparation', 'Career pathways'],
+  },
   'play-based-learning': {
     eyebrow: 'Pre Primary Wing',
     title: 'Play Based Learning',
@@ -955,6 +962,14 @@ const contentPages = {
           'The annual award program celebrates academic excellence, discipline, sportsmanship, creativity, leadership and consistent effort.',
         ],
   },
+  'annual-function': {
+    eyebrow: 'Beyond the Classroom',
+    title: 'Annual Function',
+    image: classStudentsTwo,
+    paragraphs: [
+      'Our annual function gives students a joyful platform to perform, celebrate achievement and build stage confidence through teamwork.',
+    ],
+  },
   'interschool-co-curricular-activity': {
     eyebrow: 'Activities',
     title: 'Inter School & Co-Curricular Activity',
@@ -980,6 +995,22 @@ const contentPages = {
       'School celebrations create joyful opportunities for students to learn culture, teamwork, stage confidence and respect for national and social occasions.',
     ],
     bullets: ['Independence Day', 'Republic Day', 'Annual Day', 'Festivals', 'Sports Day', 'Special assemblies'],
+  },
+  music: {
+    eyebrow: 'Beyond the Classroom',
+    title: 'Music',
+    image: classStudents,
+    paragraphs: [
+      'Music develops expression, rhythm, concentration and confidence while enriching every student experience beyond textbooks.',
+    ],
+  },
+  dance: {
+    eyebrow: 'Beyond the Classroom',
+    title: 'Dance',
+    image: classStudentsTwo,
+    paragraphs: [
+      'Dance activities encourage creativity, coordination, teamwork and self-expression during school celebrations and programs.',
+    ],
   },
   'house-system': {
     eyebrow: 'Activities',
@@ -1017,6 +1048,25 @@ const contentPages = {
     paragraphs: [
       'Educational excursions give students real-world exposure and help them learn through observation, travel and group experiences.',
     ],
+  },
+  'students-timing': {
+    eyebrow: 'More',
+    title: 'Students Timing',
+    image: campusHero,
+    paragraphs: [
+      'School timing details may vary by section and season. Parents are requested to contact the school office for the current class-wise schedule.',
+      'Helpline No.: 09461996117',
+    ],
+  },
+  ptm: {
+    eyebrow: 'More',
+    title: 'PTM',
+    image: teacherImage,
+    paragraphs: [
+      'Parent-Teacher Meetings strengthen communication between home and school by discussing student learning, attendance, participation and overall development.',
+      'Parents are requested to follow school notices for the latest PTM schedule or contact the school office for details.',
+    ],
+    bullets: ['Academic progress discussion', 'Personal guidance', 'Parent feedback', 'Student wellbeing support'],
   },
   'admission-form': {
     eyebrow: 'Admission',
@@ -3134,7 +3184,7 @@ function App() {
                     {hasSubmenu ? <Icon name="chevron" className="h-4 w-4" /> : null}
                   </a>
                   {item.groups ? (
-                    <div className={`invisible absolute left-1/2 top-full z-50 grid -translate-x-1/2 translate-y-2 gap-5 rounded-md bg-white p-5 text-slate-800 opacity-0 shadow-xl transition group-hover:visible group-hover:-translate-x-1/2 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:-translate-x-1/2 group-focus-within:translate-y-0 group-focus-within:opacity-100 ${item.label === 'About Us' ? 'w-[min(94vw,70rem)] grid-cols-5' : 'w-[min(92vw,56rem)] grid-cols-4'}`}>
+                    <div className="invisible absolute left-1/2 top-full z-50 grid w-[min(92vw,54rem)] -translate-x-1/2 translate-y-2 grid-cols-3 gap-7 rounded-md bg-white p-6 text-slate-800 opacity-0 shadow-xl transition group-hover:visible group-hover:-translate-x-1/2 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:-translate-x-1/2 group-focus-within:translate-y-0 group-focus-within:opacity-100">
                       {item.groups.map((group) => (
                         <div key={group.label}>
                           <p className="border-b border-[#ffc400] pb-2 text-sm font-black uppercase tracking-[0.11em] text-[#a8171d]">{group.label}</p>
@@ -3418,6 +3468,18 @@ function App() {
                 </p>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="hostel" className="mx-auto grid max-w-7xl gap-10 px-4 py-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
+          <img src={boyHostel} alt="Hostel facilities at Shri Pragya Public School" className="h-80 w-full rounded-xl object-cover shadow-xl" />
+          <div>
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Hostel</p>
+            <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Comfortable residential care for students.</h2>
+            <p className="mt-5 text-lg leading-8 text-slate-700">Our hostel facilities provide a supervised, disciplined and caring environment for boys and girls with accommodation, study support, meals and student wellbeing at the centre.</p>
+            <a href="/hostel/" onClick={(event) => handleInternalLink(event, '/hostel/')} className="mt-8 inline-flex items-center gap-3 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white">
+              Explore Hostel Facilities <Icon name="arrow" />
+            </a>
           </div>
         </section>
 
