@@ -28,62 +28,148 @@ const storageBucket = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET || 'school-me
 const navItems = [
   { label: 'Home', href: '/' },
   {
-    label: 'About',
+    label: 'About Us',
     href: '/about/',
-    children: [
-      ['Origin & History', '/origin-history/'],
-      ['Vision & Mission', '/origin-mission/'],
-      ['School Codes & Policies', '/school-codes-policies/'],
-      ['Principal & Teachers Details', '/principal-teachers-details/'],
-    ],
-  },
-  {
-    label: 'Facilities',
-    href: '/facilities/',
-    children: [
-      ['Overview', '/overview/'],
-      ['Hostel', '/hostel/'],
-      ['Laboratories', '/laboratories/'],
-      ['Music & Sports Facilities', '/music-sports-facilities/'],
-      ['Interactive Classroom', '/interactive-classroom/'],
-      ['Medical Facility', '/medical-facility/'],
-      ['Transportation', '/transportation/'],
+    groups: [
+      {
+        label: 'About School',
+        children: [
+          ['School Introduction', '/school-introduction/'],
+          ['Educational Philosophy', '/educational-philosophy/'],
+          ['Academic Environment', '/academic-environment/'],
+        ],
+      },
+      {
+        label: 'Our Legacy',
+        children: [
+          ['History of Institution', '/origin-history/'],
+          ['Shri Pragya Jain Smarak Samiti', '/samiti/'],
+          ['Achievements Through Years', '/legacy-achievements/'],
+        ],
+      },
+      {
+        label: 'Vision & Mission',
+        children: [
+          ['Vision Statement', '/vision-statement/'],
+          ['Mission Statement', '/mission-statement/'],
+          ['Core Values', '/core-values/'],
+        ],
+      },
+      {
+        label: 'Leadership Team',
+        children: [
+          ['Chairman Message', '/chairman-message/'],
+          ['Director Message', '/director-message/'],
+          ['Principal Message', '/principal-message/'],
+          ['Management Committee', '/management-committee/'],
+        ],
+      },
+      {
+        label: 'School Infrastructure',
+        children: [
+          ['Campus Overview', '/campus-overview/'],
+          ['Safety & Security', '/safety-security/'],
+          ['Digital Campus', '/digital-campus/'],
+        ],
+      },
     ],
   },
   {
     label: 'Academics',
     href: '/academics/',
-    children: [
-      ['Academic Report & Co-Curricular', '/academic-report-co-curricular/'],
-      ['Exam Scheme', '/exam-scheme/'],
-      ['Syllabus', '/syllabus/'],
-      ['Curriculum', '/curriculum/'],
-      ['Achievments', '/achievments/'],
-      ['Admissions & Withdrawl', '/admissions-withdrawl/'],
-      ['Fee Structure', '/fee-structure/'],
-      ['General Rules', '/general-rules/'],
+    groups: [
+      {
+        label: 'Pre Primary Wing',
+        children: [
+          ['Play Based Learning', '/play-based-learning/'],
+          ['Activity Learning', '/activity-learning/'],
+          ['Foundational Skills', '/foundational-skills/'],
+        ],
+      },
+      {
+        label: 'Primary Wing',
+        children: [
+          ['Academic Curriculum', '/academic-curriculum/'],
+          ['Concept Learning', '/concept-learning/'],
+          ['Creative Activities', '/creative-activities/'],
+        ],
+      },
+      {
+        label: 'Middle Wing',
+        children: [
+          ['Subject Enrichment', '/subject-enrichment/'],
+          ['Skill Development', '/skill-development/'],
+          ['Practical Learning', '/practical-learning/'],
+        ],
+      },
+      {
+        label: 'Secondary & Sr. Secondary',
+        children: [
+          ['Science Stream', '/science-stream/'],
+          ['Commerce Stream', '/commerce-stream/'],
+          ['Humanities Stream', '/humanities-stream/'],
+          ['Board Preparation', '/board-preparation/'],
+        ],
+      },
     ],
   },
-  { label: 'Academic Calendar', href: '/academic-calendar/' },
   {
-    label: 'Activities',
-    href: '/activities/',
+    label: 'IIT-JEE & NEET',
+    href: '/iit-jee-neet-program/',
     children: [
-      ['Club', '/club/'],
-      ['Annual Award', '/annual-award/'],
-      ['Inter School & Co-Curricular Activity', '/interschool-co-curricular-activity/'],
-      ['Spic Macay', '/spicy-macay/'],
-      ['Celebration', '/celebration/'],
-      ['House System', '/house-system/'],
-      ['Excursions', '/excursions/'],
+      ['Program Overview', '/iit-jee-neet-program/'],
+      ['Faculty Team', '/competitive-faculty/'],
+      ['Study Material', '/study-material/'],
+      ['Test Series', '/test-series/'],
+      ['Performance Tracking', '/performance-tracking/'],
+      ['Doubt Sessions', '/doubt-sessions/'],
+      ['Mentorship Program', '/mentorship-program/'],
+      ['Results & Selections', '/competitive-results/'],
+      ['Career Counseling', '/career-counseling/'],
     ],
   },
-  { label: 'Gallery', href: '/gallery/' },
-  { label: 'Student Council', href: '/student-council/' },
-  { label: 'Online Admission', href: '/admission-form/' },
-  { label: 'Careers', href: '/careers/' },
+  { label: 'Admission', href: '/admission-form/' },
+  {
+    label: 'Facilities',
+    href: '/facilities/',
+    children: [
+      ['Smart Classrooms', '/interactive-classroom/'],
+      ['Science Laboratories', '/laboratories/'],
+      ['Computer Lab', '/computer-lab/'],
+      ['Library', '/library/'],
+      ['Sports', '/music-sports-facilities/'],
+      ['Hostel Facilities', '/hostel/'],
+      ['Transport Facility', '/transportation/'],
+    ],
+  },
+  {
+    label: 'Gallery',
+    href: '/gallery/',
+    children: [
+      ['Campus Gallery', '/campus-gallery/'],
+      ['Classroom Activities', '/classroom-gallery/'],
+      ['Sports Gallery', '/sports-gallery/'],
+      ['Events & Celebrations', '/events-gallery/'],
+      ['Cultural Programs', '/cultural-gallery/'],
+      ['Hostel Life', '/hostel-gallery/'],
+      ['Educational Tours', '/tours-gallery/'],
+      ['Videos Gallery', '/videos-gallery/'],
+    ],
+  },
+  {
+    label: 'Career',
+    href: '/careers/',
+    children: [
+      ['Current Openings', '/current-openings/'],
+      ['Apply Online', '/careers/'],
+      ['Employee Benefits', '/employee-benefits/'],
+      ['Work Culture', '/work-culture/'],
+      ['Teacher Training Programs', '/teacher-training/'],
+    ],
+  },
+  { label: 'Alumni', href: '/alumni/' },
+  { label: 'ERP Login', href: 'http://pragya.eschoolapp.in/', external: true },
   { label: 'Contact Us', href: '/contact-us/' },
-  { label: 'ERP', href: 'http://pragya.eschoolapp.in/', external: true },
 ]
 
 const highlights = [
@@ -94,10 +180,38 @@ const highlights = [
 ]
 
 const stats = [
-  ['25+', 'Years of service'],
-  ['1800+', 'Students guided'],
-  ['95%', 'Board success rate'],
-  ['40+', 'Learning spaces'],
+  ['3600+', 'Students'],
+  ['50+', 'Years Legacy'],
+  ['IIT & NEET', 'Selections'],
+  ['Experienced', 'Faculty'],
+]
+
+const quickLinks = [
+  ['Admission Open', '/admission-form/', 'graduation'],
+  ['Download Brochure', '/contact-us/', 'book'],
+  ['Fee Inquiry', '/contact-us/', 'mail'],
+  ['Virtual Tour', '/campus-overview/', 'location'],
+]
+
+const admissionSlides = [
+  {
+    eyebrow: 'Admissions Open',
+    title: 'Give your child a strong start at Pragya.',
+    text: 'A caring school environment with academic excellence, discipline and opportunities for all-round development.',
+    image: campusHero,
+  },
+  {
+    eyebrow: 'Integrated Preparation',
+    title: 'School learning with IIT-JEE & NEET guidance.',
+    text: 'Focused mentoring, practice and performance support for students preparing for ambitious goals.',
+    image: digitalBoard,
+  },
+  {
+    eyebrow: 'Campus Experience',
+    title: 'Discover spaces built for confident learners.',
+    text: 'Smart classrooms, science labs, sports, library, transport and hostel support in one nurturing campus.',
+    image: classStudentsTwo,
+  },
 ]
 
 const facilities = [
@@ -115,25 +229,30 @@ const programs = [
   ['Secondary School', 'Board-focused mentoring, practical learning and career readiness.'],
 ]
 
-const activities = [
-  'Debate',
-  'Music',
-  'Yoga',
-  'Science Fair',
-  'Art Studio',
-  'Cricket',
-  'Community Service',
-  'Leadership Club',
-  'Dance',
-  'Drama',
-  'Quiz',
-  'Skating',
-  'Volleyball',
-  'Archery',
-  'Public Speaking',
-  'Creative Writing',
-  'Environmental Club',
-  'Robotics',
+const whyChooseUs = [
+  ['Strong Foundations', 'Concept-driven teaching builds confidence from primary school onward.', 'graduation'],
+  ['Safe Campus', 'A disciplined, caring environment keeps every learner supported.', 'check'],
+  ['Modern Learning', 'Smart classrooms and laboratories make lessons engaging and practical.', 'book'],
+  ['Whole Child Growth', 'Sports, values, creativity and leadership complement academics.', 'users'],
+]
+
+const competitiveProgramFeatures = [
+  'Dedicated IIT-JEE and NEET mentoring for senior students',
+  'Concept strengthening, regular practice sheets and doubt sessions',
+  'Test series, performance tracking and individual guidance',
+  'Experienced faculty focused on board and entrance preparation',
+]
+
+const testimonials = [
+  ['Parent of Class X Student', 'The teachers give personal attention and keep us informed about our child\'s progress. The discipline and academic support have been reassuring.'],
+  ['Senior Student', 'The laboratories, smart classes and regular guidance have helped me understand concepts with confidence and plan my next steps.'],
+  ['Parent of Primary Student', 'My child enjoys coming to school. The balance of learning, activities and values is exactly what we hoped for.'],
+]
+
+const newsFallback = [
+  ['Admissions Open', 'Admissions are open for the new academic session. Connect with the school office for guidance.'],
+  ['Campus Visit', 'Parents are welcome to visit the campus and explore classrooms, laboratories and facilities.'],
+  ['Academic Guidance', 'Speak with our academic team about school pathways and IIT-JEE or NEET preparation.'],
 ]
 
 const classOptions = [
@@ -206,6 +325,33 @@ const contentPages = {
     ],
     bullets: ['Origin & History', 'Vision & Mission', 'School Codes & Policies', 'Principal & Teachers Details'],
   },
+  'school-introduction': {
+    eyebrow: 'About Us',
+    title: 'School Introduction',
+    image: campusHero,
+    paragraphs: [
+      'Shri Pragya Public School is a senior secondary learning community in Bijainagar dedicated to knowledge, discipline and values.',
+      'Our students learn in a supportive environment that combines classroom excellence, practical exposure, activities and responsible citizenship.',
+    ],
+  },
+  'educational-philosophy': {
+    eyebrow: 'About Us',
+    title: 'Educational Philosophy',
+    image: boysReading,
+    paragraphs: [
+      'We believe education should develop clear thinking, strong character and the confidence to face life with purpose.',
+    ],
+    bullets: ['Child-centered guidance', 'Value-based learning', 'Curiosity and creativity', 'Discipline and responsibility'],
+  },
+  'academic-environment': {
+    eyebrow: 'About Us',
+    title: 'Academic Environment',
+    image: digitalTeaching,
+    paragraphs: [
+      'Our classrooms encourage attentive learning, regular practice, healthy discussion and meaningful teacher support at every stage.',
+    ],
+    bullets: ['Qualified faculty', 'Smart classrooms', 'Practical labs', 'Regular assessments'],
+  },
   'origin-history': {
     eyebrow: 'About',
     title: 'Origin & History',
@@ -216,6 +362,24 @@ const contentPages = {
       'We are proud to share that our hard work and sheer tenacity have made us one of the most reputed senior secondary schools in Bijainagar and its vicinity. This would not have been possible without the spiritual spirit behind our institution, Guru Dev Shri Pannalal Ji Maharaj, the supreme head of Jain Shwetamber Sthankwasi Nanak Vansh.',
       'Our faculty and staff are consummate professionals who have led our school to become secondary in 2003 and senior secondary in 2007. We are committed to providing the best educational experience to our students and preparing them for the challenges of the future.',
     ],
+  },
+  samiti: {
+    eyebrow: 'Our Legacy',
+    title: 'Shri Pragya Jain Smarak Samiti',
+    image: campusHero,
+    paragraphs: [
+      'Shri Pragya Jain Smarak Samiti established the institution with a commitment to quality education, moral values and service to society.',
+      'Its vision continues to guide the school in providing meaningful opportunities for students and families in the region.',
+    ],
+  },
+  'legacy-achievements': {
+    eyebrow: 'Our Legacy',
+    title: 'Achievements Through Years',
+    image: classStudentsTwo,
+    paragraphs: [
+      'From its beginning as Pragya Bal Mandir in 1976 to its development as a senior secondary school, the institution has grown through dedication and community trust.',
+    ],
+    bullets: ['Established in 1976', 'Transformed into Shri Pragya Public School in 1997', 'Secondary status in 2003', 'Senior Secondary status in 2007'],
   },
   'origin-mission': {
     eyebrow: 'About',
@@ -235,6 +399,85 @@ const contentPages = {
           'We are committed to creating a safe, inclusive, and collaborative environment that inspires our students to become confident, independent thinkers who can contribute meaningfully to society.',
         ],
       },
+    ],
+  },
+  'vision-statement': {
+    eyebrow: 'Vision & Mission',
+    title: 'Vision Statement',
+    image: classStudentsTwo,
+    paragraphs: [
+      'To nurture confident, responsible and compassionate learners who are prepared to contribute positively to society and succeed in a changing world.',
+    ],
+  },
+  'mission-statement': {
+    eyebrow: 'Vision & Mission',
+    title: 'Mission Statement',
+    image: boysReading,
+    paragraphs: [
+      'Our mission is to provide holistic education through academic excellence, value-based discipline, creative opportunity and supportive mentoring.',
+    ],
+  },
+  'core-values': {
+    eyebrow: 'Vision & Mission',
+    title: 'Core Values',
+    image: classStudents,
+    bullets: ['Knowledge', 'Discipline', 'Integrity', 'Compassion', 'Respect', 'Excellence'],
+  },
+  'chairman-message': {
+    eyebrow: 'Leadership Team',
+    title: 'Chairman Message',
+    image: campusHero,
+    paragraphs: [
+      'Our institution is committed to giving students an education that builds competence, humility and a lifelong desire to learn.',
+    ],
+  },
+  'director-message': {
+    eyebrow: 'Leadership Team',
+    title: 'Director Message',
+    image: drNavalSingh,
+    paragraphs: [
+      'At Pragya, we strive to guide every child through strong academics, character development and opportunities that prepare them for a purposeful future.',
+    ],
+  },
+  'principal-message': {
+    eyebrow: 'Leadership Team',
+    title: 'Principal Message',
+    image: nidhiMathur,
+    paragraphs: [
+      'Our teachers work in partnership with parents to make school a safe, engaging and inspiring place where every learner can progress with confidence.',
+    ],
+  },
+  'management-committee': {
+    eyebrow: 'Leadership Team',
+    title: 'Management Committee',
+    image: teacherImage,
+    paragraphs: [
+      'The school management supports academic quality, campus development, student wellbeing and responsible institutional governance.',
+    ],
+  },
+  'campus-overview': {
+    eyebrow: 'School Infrastructure',
+    title: 'Campus Overview',
+    image: campusHero,
+    paragraphs: [
+      'Our campus brings classrooms, laboratories, library, sports and student-support facilities together in an environment designed for learning and growth.',
+    ],
+  },
+  'safety-security': {
+    eyebrow: 'School Infrastructure',
+    title: 'Safety & Security',
+    image: campusHero,
+    paragraphs: [
+      'Student wellbeing is supported through disciplined campus routines, supervised movement, responsible transport practices and attentive staff care.',
+    ],
+    bullets: ['Supervised campus routines', 'Safe transport guidance', 'Health support access', 'Parent communication'],
+  },
+  'digital-campus': {
+    eyebrow: 'School Infrastructure',
+    title: 'Digital Campus',
+    image: digitalBoard,
+    paragraphs: [
+      'Technology-enhanced classrooms and computer resources support visual instruction, digital skills and engaging academic practice.',
     ],
   },
   'school-codes-policies': {
@@ -304,6 +547,23 @@ const contentPages = {
       'Our campus provides spaces designed for learning, discipline and discovery. Students benefit from classrooms, laboratories, library, sports, transport and day boarding support.',
     ],
     bullets: ['Digital Classrooms', 'Science Labs', 'Library', 'Sports Grounds', 'Transport', 'Day Boarding'],
+  },
+  'computer-lab': {
+    eyebrow: 'Facilities',
+    title: 'Computer Lab',
+    image: computerLab,
+    paragraphs: [
+      'The computer lab develops digital confidence and supports technology-enabled learning through supervised practical practice.',
+    ],
+    bullets: ['Digital literacy', 'Multimedia learning', 'Practical sessions', 'Guided technology use'],
+  },
+  library: {
+    eyebrow: 'Facilities',
+    title: 'Library',
+    image: studentLibrary,
+    paragraphs: [
+      'Our library encourages reading habits, quiet study and access to reference material that enriches classroom learning.',
+    ],
   },
   hostel: {
     eyebrow: 'Facilities',
@@ -445,6 +705,141 @@ const contentPages = {
       'Our academic system supports concept clarity, regular practice, practical exposure and board readiness through a structured teaching process.',
     ],
     bullets: ['Primary Wing', 'Middle School', 'Secondary School', 'Exam Scheme', 'Syllabus', 'Curriculum'],
+  },
+  'play-based-learning': {
+    eyebrow: 'Pre Primary Wing',
+    title: 'Play Based Learning',
+    image: classStudentsTwo,
+    paragraphs: ['Young learners explore language, numbers and social habits through joyful, age-appropriate activities and guided play.'],
+  },
+  'activity-learning': {
+    eyebrow: 'Pre Primary Wing',
+    title: 'Activity Learning',
+    image: classStudents,
+    paragraphs: ['Stories, rhymes, movement, art and hands-on classroom experiences make early learning meaningful and enjoyable.'],
+  },
+  'foundational-skills': {
+    eyebrow: 'Pre Primary Wing',
+    title: 'Foundational Skills',
+    image: boysReading,
+    bullets: ['Early literacy', 'Number readiness', 'Communication skills', 'Fine motor development', 'Good habits', 'Confidence building'],
+  },
+  'academic-curriculum': {
+    eyebrow: 'Primary Wing',
+    title: 'Academic Curriculum',
+    image: boysReading,
+    paragraphs: ['The primary curriculum builds confident reading, clear writing, number proficiency and awareness of the world around us.'],
+  },
+  'concept-learning': {
+    eyebrow: 'Primary Wing',
+    title: 'Concept Learning',
+    image: digitalTeaching,
+    paragraphs: ['Teachers use explanations, examples and classroom activities to help students understand ideas rather than only memorize answers.'],
+  },
+  'creative-activities': {
+    eyebrow: 'Primary Wing',
+    title: 'Creative Activities',
+    image: classStudentsTwo,
+    bullets: ['Art and craft', 'Storytelling', 'Music and dance', 'Speaking activities', 'Projects', 'Celebrations'],
+  },
+  'subject-enrichment': {
+    eyebrow: 'Middle Wing',
+    title: 'Subject Enrichment',
+    image: libraryBook,
+    paragraphs: ['Reading, projects, quizzes and enrichment exercises deepen subject understanding during the middle school years.'],
+  },
+  'skill-development': {
+    eyebrow: 'Middle Wing',
+    title: 'Skill Development',
+    image: computerLab,
+    bullets: ['Communication', 'Digital literacy', 'Teamwork', 'Problem solving', 'Leadership', 'Creative expression'],
+  },
+  'practical-learning': {
+    eyebrow: 'Middle Wing',
+    title: 'Practical Learning',
+    image: microscopeLab,
+    paragraphs: ['Laboratory experiences, models, activities and observation connect academic concepts to real-world understanding.'],
+  },
+  'science-stream': {
+    eyebrow: 'Secondary & Sr. Secondary',
+    title: 'Science Stream',
+    image: chemistryLab,
+    paragraphs: ['Science students develop strong conceptual and practical foundations in physics, chemistry, biology and mathematics as applicable.'],
+  },
+  'commerce-stream': {
+    eyebrow: 'Secondary & Sr. Secondary',
+    title: 'Commerce Stream',
+    image: boysReading,
+    paragraphs: ['Commerce education supports understanding of accountancy, business studies, economics and analytical thinking.'],
+  },
+  'humanities-stream': {
+    eyebrow: 'Secondary & Sr. Secondary',
+    title: 'Humanities Stream',
+    image: libraryBook,
+    paragraphs: ['Humanities learning encourages critical thinking, social understanding, communication and thoughtful engagement with society.'],
+  },
+  'board-preparation': {
+    eyebrow: 'Secondary & Sr. Secondary',
+    title: 'Board Preparation',
+    image: classStudents,
+    bullets: ['Structured syllabus completion', 'Revision schedules', 'Sample papers', 'Practice tests', 'Doubt clearing', 'Progress monitoring'],
+  },
+  'iit-jee-neet-program': {
+    eyebrow: 'Integrated Program',
+    title: 'IIT-JEE & NEET Integrated Program',
+    image: digitalBoard,
+    paragraphs: [
+      'Our integrated approach supports senior secondary academics alongside focused preparation for engineering and medical entrance examinations.',
+    ],
+    bullets: ['Concept-oriented teaching', 'Regular testing', 'Doubt resolution', 'Performance review', 'Mentorship', 'Career guidance'],
+  },
+  'competitive-faculty': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Faculty Team',
+    image: teacherImage,
+    paragraphs: ['Experienced teachers guide students through concepts, problem-solving methods, revision strategy and exam discipline.'],
+  },
+  'study-material': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Study Material',
+    image: libraryBook,
+    paragraphs: ['Topic-wise notes, question practice and revision material help students strengthen concepts step by step.'],
+  },
+  'test-series': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Test Series',
+    image: boysReading,
+    paragraphs: ['Regular tests encourage accuracy, time management, exam familiarity and steady improvement.'],
+  },
+  'performance-tracking': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Performance Tracking',
+    image: classStudents,
+    paragraphs: ['Assessment reviews identify strengths, gaps and focus areas so students can prepare with a clear plan.'],
+  },
+  'doubt-sessions': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Doubt Sessions',
+    image: digitalTeaching,
+    paragraphs: ['Dedicated doubt-clearing support enables students to resolve difficult concepts and build confidence in application-based questions.'],
+  },
+  'mentorship-program': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Mentorship Program',
+    image: teacherImage,
+    paragraphs: ['Personal mentoring supports consistency, motivation, study planning and balance through competitive exam preparation.'],
+  },
+  'competitive-results': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Results & Selections',
+    image: classStudentsTwo,
+    paragraphs: ['We celebrate the effort and progress of students striving for strong academic and competitive examination outcomes.'],
+  },
+  'career-counseling': {
+    eyebrow: 'IIT-JEE & NEET',
+    title: 'Career Counseling',
+    image: boysReading,
+    paragraphs: ['Students receive guidance to understand streams, entrance pathways and higher education choices aligned with their aspirations.'],
   },
   'academic-calendar': {
     eyebrow: 'Academics',
@@ -639,6 +1034,46 @@ const contentPages = {
       'Explore glimpses of school life, campus spaces, activities and learning moments at Shri Pragya Public School.',
     ],
   },
+  'campus-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Campus Gallery',
+    gallery: [[campusHero, 'School campus view'], [digitalTeaching, 'Digital teaching space'], [studentLibrary, 'Library space']],
+  },
+  'classroom-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Classroom Activities',
+    gallery: [[digitalTeaching, 'Digital classroom teaching'], [classStudents, 'Classroom learning'], [classStudentsTwo, 'Student participation']],
+  },
+  'sports-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Sports Gallery',
+    gallery: [[sportsImage, 'School sports and activities']],
+  },
+  'events-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Events & Celebrations',
+    gallery: [[classStudentsTwo, 'School event participation'], [classStudents, 'Students together at school']],
+  },
+  'cultural-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Cultural Programs',
+    gallery: [[classStudentsTwo, 'Cultural program participation']],
+  },
+  'hostel-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Hostel Life',
+    gallery: [[boyHostel, 'Hostel facility']],
+  },
+  'tours-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Educational Tours',
+    paragraphs: ['Educational tour photographs and learning experiences will be shared here.'],
+  },
+  'videos-gallery': {
+    eyebrow: 'Gallery',
+    title: 'Videos Gallery',
+    paragraphs: ['School activity and event videos will be shared here as they become available.'],
+  },
   careers: {
     eyebrow: 'Careers',
     title: 'Careers',
@@ -646,6 +1081,41 @@ const contentPages = {
     paragraphs: [
       'Join our teaching community.',
       'We welcome passionate educators who believe in discipline, care and student-centered learning. Share your profile with the school office for current vacancies.',
+    ],
+  },
+  'current-openings': {
+    eyebrow: 'Career',
+    title: 'Current Openings',
+    image: teacherImage,
+    paragraphs: [
+      'We welcome dedicated educators and professionals who share our commitment to learning, discipline and student wellbeing.',
+      'Please submit your application online or contact the school office for current vacancy details.',
+    ],
+  },
+  'employee-benefits': {
+    eyebrow: 'Career',
+    title: 'Employee Benefits',
+    image: teacherImage,
+    bullets: ['Supportive academic environment', 'Professional development opportunities', 'Collaborative team culture', 'Meaningful work with learners'],
+  },
+  'work-culture': {
+    eyebrow: 'Career',
+    title: 'Work Culture',
+    image: teacherImage,
+    paragraphs: ['Our work culture values professionalism, collaboration, respect, student care and continuous improvement in teaching.'],
+  },
+  'teacher-training': {
+    eyebrow: 'Career',
+    title: 'Teacher Training Programs',
+    image: digitalBoard,
+    paragraphs: ['Teachers are encouraged to strengthen pedagogy, technology use, classroom management and contemporary educational practices.'],
+  },
+  alumni: {
+    eyebrow: 'Alumni',
+    title: 'Alumni',
+    image: campusHero,
+    paragraphs: [
+      'Our alumni remain an important part of the Pragya family. This space will celebrate their journeys, memories and contributions.',
     ],
   },
   'student-council': {
@@ -688,6 +1158,7 @@ function Icon({ name, className = 'h-5 w-5' }) {
     users: <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.9m-3-11.9a4 4 0 0 1 0 7.8" />,
     check: <path d="m20 6-11 11-5-5" />,
     mail: <path d="M4 4h16v16H4V4Zm0 2 8 7 8-7" />,
+    chat: <path d="M20 11.5a8 8 0 0 1-8 8 8.8 8.8 0 0 1-3.5-.8L4 20l1.3-4A8 8 0 1 1 20 11.5Zm-10-2c.2 2 2.1 3.9 4.1 4.1l1.1-1.1" />,
   }
 
   return (
@@ -759,12 +1230,12 @@ function AdmissionForm({ onSubmit, message }) {
   )
 }
 
-function ContactForm({ onSubmit, message }) {
+function ContactForm({ onSubmit, message, compact = false }) {
   const [form, setForm] = useState({ name: '', phone: '', email: '', subject: '', message: '' })
   const update = (key, value) => setForm({ ...form, [key]: value })
 
   return (
-    <form onSubmit={(event) => onSubmit(event, form, 'contact')} className="mt-10 grid gap-4 rounded-lg bg-white p-6 shadow-sm">
+    <form onSubmit={(event) => onSubmit(event, form, 'contact')} className={`${compact ? '' : 'mt-10 '}grid gap-4 rounded-lg bg-white p-6 shadow-sm`}>
       <div className="grid gap-4 md:grid-cols-2">
         <input value={form.name} onChange={(event) => update('name', event.target.value)} required placeholder="Name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
         <input value={form.phone} onChange={(event) => update('phone', event.target.value)} required placeholder="Phone number" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
@@ -856,7 +1327,7 @@ function CountUpStat({ value, label }) {
   )
 }
 
-function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [], resultPhotos = [], houseRecords = [], studentCouncilRecords = [] }) {
+function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [], resultPhotos = [], studentCouncilRecords = [] }) {
   const [openGalleryPhoto, setOpenGalleryPhoto] = useState(null)
   const galleryFolders = galleryPhotos.reduce((folders, photo) => {
     const folderName = photo.folder_title || 'Gallery'
@@ -1187,8 +1658,13 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
       href,
       group: item.label,
     })) || []
+    const groupedChildren = item.groups?.flatMap((group) => group.children.map(([label, href]) => ({
+      label,
+      href,
+      group: `${item.label} / ${group.label}`,
+    }))) || []
 
-    return item.external ? [] : [parent, ...children]
+    return item.external ? [] : [parent, ...children, ...groupedChildren]
   })
     .filter((page) => {
       const slug = page.href.replace(/^\/|\/$/g, '') || 'home'
@@ -2363,6 +2839,7 @@ function App() {
   const [publicNotices, setPublicNotices] = useState([])
   const [publicStudentCouncilRecords, setPublicStudentCouncilRecords] = useState([])
   const [formMessage, setFormMessage] = useState('')
+  const [activeAdmissionSlide, setActiveAdmissionSlide] = useState(0)
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -2384,6 +2861,16 @@ function App() {
 
     return () => window.clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    if (activePage) return undefined
+
+    const timer = window.setInterval(() => {
+      setActiveAdmissionSlide((currentSlide) => (currentSlide + 1) % admissionSlides.length)
+    }, 5000)
+
+    return () => window.clearInterval(timer)
+  }, [activePage])
 
   useEffect(() => {
     if (!supabase) return
@@ -2573,10 +3060,6 @@ function App() {
           sections: dbPage.sections || defaultPage?.sections,
         }
       : defaultPage
-  const homePageSettings = cmsPages.home || contentPages.home || {}
-  const campusGlimpsesPhotos = publicGalleryPhotos.filter((photo) => getSlug(photo.folder_title) === 'campus-glimpses')
-  const homeGalleryPhotos = campusGlimpsesPhotos.slice(0, 3)
-
   return (
     <div className="min-h-screen bg-[#f8f3e9]">
       {loading ? (
@@ -2634,20 +3117,38 @@ function App() {
           </div>
 
           <div className="mx-auto hidden max-w-7xl px-4 lg:block lg:px-8">
-            <div className="flex items-center justify-center">
-              {navItems.map((item) => (
-                <div key={item.label} className="group relative">
+            <div className="relative flex items-center justify-center">
+              {navItems.map((item) => {
+                const hasSubmenu = Boolean(item.children || item.groups)
+
+                return (
+                <div key={item.label} className={`group ${item.groups ? '' : 'relative'}`}>
                   <a
                     href={item.href}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noreferrer' : undefined}
                     onClick={(event) => handleInternalLink(event, item.href)}
-                    className={`flex items-center justify-between gap-1 px-3 py-3 text-sm font-semibold transition hover:text-[#ffc400] lg:justify-start ${item.label === 'Home' ? 'text-[#ffc400]' : ''}`}
+                    className={`flex items-center justify-between gap-1 px-2 py-3 text-[13px] font-semibold transition hover:text-[#ffc400] lg:justify-start xl:px-3 ${item.label === 'Home' ? 'text-[#ffc400]' : ''}`}
                   >
                     {item.label}
-                    {item.children ? <Icon name="chevron" className="h-4 w-4" /> : null}
+                    {hasSubmenu ? <Icon name="chevron" className="h-4 w-4" /> : null}
                   </a>
-                  {item.children ? (
+                  {item.groups ? (
+                    <div className={`invisible absolute left-1/2 top-full z-50 grid -translate-x-1/2 translate-y-2 gap-5 rounded-md bg-white p-5 text-slate-800 opacity-0 shadow-xl transition group-hover:visible group-hover:-translate-x-1/2 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:-translate-x-1/2 group-focus-within:translate-y-0 group-focus-within:opacity-100 ${item.label === 'About Us' ? 'w-[min(94vw,70rem)] grid-cols-5' : 'w-[min(92vw,56rem)] grid-cols-4'}`}>
+                      {item.groups.map((group) => (
+                        <div key={group.label}>
+                          <p className="border-b border-[#ffc400] pb-2 text-sm font-black uppercase tracking-[0.11em] text-[#a8171d]">{group.label}</p>
+                          <div className="mt-2 grid gap-1">
+                            {group.children.map(([childLabel, childHref]) => (
+                              <a key={childLabel} href={childHref} onClick={(event) => handleInternalLink(event, childHref)} className="rounded px-2 py-2 text-sm font-semibold text-slate-700 transition hover:bg-[#fff2cb] hover:text-[#a8171d]">
+                                {childLabel}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : item.children ? (
                     <div className="grid gap-1 bg-[#061f3f] px-3 pb-3 lg:invisible lg:absolute lg:left-0 lg:top-full lg:z-50 lg:min-w-64 lg:translate-y-2 lg:rounded-md lg:bg-white lg:p-2 lg:text-slate-800 lg:opacity-0 lg:shadow-xl lg:transition lg:group-hover:visible lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:visible lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100">
                       {item.children.map(([childLabel, childHref]) => (
                         <a key={childLabel} href={childHref} onClick={(event) => handleInternalLink(event, childHref)} className="rounded px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#ffc400] hover:text-[#102344] lg:text-slate-800">
@@ -2657,7 +3158,8 @@ function App() {
                     </div>
                   ) : null}
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
 
@@ -2678,9 +3180,12 @@ function App() {
                 <Icon name="x" />
               </button>
             </div>
-            {navItems.map((item) => (
+            {navItems.map((item) => {
+              const hasSubmenu = Boolean(item.children || item.groups)
+
+              return (
               <div key={item.label} className="border-b border-white/10 last:border-b-0">
-                {item.children ? (
+                {hasSubmenu ? (
                   <button
                     type="button"
                     className={`flex w-full items-center justify-between gap-2 py-4 text-left text-base font-semibold transition hover:text-[#ffc400] ${openMobileMenu === item.label ? 'text-[#ffc400]' : 'text-white'}`}
@@ -2701,12 +3206,22 @@ function App() {
                     {item.label}
                   </a>
                 )}
-                {item.children && openMobileMenu === item.label ? (
+                {hasSubmenu && openMobileMenu === item.label ? (
                   <div className="grid gap-1 pb-4 pl-3">
                     <a href={item.href} onClick={(event) => handleInternalLink(event, item.href)} className="rounded-md px-3 py-2 text-sm font-bold text-[#ffc400] transition hover:bg-[#ffc400] hover:text-[#102344]">
                       {item.label} Overview
                     </a>
-                    {item.children.map(([childLabel, childHref]) => (
+                    {item.groups?.map((group) => (
+                      <div key={group.label} className="mt-3 border-l border-white/15 pl-3">
+                        <p className="mb-2 text-xs font-black uppercase tracking-[0.14em] text-[#ffc400]">{group.label}</p>
+                        {group.children.map(([childLabel, childHref]) => (
+                          <a key={childLabel} href={childHref} onClick={(event) => handleInternalLink(event, childHref)} className="block rounded-md px-3 py-2 text-sm font-semibold text-white/85 transition hover:bg-[#ffc400] hover:text-[#102344]">
+                            {childLabel}
+                          </a>
+                        ))}
+                      </div>
+                    ))}
+                    {item.children?.map(([childLabel, childHref]) => (
                       <a key={childLabel} href={childHref} onClick={(event) => handleInternalLink(event, childHref)} className="rounded-md px-3 py-2 text-sm font-semibold text-white/85 transition hover:bg-[#ffc400] hover:text-[#102344]">
                         {childLabel}
                       </a>
@@ -2714,7 +3229,8 @@ function App() {
                   </div>
                 ) : null}
               </div>
-            ))}
+              )
+            })}
           </aside>
         </div>
       ) : null}
@@ -2758,47 +3274,157 @@ function App() {
           </div>
         </section>
 
-        <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 lg:px-8">
-          <div className="grid overflow-hidden rounded-lg bg-[#fffaf0] shadow-2xl shadow-slate-950/15 sm:grid-cols-2 lg:grid-cols-4">
-            {highlights.map(([title, text, icon], index) => (
-              <div key={title} className={`highlight-flip group flex items-center gap-5 p-7 ${index > 0 ? 'lg:border-l lg:border-slate-300' : ''}`}>
-                <span className="grid h-16 w-16 flex-none place-items-center rounded-full bg-[#a8171d] text-white"><Icon name={icon} className="h-8 w-8" /></span>
+        <section aria-label="Welcome message" className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 lg:px-8">
+          <div className="welcome-card grid overflow-hidden rounded-xl border-t-4 border-[#ffc400] bg-white shadow-2xl shadow-slate-950/15 lg:grid-cols-[1.12fr_0.88fr]">
+            <div className="p-7 sm:p-10 lg:p-12">
+              <div className="flex items-center gap-4">
+                <span className="h-px w-12 bg-[#ffc400]" />
+                <p className="text-sm font-extrabold uppercase tracking-[0.22em] text-[#a8171d]">Welcome Message</p>
+              </div>
+              <h2 className="mt-5 max-w-2xl text-3xl font-black leading-tight text-[#102344] sm:text-4xl">
+                An education rooted in values, guided by excellence.
+              </h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-700">
+                Welcome to Shri Pragya Public School, where every child is known, encouraged and inspired to do their best. We nurture curious minds, disciplined habits and compassionate hearts so that learning becomes a foundation for life.
+              </p>
+              <p className="mt-4 max-w-2xl leading-7 text-slate-600">
+                With dedicated teachers, modern learning spaces and opportunities beyond the classroom, our students grow with confidence and step towards their future with purpose.
+              </p>
+              <div className="mt-8 inline-flex items-center gap-4 rounded-full bg-[#fff6df] px-5 py-3">
+                <img src={logo} alt="" className="h-10 w-10 object-contain" />
                 <div>
-                  <h2 className="text-xl font-extrabold text-[#16172b]">{title}</h2>
-                  <p className="mt-1 font-medium text-[#33436b]">{text}</p>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#a8171d]">Pragya Deep</p>
+                  <p className="text-sm font-bold text-[#102344]">Always Shining</p>
                 </div>
               </div>
-            ))}
+            </div>
+            <div className="relative min-h-72 lg:min-h-full">
+              <img src={boysReading} alt="Students reading and learning at Shri Pragya Public School" className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#06284d]/80 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8">
+                <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">Shri Pragya Public School</p>
+                <p className="mt-2 text-lg font-semibold">Knowledge. Discipline. Values.</p>
+              </div>
+            </div>
           </div>
         </section>
 
 
 
-        <section id="about" className="mx-auto grid max-w-7xl gap-12 px-4 py-24 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
-          <div>
-            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">About the school</p>
-            <h2 className="mt-3 text-4xl font-black leading-tight text-[#102344] sm:text-5xl">A disciplined, caring campus for confident learners.</h2>
-            <p className="mt-6 text-lg leading-8 text-slate-700">Shri Pragya Public School brings academics, values, sports and creative expression together in a structured environment. The website mirrors the school identity from the reference while extending it into a complete digital experience for parents, students and staff.</p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {['Value-based education', 'Qualified faculty', 'Regular parent communication', 'Balanced academics and activities'].map((item) => (
-                <p key={item} className="flex items-center gap-3 rounded-md bg-white px-4 py-3 font-semibold shadow-sm"><Icon name="check" className="h-5 w-5 text-[#a8171d]" />{item}</p>
-              ))}
+        <section id="about" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+            <div>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">About Pragya</p>
+              <h2 className="mt-3 text-4xl font-black leading-tight text-[#102344] sm:text-5xl">A disciplined, caring campus for confident learners.</h2>
+              <p className="mt-6 text-lg leading-8 text-slate-700">Shri Pragya Public School brings academics, values, sports and creative expression together in a structured environment. The website mirrors the school identity from the reference while extending it into a complete digital experience for parents, students and staff.</p>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                {['Value-based education', 'Qualified faculty', 'Regular parent communication', 'Balanced academics and activities'].map((item) => (
+                  <p key={item} className="flex items-center gap-3 rounded-md bg-white px-4 py-3 font-semibold shadow-sm"><Icon name="check" className="h-5 w-5 text-[#a8171d]" />{item}</p>
+                ))}
+              </div>
+            </div>
+            <div className="grid content-start gap-5">
+              <img src={campusHero} alt="School campus buildings and courtyard" className="h-full min-h-80 w-full rounded-lg object-cover shadow-xl" />
             </div>
           </div>
-          <div className="grid content-start gap-5">
-            <div className="grid grid-cols-2 gap-4">
+
+          <div className="mt-14 grid overflow-hidden rounded-lg bg-[#fffaf0] shadow-xl shadow-slate-950/10 sm:grid-cols-2 lg:grid-cols-4">
+            {highlights.map(([title, text, icon], index) => (
+              <div key={title} className={`highlight-flip group flex items-center gap-5 p-7 ${index > 0 ? 'lg:border-l lg:border-slate-300' : ''}`}>
+                <span className="grid h-16 w-16 flex-none place-items-center rounded-full bg-[#a8171d] text-white"><Icon name={icon} className="h-8 w-8" /></span>
+                <div>
+                  <h3 className="text-xl font-extrabold text-[#16172b]">{title}</h3>
+                  <p className="mt-1 font-medium text-[#33436b]">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-14 rounded-xl bg-[#06284d] p-6 text-white sm:p-9">
+            <h3 className="text-center text-3xl font-black sm:text-4xl">Achievement Counters</h3>
+            <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {stats.map(([value, label]) => (
                 <CountUpStat key={label} value={value} label={label} />
               ))}
             </div>
-            <img src={campusHero} alt="School campus buildings and courtyard" className="h-72 w-full rounded-lg object-cover shadow-xl" />
+            <p className="mt-10 text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Quick Links</p>
+            <div className="mt-6 grid overflow-hidden rounded-xl border border-white/10 bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
+              {quickLinks.map(([label, href, icon], index) => (
+                <a
+                  key={label}
+                  href={href}
+                  onClick={(event) => handleInternalLink(event, href)}
+                  className={`group flex items-center gap-4 px-6 py-5 font-bold text-white transition hover:bg-[#ffc400] hover:text-[#102344] ${index > 0 ? 'lg:border-l lg:border-white/10' : ''}`}
+                >
+                  <Icon name={icon} className="h-6 w-6 flex-none text-[#ffc400] transition group-hover:text-[#102344]" />
+                  <span>{label}</span>
+                  <Icon name="arrow" className="ml-auto h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="why-choose-us" className="bg-white py-24">
+          <div className="mx-auto max-w-7xl px-4 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Why Choose Us</p>
+              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Education that prepares students for life.</h2>
+            </div>
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {whyChooseUs.map(([title, text, icon]) => (
+                <article key={title} className="rounded-lg border border-slate-100 bg-[#fffaf0] p-7 shadow-sm">
+                  <span className="grid h-14 w-14 place-items-center rounded-full bg-[#a8171d] text-white"><Icon name={icon} className="h-7 w-7" /></span>
+                  <h3 className="mt-5 text-xl font-extrabold text-[#102344]">{title}</h3>
+                  <p className="mt-3 leading-7 text-slate-700">{text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="academics" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Academic Highlights</p>
+              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Clear pathways from strong foundations to board readiness.</h2>
+            </div>
+            <div className="grid gap-5">
+              {programs.map(([title, text]) => (
+                <article key={title} className="rounded-lg bg-white p-7 shadow-sm">
+                  <h3 className="text-2xl font-extrabold text-[#a8171d]">{title}</h3>
+                  <p className="mt-2 text-lg leading-8 text-slate-700">{text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="competitive-program" className="bg-[#06284d] py-24 text-white">
+          <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8">
+            <div>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">IIT-JEE &amp; NEET Program</p>
+              <h2 className="mt-3 text-4xl font-black sm:text-5xl">Focused preparation for ambitious futures.</h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">Our senior students receive structured guidance that supports school academics while building the discipline and conceptual clarity needed for competitive examinations.</p>
+              <a href="/academics/" onClick={(event) => handleInternalLink(event, '/academics/')} className="mt-8 inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">
+                Explore Academics <Icon name="arrow" />
+              </a>
+            </div>
+            <div className="rounded-lg bg-white/10 p-6 sm:p-8">
+              {competitiveProgramFeatures.map((item) => (
+                <p key={item} className="flex gap-3 border-b border-white/15 py-4 first:pt-0 last:border-0 last:pb-0">
+                  <Icon name="check" className="mt-1 h-5 w-5 flex-none text-[#ffc400]" />
+                  <span className="text-lg font-semibold">{item}</span>
+                </p>
+              ))}
+            </div>
           </div>
         </section>
 
         <section id="facilities" className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
             <div className="max-w-3xl">
-              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Facilities</p>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Facilities Overview</p>
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Spaces designed for learning, discipline and discovery.</h2>
             </div>
             <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -2826,29 +3452,12 @@ function App() {
           </div>
         </section>
 
-        <section id="academics" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Academics</p>
-              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Clear pathways from foundation to board readiness.</h2>
-            </div>
-            <div className="grid gap-5">
-              {programs.map(([title, text]) => (
-                <article key={title} className="rounded-lg bg-white p-7 shadow-sm">
-                  <h3 className="text-2xl font-extrabold text-[#a8171d]">{title}</h3>
-                  <p className="mt-2 text-lg leading-8 text-slate-700">{text}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section id="academic-calendar" className="bg-[#06284d] py-20 text-white">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
             <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
               <div>
-                <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Academics</p>
-                <h2 className="mt-3 text-4xl font-black">Result</h2>
+                <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Results &amp; Achievements</p>
+                <h2 className="mt-3 text-4xl font-black">Celebrating student success.</h2>
               </div>
               <a href="/results/" onClick={(event) => handleInternalLink(event, '/results/')} className="inline-flex w-fit items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">View All Results <Icon name="arrow" /></a>
             </div>
@@ -2872,85 +3481,60 @@ function App() {
           </div>
         </section>
 
-        {publicNotices.length > 0 ? (
-          <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
-            <div className="overflow-hidden rounded-lg border border-[#ffc400]/50 bg-white shadow-sm">
-              <div className="flex items-center gap-3 bg-[#06284d] px-5 py-4 text-white">
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-[#ffc400] text-[#102344]"><Icon name="book" className="h-5 w-5" /></span>
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ffc400]">Updates</p>
-                  <h2 className="text-2xl font-black">Notice Board</h2>
-                </div>
-              </div>
-              <div className="grid divide-y divide-slate-200">
-                {publicNotices.map((notice) => {
-                  const content = (
-                    <>
-                      <span className="mt-1 h-2 w-2 flex-none rounded-full bg-[#a8171d]" />
-                      <span>{notice.notice_text}</span>
-                    </>
-                  )
-
-                  return notice.link_url ? (
-                    <a key={notice.id} href={notice.link_url} target="_blank" rel="noreferrer" className="flex gap-3 px-5 py-4 font-bold text-[#102344] transition hover:bg-[#fffaf0] hover:text-[#a8171d]">
-                      {content}
-                    </a>
-                  ) : (
-                    <p key={notice.id} className="flex gap-3 px-5 py-4 font-bold text-[#102344]">{content}</p>
-                  )
-                })}
-              </div>
+        <section id="testimonials" className="bg-white py-24">
+          <div className="mx-auto max-w-7xl px-4 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Testimonials</p>
+              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Trusted by families and learners.</h2>
             </div>
-          </section>
-        ) : null}
-
-        <section id="activities" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div className="max-w-3xl">
-              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Activities</p>
-              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Every child gets room to lead, perform and play.</h2>
-              <a href="/gallery/" onClick={(event) => handleInternalLink(event, '/gallery/')} className="mt-8 inline-flex w-fit items-center gap-3 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white">View Gallery <Icon name="arrow" /></a>
+            <div className="mt-12 grid gap-5 lg:grid-cols-3">
+              {testimonials.map(([name, quote]) => (
+                <figure key={name} className="rounded-lg bg-[#fffaf0] p-7 shadow-sm">
+                  <p className="text-4xl font-black leading-none text-[#ffc400]">&ldquo;</p>
+                  <blockquote className="mt-3 text-lg leading-8 text-slate-700">{quote}</blockquote>
+                  <figcaption className="mt-6 font-extrabold text-[#a8171d]">{name}</figcaption>
+                </figure>
+              ))}
             </div>
-            <img src={classStudentsTwo} alt="Students participating in school activities" className="h-80 w-full rounded-lg object-cover shadow-xl" />
           </div>
-          <div className="mt-12 flex flex-wrap gap-3">
-            {activities.map((item) => (
-              <span key={item} className="rounded-md bg-white px-5 py-3 text-lg font-bold text-[#102344] shadow-sm">{item}</span>
+        </section>
+
+        <section id="news-events" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Latest News &amp; Events</p>
+              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Stay connected with Pragya.</h2>
+            </div>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {(publicNotices.length > 0 ? publicNotices.slice(0, 3).map((notice) => [notice.id, 'School Update', notice.notice_text, notice.link_url]) : newsFallback.map(([title, text]) => [title, title, text, null])).map(([key, title, text, link]) => (
+              <article key={key} className="flex flex-col rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+                <p className="text-sm font-black uppercase tracking-[0.18em] text-[#a8171d]">{title}</p>
+                <p className="mt-4 flex-1 text-lg leading-8 text-slate-700">{text}</p>
+                {link ? <a href={link} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 font-bold text-[#a8171d]">Read More <Icon name="arrow" /></a> : null}
+              </article>
             ))}
           </div>
         </section>
 
-        <section id="gallery" className="bg-white py-24">
-          <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">{homePageSettings.homeGalleryEyebrow || 'Gallery'}</p>
-            <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">{homePageSettings.homeGalleryTitle || 'Campus glimpses'}</h2>
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {homeGalleryPhotos.length > 0 ? (
-                homeGalleryPhotos.map((photo) => (
-                  <img key={photo.id || photo.image_url} src={photo.image_url} alt={photo.title || 'Campus glimpse'} className="h-72 w-full rounded-lg object-cover shadow-md" />
-                ))
-              ) : (
-                galleryImages.slice(0, 3).map(([image, alt]) => (
-                  <img key={alt} src={image} alt={alt} className="h-72 w-full rounded-lg object-cover shadow-md" />
-                ))
-              )}
+        <section id="admission-open" className="bg-[#a8171d] py-16 text-white">
+          <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-4 lg:flex-row lg:items-center lg:px-8">
+            <div>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Admission Open</p>
+              <h2 className="mt-3 text-4xl font-black sm:text-5xl">Begin your child&apos;s Pragya journey.</h2>
+              <p className="mt-4 max-w-2xl text-lg leading-8 text-white/85">Enquiries are welcome for the upcoming academic session. Meet our team and discover an education built on knowledge, discipline and values.</p>
             </div>
-          </div>
-        </section>
-
-        <section id="careers" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
-          <div className="rounded-lg bg-[#fffaf0] p-8 shadow-sm md:p-12">
-            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Careers</p>
-            <h2 className="mt-3 text-4xl font-black text-[#102344]">Join our teaching community.</h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">We welcome passionate educators who believe in discipline, care and student-centered learning. Share your profile with the school office for current vacancies.</p>
+            <a href="/admission-form/" onClick={(event) => handleInternalLink(event, '/admission-form/')} className="inline-flex shrink-0 items-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-lg font-black text-[#102344] shadow-xl">
+              Apply For Admission <Icon name="arrow" />
+            </a>
           </div>
         </section>
 
         <section id="contact-us" className="bg-white py-24">
           <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-2 lg:px-8">
             <div>
-              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Contact Us</p>
-              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Visit the campus or send an enquiry.</h2>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Contact Quick Form</p>
+              <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Visit the campus or send a quick enquiry.</h2>
               <div className="mt-8 grid gap-4 text-base font-semibold text-slate-700">
                 {contactDetails.map(([label, value]) => (
                   <p key={label} className="flex gap-3">
@@ -2960,30 +3544,59 @@ function App() {
                 ))}
               </div>
             </div>
-            <form className="grid gap-4 rounded-lg bg-[#fffaf0] p-6 shadow-sm">
-              {['Parent Name', 'Phone Number'].map((label) => (
-                <label key={label} className="grid gap-2 font-semibold text-slate-800">
-                  {label}
-                  <input className="rounded-md border border-slate-300 bg-white px-4 py-3 outline-none focus:border-[#a8171d]" />
-                </label>
-              ))}
-              <label className="grid gap-2 font-semibold text-slate-800">
-                Student Class
-                <select defaultValue="" className="rounded-md border border-slate-300 bg-white px-4 py-3 outline-none focus:border-[#a8171d]">
-                  <option value="" disabled>Select class</option>
-                  {classOptions.map((className) => (
-                    <option key={className} value={className}>{className}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-2 font-semibold text-slate-800">
-                Message
-                <textarea rows="4" className="rounded-md border border-slate-300 bg-white px-4 py-3 outline-none focus:border-[#a8171d]" />
-              </label>
-              <button type="button" className="rounded-md bg-[#a8171d] px-6 py-4 font-bold text-white">Submit Enquiry</button>
-            </form>
+            <div className="rounded-lg bg-[#fffaf0] p-2 shadow-sm">
+              <ContactForm onSubmit={handlePublicFormSubmit} message={formMessage} compact />
+            </div>
           </div>
         </section>
+
+        <section aria-label="Admission highlights slider" className="bg-[#f8f3e9] px-4 py-16 lg:px-8">
+          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl">
+            <img
+              src={admissionSlides[activeAdmissionSlide].image}
+              alt="Admission at Shri Pragya Public School"
+              className="h-56 w-full object-cover transition-opacity duration-500 sm:h-72 lg:h-[420px]"
+            />
+            <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 sm:bottom-8 sm:right-10">
+              {admissionSlides.map((slide, index) => (
+                <button
+                  key={slide.title}
+                  type="button"
+                  aria-label={`Show admission slide ${index + 1}`}
+                  onClick={() => setActiveAdmissionSlide(index)}
+                  className={`h-2.5 rounded-full transition-all ${activeAdmissionSlide === index ? 'w-10 bg-[#a8171d]' : 'w-2.5 bg-slate-400 hover:bg-[#a8171d]'}`}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="fixed bottom-5 right-4 z-40 flex flex-col items-end gap-3 sm:bottom-7 sm:right-7" aria-label="Quick contact actions">
+          <a
+            href="https://wa.me/919461996117"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-3 rounded-full bg-[#16a34a] px-4 py-3 font-bold text-white shadow-xl transition hover:-translate-y-1 hover:bg-[#15803d]"
+          >
+            <Icon name="chat" className="h-5 w-5" />
+            <span className="hidden sm:inline">WhatsApp Chat</span>
+          </a>
+          <a
+            href="/admission-form/"
+            onClick={(event) => handleInternalLink(event, '/admission-form/')}
+            className="flex items-center gap-3 rounded-full bg-[#a8171d] px-4 py-3 font-bold text-white shadow-xl transition hover:-translate-y-1 hover:bg-[#06284d]"
+          >
+            <Icon name="graduation" className="h-5 w-5" />
+            <span className="hidden sm:inline">Apply Now</span>
+          </a>
+          <a
+            href="tel:09461996117"
+            className="flex items-center gap-3 rounded-full bg-[#ffc400] px-4 py-3 font-bold text-[#102344] shadow-xl transition hover:-translate-y-1 hover:bg-white"
+          >
+            <Icon name="phone" className="h-5 w-5" />
+            <span className="hidden sm:inline">Call Now</span>
+          </a>
+        </div>
       </main>
       )}
 
