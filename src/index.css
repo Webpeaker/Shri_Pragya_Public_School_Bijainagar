@@ -60,6 +60,303 @@ body {
   }
 }
 
+@keyframes backdropDrift {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.07);
+  }
+}
+
+@keyframes titleShine {
+  0% {
+    background-position: 180% center;
+  }
+
+  100% {
+    background-position: -180% center;
+  }
+}
+
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgb(255 196 0 / 30%);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 14px rgb(255 196 0 / 0%);
+  }
+}
+
+.hero-backdrop {
+  animation: backdropDrift 12s ease-in-out infinite alternate;
+}
+
+.hero-title-accent {
+  background: linear-gradient(105deg, #ffc400 20%, #ffffff 46%, #ffc400 66%);
+  background-clip: text;
+  background-size: 240% auto;
+  color: transparent;
+  animation: titleShine 5s linear 1.2s infinite;
+  overflow-wrap: normal;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.responsive-image-frame {
+  background: linear-gradient(135deg, #fffaf0, #ffffff);
+  isolation: isolate;
+}
+
+.responsive-image-frame > img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 640px) {
+  main img.object-cover:not(.hero-backdrop):not(.absolute),
+  main img.object-contain:not(.hero-backdrop):not(.absolute) {
+    background-color: #fffaf0;
+    height: auto !important;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  main img.object-cover:not(.hero-backdrop):not(.absolute) {
+    aspect-ratio: auto;
+  }
+
+  .responsive-image-frame {
+    aspect-ratio: auto !important;
+    min-height: 0 !important;
+  }
+
+  .responsive-image-frame > img[aria-hidden="true"],
+  .responsive-image-frame > div {
+    display: none;
+  }
+
+  .responsive-image-frame > img:not([aria-hidden="true"]) {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0.5rem;
+  }
+
+  .cms-html-content img {
+    height: auto !important;
+  }
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.scroll-reveal.reveal-left {
+  transform: translateX(-36px);
+}
+
+.scroll-reveal.reveal-right {
+  transform: translateX(36px);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translate(0);
+}
+
+.stagger-grid > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    box-shadow 0.35s ease;
+}
+
+.stagger-grid.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-grid.is-visible > *:nth-child(2) {
+  transition-delay: 0.08s;
+}
+
+.stagger-grid.is-visible > *:nth-child(3) {
+  transition-delay: 0.16s;
+}
+
+.stagger-grid.is-visible > *:nth-child(4) {
+  transition-delay: 0.24s;
+}
+
+.stagger-grid.is-visible > *:nth-child(5) {
+  transition-delay: 0.32s;
+}
+
+.stagger-grid.is-visible > *:nth-child(6) {
+  transition-delay: 0.4s;
+}
+
+.motion-card {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.motion-card:hover {
+  box-shadow: 0 22px 48px rgb(15 23 42 / 14%);
+  transform: translateY(-7px);
+}
+
+.academics-layout {
+  border: 1px solid rgb(226 232 240 / 90%);
+}
+
+.academics-hero-image {
+  animation: academicImageFloat 6s ease-in-out infinite alternate;
+}
+
+.academics-info-card,
+.academics-gallery-card,
+.academics-feature-card,
+.academics-roadmap-card,
+.academics-mini-card {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.academics-info-card:hover,
+.academics-gallery-card:hover,
+.academics-feature-card:hover,
+.academics-roadmap-card:hover,
+.academics-mini-card:hover {
+  border-color: rgb(255 196 0 / 65%);
+  box-shadow: 0 18px 38px rgb(15 23 42 / 12%);
+  transform: translateY(-5px);
+}
+
+.academics-roadmap-card:hover {
+  box-shadow: 0 20px 44px rgb(0 0 0 / 18%);
+}
+
+@keyframes academicImageFloat {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+.motion-button {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.motion-button::after {
+  position: absolute;
+  inset: -30% auto -30% -45%;
+  width: 32%;
+  content: "";
+  background: rgb(255 255 255 / 30%);
+  transform: skewX(-22deg);
+  transition: transform 0.55s ease;
+}
+
+.motion-button:hover {
+  transform: translateY(-3px);
+}
+
+.motion-button:hover::after {
+  transform: translateX(440%) skewX(-22deg);
+}
+
+.menu-pop {
+  transform-origin: top center;
+}
+
+.group:hover .menu-pop,
+.group:focus-within .menu-pop {
+  animation: softPopIn 0.26s ease both;
+}
+
+.floating-action {
+  animation: gentleFloat 3.2s ease-in-out infinite;
+}
+
+.floating-action:nth-child(2) {
+  animation-delay: 0.45s;
+}
+
+.floating-action:nth-child(3) {
+  animation-delay: 0.9s;
+}
+
+.admission-pulse {
+  animation: pulseRing 2.4s ease-out infinite;
+}
+
+.motion-form input,
+.motion-form select,
+.motion-form textarea {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.motion-form input:focus,
+.motion-form select:focus,
+.motion-form textarea:focus {
+  box-shadow: 0 0 0 3px rgb(168 23 29 / 10%);
+  transform: translateY(-1px);
+}
+
+.motion-form button {
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.motion-form button:hover {
+  box-shadow: 0 12px 24px rgb(168 23 29 / 20%);
+  transform: translateY(-2px);
+}
+
 .hero-kicker,
 .hero-title,
 .hero-copy,
@@ -249,10 +546,34 @@ body {
   .result-card,
   .facility-card,
   .facility-overlay,
-  .facility-overlay-content {
+  .facility-overlay-content,
+  .hero-backdrop,
+  .hero-title-accent,
+  .scroll-reveal,
+  .stagger-grid > *,
+  .motion-card,
+  .academics-hero-image,
+  .academics-info-card,
+  .academics-gallery-card,
+  .academics-feature-card,
+  .academics-roadmap-card,
+  .academics-mini-card,
+  .motion-button,
+  .menu-pop,
+  .floating-action,
+  .admission-pulse,
+  .motion-form input,
+  .motion-form select,
+  .motion-form textarea,
+  .motion-form button {
     animation: none;
     transition: none;
     transform: none;
+  }
+
+  .scroll-reveal,
+  .stagger-grid > * {
+    opacity: 1;
   }
 
   .facility-overlay,

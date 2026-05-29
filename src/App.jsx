@@ -259,6 +259,69 @@ const contactDetails = [
   ['Email id', 'officepragyaschool@gmail.com, shripragyaschool@gmail.com'],
 ]
 
+const pageVisualThemes = {
+  campus: {
+    heading: 'A School Experience Built with Purpose',
+    copy: 'Every part of school life is designed to help learners feel supported, remain disciplined and grow with confidence.',
+    highlights: ['Caring environment', 'Strong values', 'Confident learners'],
+    photos: [
+      [campusHero, 'Shri Pragya Public School campus'],
+      [teacherImage, 'Teacher guiding students in class'],
+      [classStudents, 'Students learning together'],
+    ],
+  },
+  academics: {
+    heading: 'Learning in Action',
+    copy: 'Concept clarity grows through engaging classroom instruction, thoughtful practice and hands-on academic experiences.',
+    highlights: ['Concept learning', 'Practical exposure', 'Regular guidance'],
+    photos: [
+      [digitalBoard, 'Digital classroom learning'],
+      [chemistryLab, 'Students learning through science practicals'],
+      [boysReading, 'Students developing study habits'],
+    ],
+  },
+  facilities: {
+    heading: 'Spaces That Support Every Learner',
+    copy: 'Our campus resources give students opportunities to observe, practise, explore technology, read and participate actively.',
+    highlights: ['Modern classrooms', 'Practical labs', 'Student comfort'],
+    photos: [
+      [computerLab, 'Computer lab facilities'],
+      [studentLibrary, 'Library reading environment'],
+      [physicsLab, 'Science laboratory facilities'],
+    ],
+  },
+  activities: {
+    heading: 'Confidence Beyond Textbooks',
+    copy: 'Participation in events, sports and cultural activities helps students build expression, teamwork and leadership.',
+    highlights: ['Teamwork', 'Creativity', 'Leadership'],
+    photos: [
+      [classStudentsTwo, 'Students participating in school life'],
+      [sportsImage, 'Sports and activity opportunities'],
+      [classStudents, 'Learning and celebration together'],
+    ],
+  },
+  admissions: {
+    heading: 'Begin the Pragya Journey',
+    copy: 'Families are welcome to discover a learning environment shaped by care, discipline, opportunity and purposeful guidance.',
+    highlights: ['Guided admission', 'Campus visit', 'Parent support'],
+    photos: [
+      [campusHero, 'School campus welcoming families'],
+      [boysReading, 'A joyful start to learning'],
+      [classStudentsTwo, 'Students growing with confidence'],
+    ],
+  },
+  careers: {
+    heading: 'Grow with Our Learning Community',
+    copy: 'Committed educators and staff members contribute to a culture where students are known, guided and inspired.',
+    highlights: ['Professional culture', 'Student care', 'Continuous learning'],
+    photos: [
+      [teacherImage, 'Dedicated teaching faculty'],
+      [digitalTeaching, 'Modern teaching practices'],
+      [classStudents, 'Learning supported by educators'],
+    ],
+  },
+}
+
 const getActivePageFromPath = () => window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase()
 const getSlug = (value) => String(value || '')
   .toLowerCase()
@@ -266,16 +329,83 @@ const getSlug = (value) => String(value || '')
   .replace(/[^a-z0-9]+/g, '-')
   .replace(/^-+|-+$/g, '')
 
+const getPageVisualTheme = (activePage, page) => {
+  const pageIdentity = `${activePage} ${page.eyebrow || ''} ${page.title || ''}`.toLowerCase()
+  let theme = pageVisualThemes.campus
+
+  if (/(career|opening|employee|teacher training|work culture)/.test(pageIdentity)) {
+    theme = pageVisualThemes.careers
+  } else if (/(admission|contact)/.test(pageIdentity)) {
+    theme = pageVisualThemes.admissions
+  } else if (/(facilit|infrastructure|classroom|laborator|computer|library|hostel|transport|safety|digital campus)/.test(pageIdentity)) {
+    theme = pageVisualThemes.facilities
+  } else if (/(academic|curriculum|section|iit|neet|report|exam)/.test(pageIdentity)) {
+    theme = pageVisualThemes.academics
+  } else if (/(gallery|beyond|annual|sports|house|music|dance|alumni|achievement|calendar|ptm)/.test(pageIdentity)) {
+    theme = pageVisualThemes.activities
+  }
+
+  const heroPhoto = page.image && page.image !== logo ? page.image : theme.photos[0][0]
+  const photos = [[heroPhoto, `${page.title} - Shri Pragya Public School`], ...theme.photos]
+    .filter(([image], index, allPhotos) => allPhotos.findIndex(([candidate]) => candidate === image) === index)
+    .slice(0, 3)
+
+  return { ...theme, heroPhoto, photos }
+}
+
+const historyMilestones = [
+  ['1976', 'Pragya Bal Mandir Founded', 'Shri Pragya Jain Smarak Samiti began the educational journey with a commitment to values and meaningful learning.'],
+  ['1997', 'Shri Pragya Public School', 'The institution developed into Shri Pragya Public School to serve students through a broader academic environment.'],
+  ['2003', 'Secondary School Status', 'The school expanded its academic pathway to support students during their important secondary years.'],
+  ['2007', 'Senior Secondary Growth', 'Senior secondary education strengthened the institution as a complete school community for the region.'],
+]
+
+const getPageLayoutKind = (activePage, page) => {
+  const pageIdentity = `${activePage} ${page.eyebrow || ''} ${page.title || ''}`.toLowerCase()
+
+  if (activePage === 'origin-history') return 'history'
+  if (/(chairman|director|principal|management|leadership)/.test(pageIdentity)) return 'leadership'
+  if (/(vision|mission|motto|core values|educational philosophy)/.test(pageIdentity)) return 'values'
+  if (/(admission|contact|career|opening|employee|work culture|teacher training)/.test(pageIdentity)) return 'enquiry'
+  if (/(facilit|infrastructure|classroom|laborator|computer|library|hostel|transport|safety|digital campus)/.test(pageIdentity)) return 'facilities'
+  if (/(academic|curriculum|section|iit|neet|report|exam)/.test(pageIdentity)) return 'academics'
+  if (/(gallery|beyond|annual|sports|house|music|dance|alumni|achievement|calendar|ptm)/.test(pageIdentity)) return 'activities'
+  return 'editorial'
+}
+
 const contentPages = {
   about: {
-    eyebrow: 'About',
-    title: 'About Shri Pragya Public School',
+    eyebrow: 'About Us',
+    title: 'School Overview',
     image: teacherImage,
+    layoutVariant: 'about-school',
     paragraphs: [
-      'Shri Pragya Public School brings academics, values, sports and creative expression together in a structured environment.',
-      'The school is committed to disciplined learning, holistic development and strong parent-school communication.',
+      'Shri Pragya Public School is a premier educational institution committed to providing quality education and fostering an environment of learning, discipline, innovation, and holistic development.',
+      'With a rich legacy of academic excellence and value-based education, the school has emerged as one of the most reputed senior secondary schools in Bijainagar and its surrounding region.',
+      'The foundation of the institution was laid in 1976 by Shri Pragya Jain Smarak Samiti as Pragya Bal Mandir. With a vision to provide comprehensive and modern education, the institution was later transformed into Shri Pragya Public School in 1997. Since its inception, the school has continuously evolved to meet the changing educational needs of students while preserving strong moral and cultural values.',
+      'Inspired by the spiritual guidance and blessings of Guru Dev Shri Pannalal Ji Maharaj Saheb, the supreme head of Jain Shwetamber Sthankwasi Nanak Vansh, the institution has grown with dedication, commitment, and excellence in the field of education.',
+      'Our highly qualified faculty members and dedicated staff work tirelessly to nurture young minds and prepare students for future challenges and opportunities. Through innovative teaching methodologies, smart learning practices, competitive exam preparation, sports, co-curricular activities, and personality development programs, the school focuses on the overall growth of every student.',
+      'The school achieved Secondary Level recognition in 2003 and Senior Secondary Level recognition in 2007, marking significant milestones in its journey of excellence.',
+      'At Shri Pragya Public School, we believe that education goes beyond textbooks. Our aim is to develop confident, responsible, compassionate, and future-ready individuals who contribute positively to society and the nation.',
+      'We welcome you to explore our institution and become a part of the Pragya family, where learning inspires excellence and values shape character.',
     ],
-    bullets: ['Origin & History', 'Vision & Mission', 'School Codes & Policies', 'Principal & Teachers Details'],
+    bullets: ['Learning and discipline', 'Innovation and smart learning', 'Holistic development', 'Value-based education', 'Future-ready guidance', 'Pragya family values'],
+    sections: [
+      {
+        heading: 'Dedicated Faculty and Student Growth',
+        paragraphs: [
+          'Our highly qualified faculty members and dedicated staff work tirelessly to nurture young minds and prepare students for future challenges and opportunities.',
+          'Through innovative teaching methodologies, smart learning practices, competitive exam preparation, sports, co-curricular activities, and personality development programs, the school focuses on the overall growth of every student.',
+        ],
+      },
+      {
+        heading: 'Milestones of Excellence',
+        paragraphs: [
+          'The school achieved Secondary Level recognition in 2003 and Senior Secondary Level recognition in 2007, marking significant milestones in its journey of excellence.',
+          'We welcome you to explore our institution and become a part of the Pragya family, where learning inspires excellence and values shape character.',
+        ],
+      },
+    ],
   },
   'school-introduction': {
     eyebrow: 'About Us',
@@ -309,38 +439,88 @@ const contentPages = {
     title: 'Why Pragya School',
     image: classStudentsTwo,
     paragraphs: [
-      'Pragya School combines disciplined learning, committed teachers, modern facilities and opportunities for children to grow in confidence and character.',
+      'Shri Pragya Public School is dedicated to providing an enriching educational experience that combines academic excellence, moral values, modern learning practices, and holistic development.',
+      'With a strong legacy of quality education and a student-centered approach, the school has emerged as one of the most trusted educational institutions in the region.',
     ],
-    bullets: ['Value-based education', 'Academic guidance', 'Safe and caring campus', 'Holistic development'],
+    sections: [
+      {
+        heading: 'Academic Excellence',
+        paragraphs: ['The school follows a well-structured academic system focused on conceptual clarity, practical learning, and continuous improvement, helping students achieve outstanding academic results.'],
+      },
+      {
+        heading: 'Experienced & Dedicated Faculty',
+        paragraphs: ['Our team of highly qualified and experienced educators is committed to nurturing every student through personalized attention, mentorship, and innovative teaching methodologies.'],
+      },
+      {
+        heading: 'IIT-JEE & NEET Integrated Preparation',
+        paragraphs: ['The school provides integrated coaching programs that prepare students for competitive examinations like IIT-JEE and NEET alongside regular academics.'],
+      },
+      {
+        heading: 'Holistic Development',
+        paragraphs: ['At Pragya School, education goes beyond textbooks. Students are encouraged to participate in sports, cultural activities, leadership programs, debates, music, dance, and various co-curricular activities for overall personality development.'],
+      },
+      {
+        heading: 'Modern Infrastructure',
+        paragraphs: ['The campus is equipped with smart classrooms, well-equipped laboratories, computer labs, library facilities, sports infrastructure, and digital learning resources to create an engaging learning environment.'],
+      },
+      {
+        heading: 'Safe & Disciplined Environment',
+        paragraphs: ['We provide a secure, disciplined, and nurturing atmosphere that supports the academic, emotional, and personal growth of every child.'],
+      },
+      {
+        heading: 'Hostel Facilities',
+        paragraphs: ['Separate hostel facilities for boys and girls offer a comfortable and disciplined environment with proper academic support, safety, and hygienic living arrangements.'],
+      },
+      {
+        heading: 'Value-Based Education',
+        paragraphs: ['The school strongly believes in imparting moral values, discipline, respect, compassion, and social responsibility along with academic education.'],
+      },
+      {
+        heading: 'Focus on Future Readiness',
+        paragraphs: ['Through skill development, career guidance, leadership activities, and technology integration, students are prepared to face future challenges with confidence and competence.'],
+      },
+      {
+        heading: 'Strong Legacy & Trust',
+        paragraphs: ['With decades of educational excellence under Shri Pragya Jain Smarak Samiti, the institution continues to inspire generations of learners and contribute meaningfully to society.'],
+      },
+    ],
   },
   'our-motto': {
     eyebrow: 'About Us',
     title: 'Our Motto',
     image: logo,
     paragraphs: [
-      'Pragya Deep: Always Shining.',
-      'Our motto reflects the light of knowledge, values and purpose that guides each student through school and beyond.',
+      '"Learn - Lead - Achieve"',
+      'At Shri Pragya Public School, our motto reflects our commitment to nurturing knowledgeable, confident, and responsible individuals. We inspire students to continuously learn with curiosity, lead with integrity and confidence, and achieve excellence in every sphere of life.',
+      'Through quality education, strong values, discipline, and holistic development, we strive to empower students to become future-ready leaders and responsible citizens who contribute positively to society.',
     ],
   },
   'our-branches': {
     eyebrow: 'About Us',
     title: 'Our Branches',
-    image: campusHero,
+    hideImages: true,
     paragraphs: [
-      'Shri Pragya Public School supports learners through its main campus and junior wing in Bijainagar, Rajasthan.',
-      'Main Branch: Pragya Road, Bijainagar (Ajmer), Rajasthan. Phone: +91-1462-230201',
-      'Junior Wing: Infront of Mahaveer Bhawan, Bijainagar (Ajmer), Rajasthan. Phone: +91-1462-230451',
+      'Our Branch Are',
+    ],
+    bullets: [
+      'Bijainagar',
+      'Gulabpura',
+      'Bhinai',
+      'Masuda',
+      'Bandanware',
+      'P.I.S BIAJINAGAR',
     ],
   },
   'origin-history': {
-    eyebrow: 'About',
-    title: 'Origin & History',
+    eyebrow: 'Our Legacy',
+    title: 'Our Legacy',
     image: campusHero,
     paragraphs: [
-      'Our school has a rich legacy of providing quality education and fostering an environment of learning and growth.',
-      'The foundation of our school was laid by Shri Pragya Jain Smarak Samiti in 1976 as Pragya Bal Mandir, which was later transformed into Shri Pragya Public School in 1997. Our vision is to provide a comprehensive and holistic education to our students, which not only focuses on academics but also on their overall development.',
-      'We are proud to share that our hard work and sheer tenacity have made us one of the most reputed senior secondary schools in Bijainagar and its vicinity. This would not have been possible without the spiritual spirit behind our institution, Guru Dev Shri Pannalal Ji Maharaj, the supreme head of Jain Shwetamber Sthankwasi Nanak Vansh.',
-      'Our faculty and staff are consummate professionals who have led our school to become secondary in 2003 and senior secondary in 2007. We are committed to providing the best educational experience to our students and preparing them for the challenges of the future.',
+      'Shri Pragya Public School proudly carries a rich legacy of educational excellence, discipline, and value-based learning. Established under the esteemed guidance of Shri Pragya Jain Smarak Samiti, the institution has been dedicated to shaping young minds and empowering students with knowledge, confidence, and strong moral values for decades.',
+      'The journey began in 1976 with the establishment of Pragya Bal Mandir, founded with the vision of providing quality education and holistic development to students in Bijainagar and nearby regions. With continuous progress, dedication, and community trust, the institution was transformed into Shri Pragya Public School in 1997.',
+      'Inspired by the spiritual values and blessings of Guru Dev Shri Pannalal Ji Maharaj Saheb, the supreme head of Jain Shwetamber Sthankwasi Nanak Vansh, the institution has consistently upheld the ideals of discipline, integrity, compassion, and excellence.',
+      'Over the years, the school has achieved remarkable milestones, becoming a Secondary School in 2003 and a Senior Secondary School in 2007. Through its commitment to academic excellence, competitive preparation, sports, co-curricular activities, and character building, the school has earned a reputation as one of the leading educational institutions in the region.',
+      'Today, Shri Pragya Public School stands as a symbol of trust, tradition, innovation, and excellence, continuing its mission of nurturing future leaders and responsible citizens.',
     ],
   },
   samiti: {
@@ -369,14 +549,25 @@ const contentPages = {
       {
         heading: 'Vision',
         paragraphs: [
-          'We envision a world where every child is empowered with the skills and knowledge to succeed in their personal and professional lives. Our aim is to create a nurturing and challenging learning environment where students can explore their potential and grow into responsible, empathetic, and innovative global citizens.',
+          'At Shri Pragya Public School, our vision is to create an inspiring and progressive learning environment where every student is empowered to achieve academic excellence, develop strong moral values, and discover their true potential.',
+          'We aim to nurture confident, compassionate, innovative, and responsible individuals who are prepared to face global challenges with integrity and leadership.',
+          'We envision an institution that not only imparts knowledge but also inspires lifelong learning, creativity, discipline, and social responsibility, enabling students to become valuable contributors to society and the nation.',
         ],
       },
       {
         heading: 'Mission',
         paragraphs: [
-          'Our mission at Pragya School is to provide a holistic education that nurtures the physical, emotional, social, and intellectual development of each student. We strive to create a learning community that fosters a love for lifelong learning and instills core values such as respect, integrity, empathy, and responsibility.',
-          'We are committed to creating a safe, inclusive, and collaborative environment that inspires our students to become confident, independent thinkers who can contribute meaningfully to society.',
+          'Our mission is to provide a comprehensive and holistic education that promotes intellectual, emotional, physical, social, and ethical development of every student.',
+        ],
+        bullets: [
+          'Delivering quality education through modern and innovative teaching methodologies.',
+          'Creating a student-centered learning environment that encourages curiosity, creativity, and critical thinking.',
+          'Instilling moral values, discipline, integrity, and respect in students.',
+          'Encouraging participation in academics, sports, cultural, and co-curricular activities for overall personality development.',
+          'Integrating technology and experiential learning to prepare students for future opportunities and challenges.',
+          'Guiding students towards academic excellence and success in competitive examinations.',
+          'Building confident, responsible, and compassionate individuals who contribute positively to society.',
+          'Maintaining a safe, inclusive, and nurturing environment where every child feels valued and inspired to grow.',
         ],
       },
     ],
@@ -409,6 +600,8 @@ const contentPages = {
     image: campusHero,
     paragraphs: [
       'Our institution is committed to giving students an education that builds competence, humility and a lifelong desire to learn.',
+      'Education is most valuable when it enables young people to act with wisdom, courage and compassion. Our aim is to provide an atmosphere where students pursue excellence while remaining grounded in values.',
+      'I extend my best wishes to every student, parent and staff member who contributes to the continuing journey of Shri Pragya Public School.',
     ],
   },
   'director-message': {
@@ -417,14 +610,25 @@ const contentPages = {
     image: drNavalSingh,
     paragraphs: [
       'At Pragya, we strive to guide every child through strong academics, character development and opportunities that prepare them for a purposeful future.',
+      'Our focus is on clear teaching, regular evaluation, modern resources and responsible mentoring. Students should be equipped not only to perform in examinations but also to make informed choices with confidence.',
+      'Together with parents and teachers, we continue to strengthen an educational culture built on commitment and care.',
     ],
   },
   'principal-message': {
     eyebrow: 'Leadership Team',
     title: 'Principal Message',
     image: nidhiMathur,
+    layoutVariant: 'principal-message',
     paragraphs: [
-      'Our teachers work in partnership with parents to make school a safe, engaging and inspiring place where every learner can progress with confidence.',
+      'Dear Students, Parents, and Well-Wishers,',
+      'Welcome to Shri Pragya Public School, an institution dedicated to academic excellence, value-based education, and holistic development. At Pragya, we believe that education is the foundation for building confident, responsible, and future-ready individuals.',
+      'Our commitment is to provide a progressive learning environment that nurtures intellectual growth, creativity, discipline, leadership, and moral values. We strive to empower students with knowledge, skills, and confidence that enable them to excel in academics and contribute meaningfully to society.',
+      'The school consistently achieves outstanding board examination results and academic accomplishments, reflecting our dedication to quality education, disciplined learning, and continuous student guidance. Our focus remains on nurturing excellence through conceptual understanding, innovation, and result-oriented learning practices.',
+      'The school emphasizes a balanced approach to education by integrating academics, sports, co-curricular activities, and life skills with modern teaching methodologies and technology-enabled learning. Our dedicated faculty members continuously guide and inspire students to achieve their highest potential while fostering critical thinking, innovation, and lifelong learning.',
+      'At Shri Pragya Public School, we view every child as unique and capable of achieving excellence. Through a safe, supportive, and motivating environment, we encourage students to develop self-confidence, integrity, compassion, and a spirit of responsibility.',
+      'We are grateful to our parents for their continued trust and cooperation, which play a vital role in the growth and success of our students and institution. Together, we remain committed to shaping young minds into enlightened individuals and responsible global citizens.',
+      'With Best Wishes,',
+      'Principal Shri Pragya Public School',
     ],
   },
   'management-committee': {
@@ -439,18 +643,45 @@ const contentPages = {
     eyebrow: 'School Infrastructure',
     title: 'Campus Overview',
     image: campusHero,
+    layoutVariant: 'infrastructure-image-first',
+    hideClosingImages: true,
     paragraphs: [
-      'Our campus brings classrooms, laboratories, library, sports and student-support facilities together in an environment designed for learning and growth.',
+      'Shri Pragya Public School provides a vibrant, safe, and student-friendly campus designed to create an ideal environment for academic excellence and holistic development. The school campus combines modern infrastructure with a disciplined and nurturing atmosphere that encourages learning, creativity, innovation, and personal growth.',
+      'Our well-planned campus is equipped with smart classrooms, advanced science and computer laboratories, a rich library, sports facilities, activity areas, and digital learning resources to support an engaging and interactive educational experience. Every facility is thoughtfully developed to meet the academic, physical, creative, and emotional needs of students.',
+      'The school emphasizes cleanliness, safety, and environmental awareness, ensuring a secure and healthy atmosphere for all students. CCTV surveillance, disciplined campus management, and dedicated staff supervision contribute to maintaining a safe learning environment.',
+      'Along with academics, the campus promotes co-curricular excellence through dedicated spaces for sports, music, dance, cultural activities, and student interaction. Spacious playgrounds and recreational areas encourage physical fitness, teamwork, and overall well-being.',
+      'The hostel facilities provide a comfortable and supportive environment for students, with proper care, academic guidance, hygienic dining, and disciplined supervision.',
+      'At Shri Pragya Public School, the campus reflects our commitment to providing quality education in an inspiring environment where students learn, grow, and prepare themselves for future success.',
+    ],
+    bullets: ['Smart classrooms', 'Science and computer labs', 'Library and reading spaces', 'Sports facilities', 'Transport support', 'Hostel support'],
+    sections: [
+      {
+        heading: 'A Learning-Focused Campus',
+        paragraphs: ['Campus facilities are planned to support curiosity, discipline, teamwork and safe participation in both academic and co-curricular learning.'],
+      },
     ],
   },
   'safety-security': {
     eyebrow: 'School Infrastructure',
     title: 'Safety & Security',
     image: campusHero,
+    layoutVariant: 'infrastructure-image-first',
+    hideClosingImages: true,
     paragraphs: [
-      'Student wellbeing is supported through disciplined campus routines, supervised movement, responsible transport practices and attentive staff care.',
+      'At Shri Pragya Public School, the safety, security, and well-being of our students are of utmost importance. We are committed to providing a safe, disciplined, and nurturing environment where students can learn and grow with confidence and peace of mind.',
+      'The school campus is equipped with CCTV surveillance systems to ensure continuous monitoring and enhanced security across key areas of the campus. Entry and exit points are carefully supervised, and strict safety protocols are followed to maintain a secure environment for students, staff, and visitors.',
+      'The institution maintains a disciplined campus culture under the guidance of experienced faculty members, administrative staff, and support personnel. Regular monitoring and supervision help ensure student safety throughout the school day.',
+      'Safe transportation facilities with trained drivers and support staff further ensure the security and comfort of students during travel. The school also emphasizes health and hygiene through clean surroundings, regular sanitation, and basic medical support for emergencies.',
+      'Fire safety measures, emergency preparedness, and awareness programs are conducted regularly to ensure that students and staff remain informed and prepared. The school continuously strives to maintain an environment that promotes physical safety, emotional well-being, and positive learning experiences for every student.',
+      'At Shri Pragya Public School, we believe that a safe and secure environment is essential for effective learning and the overall development of every child.',
     ],
-    bullets: ['Supervised campus routines', 'Safe transport guidance', 'Health support access', 'Parent communication'],
+    bullets: ['Supervised campus routines', 'Safe transport guidance', 'Health support access', 'Parent communication', 'Visitor awareness', 'Discipline and conduct'],
+    sections: [
+      {
+        heading: 'Student Wellbeing',
+        paragraphs: ['Parents are encouraged to keep student health and emergency information updated and to follow official school instructions regarding attendance, pickup and transport.'],
+      },
+    ],
   },
   'digital-campus': {
     eyebrow: 'School Infrastructure',
@@ -525,24 +756,39 @@ const contentPages = {
     image: digitalTeaching,
     paragraphs: [
       'Our campus provides spaces designed for learning, discipline and discovery. Students benefit from classrooms, laboratories, library, sports, transport and day boarding support.',
+      'Facilities are used as part of the learning experience: classrooms support engagement, laboratories support experimentation, the library builds reading habits, and activity spaces encourage fitness and teamwork.',
     ],
-    bullets: ['Digital Classrooms', 'Science Labs', 'Library', 'Sports Grounds', 'Transport', 'Day Boarding'],
+    bullets: ['Smart classrooms', 'Science laboratories', 'Computer lab', 'Library', 'Sports spaces', 'Hostel facilities', 'Transport support', 'Student wellbeing'],
+    sections: [
+      {
+        heading: 'Spaces that Support Learning',
+        paragraphs: ['Our facilities help students connect classroom ideas with observation, practice, reading, technology and healthy activity.'],
+      },
+      {
+        heading: 'Care and Convenience',
+        paragraphs: ['Transport and residential support are designed to help families access an organised, attentive and disciplined educational environment.'],
+      },
+    ],
   },
   'computer-lab': {
     eyebrow: 'Facilities',
     title: 'Computer Lab',
     image: computerLab,
     paragraphs: [
-      'The computer lab develops digital confidence and supports technology-enabled learning through supervised practical practice.',
+      'Shri Pragya Public School provides a well-equipped and modern Computer Lab designed to develop digital literacy, technical skills, and technological awareness among students. The lab offers a dynamic learning environment where students gain practical knowledge and hands-on experience with computers and modern technology.',
+      'Equipped with advanced computer systems, updated software, high-speed internet connectivity, and essential digital resources, the lab supports interactive and skill-based learning. Students are introduced to computer fundamentals, programming concepts, digital applications, internet usage, and technology-based learning practices that enhance their academic and practical knowledge.',
+      'The Computer Lab encourages students to explore creativity, logical thinking, problem-solving skills, and innovation through practical activities and project-based learning. Under the guidance of experienced faculty members, students learn to use technology confidently, responsibly, and effectively in today\'s digital world.',
+      'The school emphasizes safe and ethical use of technology while creating opportunities for students to stay updated with modern technological advancements and future-ready skills.',
+      'At Shri Pragya Public School, the Computer Lab plays an important role in preparing students for a technology-driven future by promoting digital competence, creativity, and lifelong learning.',
     ],
-    bullets: ['Digital literacy', 'Multimedia learning', 'Practical sessions', 'Guided technology use'],
   },
   library: {
     eyebrow: 'Facilities',
     title: 'Library',
     image: studentLibrary,
     paragraphs: [
-      'Our library encourages reading habits, quiet study and access to reference material that enriches classroom learning.',
+      'The library at Shri Pragya Public School serves as a center of knowledge, learning, and intellectual development. It provides students with a rich collection of academic books, reference materials, journals, magazines, newspapers, and digital resources that support both curriculum-based learning and personal growth.',
+      'The library encourages reading habits, self-learning, research, and creative thinking among students. A peaceful and well-organized environment helps students improve their knowledge, language skills, concentration, and analytical abilities while developing a lifelong interest in reading and learning.',
     ],
   },
   hostel: {
@@ -550,9 +796,11 @@ const contentPages = {
     title: 'Hostel Facility For Boys and Girls',
     image: boyHostel,
     paragraphs: [
-      'Shri Pragya Public School offers comfortable and convenient hostel facilities for girls and boys. Our hostel block has spacious, well-lit, air-conditioned bedrooms, with each room accommodating up to 3 students and attached washrooms.',
-      'The dining hall is large and has comfortable seating arrangements. The hostel wing also houses rooms for wardens, pastoral care, an infirmary, a recreation hall with TV, music system, reading materials and an IT room.',
-      'We offer both fixed and flexible boarding facilities for students seeking admission in grades 3 and above. Students can register for boarding facilities for a full term or for a shorter duration.',
+      'Shri Pragya Public School offers separate hostel facilities for boys and girls, providing a safe, comfortable, disciplined, and nurturing environment that supports both academic excellence and personal development. The hostels are thoughtfully designed to create a homely atmosphere where students feel secure, motivated, and well cared for throughout their educational journey.',
+      'The hostel infrastructure includes spacious and well-furnished rooms, hygienic dining arrangements, clean surroundings, dedicated study areas, and recreational facilities to ensure a balanced and healthy lifestyle for students. A disciplined daily routine combined with academic support helps students develop self-discipline, responsibility, confidence, and independence.',
+      'Experienced wardens and caring support staff provide continuous supervision, guidance, and emotional support to ensure the well-being and safety of every student. The hostels are equipped with proper safety measures, regular monitoring, and a secure environment that gives parents complete peace of mind.',
+      'Nutritious and hygienic meals are provided with special attention to students\' health, wellness, and dietary needs. Along with academics, students are encouraged to participate in sports, cultural activities, and personality development programs for their overall growth and well-being.',
+      'At Shri Pragya Public School, the hostel facilities reflect our commitment to creating a supportive and student-friendly environment where students can learn, grow, and achieve their full potential with confidence and discipline.',
     ],
     sections: [
       {
@@ -582,73 +830,37 @@ const contentPages = {
   },
   laboratories: {
     eyebrow: 'Facilities',
-    title: 'Laboratories',
+    title: 'Science Laboratories',
     image: microscopeLab,
-    sections: [
-      {
-        heading: 'Computer Lab',
-        paragraphs: [
-          'Our school has a computer lab with the latest hardware and software versions. Students work on systems independently and use multimedia tools for subjects such as Science, Social Studies, Mathematics, English and Hindi.',
-          'The air-conditioned computer lab is configured with LCD, OHP, wide screen TV attachments and Wi-Fi internet connection to facilitate effective teaching.',
-        ],
-      },
-      {
-        heading: 'Chemistry Lab',
-        paragraphs: [
-          'The Chemistry Lab is conveniently located and provides facilities for hands-on experience. Reagents are neatly arranged and made accessible by trained laboratory assistants.',
-          'Experiments are conducted with half batches so that each student can safely satisfy their curiosity and connect theoretical learning with practical work.',
-        ],
-      },
-      {
-        heading: 'Physics Lab',
-        paragraphs: [
-          'The Physics Lab is carefully designed and well equipped with modern gadgets and hi-tech facilities. It caters to the needs of children as per the revised syllabus.',
-          'Equipment includes transistor, P-N junction, Zener diode, AC and DC devices, meter bridge, potential meter, prisms, rectangular glass slabs, voltmeter and galvanometer.',
-        ],
-      },
-      {
-        heading: 'Biology Lab',
-        paragraphs: [
-          'The Biology Lab enhances practical knowledge and interest among students. It includes specimens, slides, spotting materials, skeleton system, chemicals, microscopes and other glass apparatus required for classes VI to XII.',
-        ],
-      },
-      {
-        heading: 'English Lab',
-        paragraphs: [
-          'Words Worth English Language Lab is designed to develop English language proficiency among learners. It covers listening, speaking, reading and writing skills through a blend of instructor-led and computer-based learning.',
-        ],
-      },
+    paragraphs: [
+      'Shri Pragya Public School provides well-equipped and modern Science Laboratories that promote practical learning, scientific thinking, and experiential education among students. The laboratories are designed to provide hands-on learning experiences that help students understand scientific concepts through observation, experimentation, and analysis.',
+      'Separate laboratories for Physics, Chemistry, and Biology are equipped with the necessary instruments, apparatus, models, specimens, and safety measures to support effective practical learning. The labs provide students with opportunities to explore scientific principles, develop analytical skills, and enhance conceptual understanding through experiments and demonstrations.',
+      'The school encourages students to actively participate in practical activities, research-based learning, and scientific exploration, helping them develop curiosity, critical thinking, problem-solving abilities, and innovation. Under the guidance of experienced faculty members, students gain confidence in applying theoretical knowledge to real-life situations.',
+      'Safety, discipline, and proper laboratory practices are given utmost importance to ensure a secure and productive learning environment for all students.',
+      'At Shri Pragya Public School, the Science Laboratories play a vital role in nurturing scientific temperament, creativity, and a spirit of inquiry, preparing students for academic excellence and future scientific pursuits.',
     ],
   },
   'music-sports-facilities': {
-    eyebrow: 'Facilities',
-    title: 'Music & Sports Facilities',
+    eyebrow: 'Beyond the Classroom',
+    title: 'Sports',
     image: classStudents,
-    sections: [
-      {
-        heading: 'Sports Facilities',
-        paragraphs: [
-          'Our school emphasizes both studies and sports. We have a large playground earmarked for various sports activities, and each day a period is allocated for sports.',
-          'We provide facilities for outdoor and indoor games and host state and district level tournaments.',
-        ],
-        bullets: ['Archery', 'Volleyball', 'Skating', 'Cricket'],
-      },
-      {
-        heading: 'Musical Band',
-        paragraphs: [
-          'Music learning activates areas of the brain and synchronizes the mind for faster learning and better retention. SPPS has launched a musical band where students are prepared for musical careers and creative confidence.',
-        ],
-      },
+    paragraphs: [
+      'Shri Pragya Public School strongly believes that sports and physical activities are essential for the overall growth and development of students. The school provides excellent sports facilities and encourages students to actively participate in various indoor and outdoor games to promote physical fitness, discipline, teamwork, and sportsmanship.',
+      'Students are given opportunities to participate in activities such as cricket, basketball, volleyball, athletics, yoga, Mallakhamb, skating, and indoor games under proper guidance and supervision. Regular sports activities, competitions, and fitness programs help students develop confidence, leadership qualities, determination, and a healthy lifestyle.',
+      'The school actively promotes traditional Indian sports and modern fitness activities that help students improve strength, flexibility, balance, concentration, coordination, and self-discipline while encouraging active participation and healthy competition.',
+      'The school aims to maintain a healthy balance between academics and physical development, ensuring the holistic growth and overall well-being of every student.',
     ],
   },
   'interactive-classroom': {
     eyebrow: 'Facilities',
-    title: 'Interactive Classroom',
+    title: 'Smart Classrooms',
     image: digitalBoard,
     paragraphs: [
-      'Welcome to Pragya School, where we are committed to providing the best learning environment for our students. Our classrooms are spacious, bright and well-furnished, designed for comfort and ergonomics.',
-      'Each classroom is equipped with a state-of-the-art smart board and interactive features that make learning come alive. Teachers use these boards to create animations and activities that help students understand complex concepts quickly.',
-      'Digital teaching methodology helps students concentrate better and take a more active interest in learning. Classroom tests are also easier and more structured, leaving ample time for revision.',
+      'At Shri Pragya Public School, Smart Classrooms are designed to make learning more interactive, engaging, and effective through the integration of modern technology with classroom teaching. Our technology-enabled learning environment enhances the teaching-learning process by making concepts easier to understand, visually appealing, and practically oriented.',
+      'The classrooms are equipped with advanced digital teaching tools, audio-visual aids, interactive presentations, and multimedia resources that help students grasp complex topics with greater clarity and interest. Through animations, videos, real-time demonstrations, and interactive content, learning becomes more enjoyable, participative, and student-centered.',
+      'Smart classroom teaching encourages active involvement, improves concentration, strengthens conceptual understanding, and promotes creative and analytical thinking among students. It also supports different learning styles, enabling every child to learn at their own pace with better understanding and retention.',
+      'By integrating technology into daily teaching practices, the school creates a dynamic and future-ready educational environment that enhances academic performance and develops digital awareness among students.',
+      'At Shri Pragya Public School, Smart Classrooms reflect our commitment to innovation, quality education, and modern learning methodologies that prepare students for the evolving world.',
     ],
   },
   'medical-facility': {
@@ -662,19 +874,12 @@ const contentPages = {
   },
   transportation: {
     eyebrow: 'Facilities',
-    title: 'Transportation',
+    title: 'Transport Facility',
     image: busImage,
     paragraphs: [
-      'School bus transport is a safe and convenient way for students to travel to and from school, as well as to school-related events and activities.',
-    ],
-    bullets: [
-      'The school bus is operated by a trained and licensed driver.',
-      'School buses are equipped with safety features such as seat belts and emergency exits.',
-      'Students should arrive at the bus stop on time and wait patiently.',
-      'Students should always follow the instructions of the bus driver.',
-      'Students should avoid shouting, throwing objects or standing while the bus is moving.',
-      'Students should respect the property of the bus and other passengers.',
-      'Violation of transport rules may result in disciplinary action.',
+      'Shri Pragya Public School provides safe, reliable, and well-organized transport facilities for students from nearby towns and surrounding areas. The transportation system is designed to ensure comfort, punctuality, and safety during daily travel to and from the school campus.',
+      'The school buses are operated by experienced drivers and trained support staff while maintaining proper safety standards and discipline. Regular monitoring, route management, and supervision ensure smooth and secure transportation services for students.',
+      'The transport facility is planned to provide convenience to parents and a comfortable travel experience for students, ensuring that they reach school safely and on time every day.',
     ],
   },
   academics: {
@@ -682,36 +887,79 @@ const contentPages = {
     title: 'Academics',
     image: boysReading,
     paragraphs: [
-      'Our academic system supports concept clarity, regular practice, practical exposure and board readiness through a structured teaching process.',
+      'Shri Pragya Public School offers a structured academic journey across the Foundation Stage, Preparatory Stage, Middle Stage, and Senior Stage.',
+      'At every stage, the school focuses on academic excellence, holistic development, values, confidence, communication, and future readiness.',
     ],
-    bullets: ['Primary Wing', 'Middle School', 'Secondary School', 'Exam Scheme', 'Syllabus', 'Curriculum'],
+    sections: [
+      {
+        heading: 'Foundation Stage (Pre-Primary)',
+        paragraphs: [
+          'Classes: PG, Nursery, LKG & UKG',
+          'The Foundation Stage at Shri Pragya Public School provides a joyful, caring, and stimulating learning environment where young learners begin their educational journey with confidence and enthusiasm. We understand that the early years of education are crucial for the overall growth and development of a child, and therefore we focus on building strong foundational skills through engaging and meaningful learning experiences.',
+          'Our curriculum is designed to promote intellectual, emotional, social, physical, and creative development through activity-based and experiential learning methodologies. Through storytelling, music, games, art, interactive activities, and play-way techniques, children develop communication skills, creativity, curiosity, confidence, and a love for learning.',
+          'The classrooms are thoughtfully designed to be safe, colorful, and child-friendly, creating a warm and nurturing atmosphere where children feel secure, happy, and motivated to explore the world around them.',
+        ],
+      },
+      {
+        heading: 'Preparatory Stage (Primary Section)',
+        paragraphs: [
+          'Classes: I to V',
+          'The Preparatory Stage at Shri Pragya Public School focuses on strengthening academic foundations while nurturing curiosity, creativity, confidence, and essential life skills among students. During these formative years, students are encouraged to become active, independent, and enthusiastic learners through engaging and meaningful educational experiences.',
+          'The curriculum provides a balanced blend of academics, co-curricular activities, values, and skill development through interactive and student-centered teaching methodologies. Emphasis is placed on conceptual understanding, communication skills, creativity, and experiential learning to ensure holistic growth and development.',
+          'Students actively participate in classroom activities, projects, sports, music, dance, art, and cultural programs that contribute to their overall personality development.',
+        ],
+      },
+      {
+        heading: 'Middle Stage',
+        paragraphs: [
+          'Classes: VI to VIII',
+          'The Middle Stage is designed to strengthen conceptual understanding, analytical thinking, communication skills, and subject knowledge among students. The curriculum encourages inquiry-based learning, practical understanding, creativity, and skill development through modern teaching methodologies and interactive classroom experiences.',
+          'Students are encouraged to participate in academics, sports, leadership activities, competitions, and co-curricular programs that enhance confidence, teamwork, discipline, and overall personality development.',
+        ],
+      },
+      {
+        heading: 'Senior Stage',
+        paragraphs: [
+          'Classes: IX to XII',
+          'The Senior Stage at Shri Pragya Public School focuses on academic excellence, leadership development, career readiness, and future aspirations. Students are guided through comprehensive subject learning, critical thinking, practical knowledge, and technology-enabled education to prepare them for higher education and future opportunities.',
+          'Special emphasis is placed on conceptual clarity, problem-solving skills, communication, competitive preparedness, and personality development. Through continuous guidance, assessments, mentorship, and career support, students are encouraged to achieve excellence with confidence, discipline, and determination.',
+          'At Shri Pragya Public School, the Senior Stage nurtures responsible, knowledgeable, and future-ready individuals prepared to excel in every sphere of life.',
+        ],
+      },
+    ],
   },
   'pg-section': {
     eyebrow: 'Academics',
-    title: 'PG Section',
+    title: 'Foundation Stage (Pre-Primary)',
     image: classStudentsTwo,
     paragraphs: [
-      'Our early learning section supports young children with a joyful, caring beginning built around play, communication and foundational habits.',
+      'Classes: PG, Nursery, LKG & UKG',
+      'The Foundation Stage at Shri Pragya Public School provides a joyful, caring, and stimulating learning environment where young learners begin their educational journey with confidence and enthusiasm. We understand that the early years of education are crucial for the overall growth and development of a child, and therefore we focus on building strong foundational skills through engaging and meaningful learning experiences.',
+      'Our curriculum is designed to promote intellectual, emotional, social, physical, and creative development through activity-based and experiential learning methodologies. Through storytelling, music, games, art, interactive activities, and play-way techniques, children develop communication skills, creativity, curiosity, confidence, and a love for learning.',
+      'The classrooms are thoughtfully designed to be safe, colorful, and child-friendly, creating a warm and nurturing atmosphere where children feel secure, happy, and motivated to explore the world around them.',
     ],
-    bullets: ['Play-based learning', 'Language readiness', 'Number readiness', 'Creative activities'],
   },
   'primary-section': {
     eyebrow: 'Academics',
-    title: 'Primary Section',
+    title: 'Preparatory Stage (Primary Section)',
     image: boysReading,
     paragraphs: [
-      'Primary classes build confident reading, writing, mathematics and curiosity through concept-based classroom learning and activities.',
+      'Classes: I to V',
+      'The Preparatory Stage at Shri Pragya Public School focuses on strengthening academic foundations while nurturing curiosity, creativity, confidence, and essential life skills among students. During these formative years, students are encouraged to become active, independent, and enthusiastic learners through engaging and meaningful educational experiences.',
+      'The curriculum provides a balanced blend of academics, co-curricular activities, values, and skill development through interactive and student-centered teaching methodologies. Emphasis is placed on conceptual understanding, communication skills, creativity, and experiential learning to ensure holistic growth and development.',
+      'Students actively participate in classroom activities, projects, sports, music, dance, art, and cultural programs that contribute to their overall personality development.',
     ],
-    bullets: ['Strong foundations', 'Concept learning', 'Projects and creativity', 'Values and confidence'],
   },
   'senior-section': {
     eyebrow: 'Academics',
-    title: 'Senior Section',
+    title: 'Senior Stage',
     image: chemistryLab,
     paragraphs: [
-      'Senior learners are supported with subject depth, practical exposure, board preparation and informed career guidance.',
+      'Classes: IX to XII',
+      'The Senior Stage at Shri Pragya Public School focuses on academic excellence, leadership development, career readiness, and future aspirations. Students are guided through comprehensive subject learning, critical thinking, practical knowledge, and technology-enabled education to prepare them for higher education and future opportunities.',
+      'Special emphasis is placed on conceptual clarity, problem-solving skills, communication, competitive preparedness, and personality development. Through continuous guidance, assessments, mentorship, and career support, students are encouraged to achieve excellence with confidence, discipline, and determination.',
+      'At Shri Pragya Public School, the Senior Stage nurtures responsible, knowledgeable, and future-ready individuals prepared to excel in every sphere of life.',
     ],
-    bullets: ['Science learning', 'Commerce learning', 'Board preparation', 'Career pathways'],
   },
   'play-based-learning': {
     eyebrow: 'Pre Primary Wing',
@@ -797,8 +1045,23 @@ const contentPages = {
     image: digitalBoard,
     paragraphs: [
       'Our integrated approach supports senior secondary academics alongside focused preparation for engineering and medical entrance examinations.',
+      'Students are encouraged to build strong concepts first, then develop accuracy, speed and examination discipline through planned practice and timely feedback.',
     ],
     bullets: ['Concept-oriented teaching', 'Regular testing', 'Doubt resolution', 'Performance review', 'Mentorship', 'Career guidance'],
+    sections: [
+      {
+        heading: 'Program Framework',
+        paragraphs: ['The program combines school curriculum needs with focused problem-solving practice, revision schedules and subject-wise academic support.'],
+      },
+      {
+        heading: 'Testing and Tracking',
+        paragraphs: ['Tests and review discussions help students understand their performance, identify improvement areas and maintain consistency over time.'],
+      },
+      {
+        heading: 'Mentoring and Guidance',
+        paragraphs: ['Teacher support and counseling encourage students to manage goals responsibly and select suitable pathways for engineering, medical or other higher education opportunities.'],
+      },
+    ],
   },
   'competitive-faculty': {
     eyebrow: 'IIT-JEE & NEET',
@@ -855,8 +1118,9 @@ const contentPages = {
     paragraphs: [
       'The academic calendar keeps students and parents informed about important school dates, assessments, activities, holidays and academic milestones.',
       'Please contact the school office for the latest detailed calendar and any date-specific updates.',
+      'Updates may be communicated through notices or school communication channels so families can plan participation and attendance responsibly.',
     ],
-    bullets: ['Assessment schedule', 'Activity dates', 'Parent communication', 'Holiday updates'],
+    bullets: ['Assessment schedule', 'Activity dates', 'PTM information', 'Holiday updates', 'Celebration dates', 'School notices'],
   },
   results: {
     eyebrow: 'Academics',
@@ -875,6 +1139,16 @@ const contentPages = {
       'Students are encouraged to participate in cultural, literary, sports and leadership activities so that learning goes beyond textbooks and builds confidence.',
     ],
     bullets: ['Regular academic monitoring', 'Parent-teacher communication', 'Project-based learning', 'Sports and cultural participation', 'Leadership and house activities', 'Value-based education'],
+    sections: [
+      {
+        heading: 'Academic Progress',
+        paragraphs: ['Teachers observe classwork, written work, assessments and participation to understand student progress and provide appropriate guidance.'],
+      },
+      {
+        heading: 'Co-Curricular Development',
+        paragraphs: ['Activities complement academics by developing communication, creativity, leadership, sportsmanship and confidence.'],
+      },
+    ],
   },
   'exam-scheme': {
     eyebrow: 'Academics',
@@ -902,15 +1176,29 @@ const contentPages = {
       'Our curriculum balances academics, language development, mathematics, science, social understanding, digital literacy, arts, physical education and moral values.',
       'The focus is on concept clarity, communication, discipline, creativity and responsible citizenship.',
     ],
+    bullets: ['Languages and communication', 'Mathematics and reasoning', 'Science and practical inquiry', 'Social awareness', 'Digital literacy', 'Arts and physical education'],
+    sections: [
+      {
+        heading: 'Balanced Learning',
+        paragraphs: ['Subject teaching is strengthened through activities, revision, projects, reading, laboratory exposure and age-appropriate evaluation.'],
+      },
+    ],
   },
   achievments: {
     eyebrow: 'Academics',
-    title: 'Achievments',
+    title: 'Achievements',
     image: classStudentsTwo,
     paragraphs: [
       'Students of Shri Pragya Public School are encouraged to achieve excellence in academics, sports, arts, competitions and community participation.',
+      'Achievement at Pragya includes consistent effort, improvement, discipline, teamwork and the confidence to represent the school with responsibility.',
     ],
     bullets: ['Board examination performance', 'Inter-school competitions', 'Sports tournaments', 'Cultural events', 'Science and literary activities', 'Student leadership initiatives'],
+    sections: [
+      {
+        heading: 'Celebrating Every Step',
+        paragraphs: ['Recognition motivates students to work sincerely, learn from experience and continue striving for excellence in their chosen fields.'],
+      },
+    ],
   },
   'admissions-withdrawl': {
     eyebrow: 'Academics',
@@ -927,7 +1215,9 @@ const contentPages = {
     image: campusHero,
     paragraphs: [
       'Fee details may vary by class, facility and academic session. Parents can contact the school office for updated fee structure, transport charges and hostel details.',
+      'To ensure families receive correct information, all applicable fee details, payment guidance and facility charges should be confirmed directly with the school office for the relevant session.',
     ],
+    bullets: ['Class-wise fee guidance', 'Transport enquiry', 'Hostel enquiry', 'Admission-related information', 'Payment guidance', 'Office support'],
   },
   'general-rules': {
     eyebrow: 'Academics',
@@ -948,13 +1238,20 @@ const contentPages = {
     bullets: ['Literary Club', 'Science Club', 'Art Club', 'Eco Club', 'Music Club', 'Sports Club'],
   },
   activities: {
-    eyebrow: 'Activities',
-    title: 'Activities',
+    eyebrow: 'Beyond the Classroom',
+    title: 'Beyond the Classroom',
     image: classStudents,
     paragraphs: [
       'Activities at Shri Pragya Public School help students lead, perform, collaborate and build confidence beyond the classroom.',
+      'Cultural programs, sports, house events, music and dance provide opportunities for self-expression, resilience, healthy competition and teamwork.',
     ],
-    bullets: ['Debate', 'Music', 'Yoga', 'Science Fair', 'Art Studio', 'Cricket', 'Community Service', 'Leadership Club'],
+    bullets: ['Annual Function', 'Sports', 'House System', 'Music', 'Dance', 'Leadership opportunities'],
+    sections: [
+      {
+        heading: 'Confidence Through Participation',
+        paragraphs: ['Every activity encourages students to practise, perform responsibly, appreciate others and discover their individual interests.'],
+      },
+    ],
   },
   'annual-award': {
     eyebrow: 'Activities',
@@ -967,7 +1264,10 @@ const contentPages = {
     title: 'Annual Function',
     image: classStudentsTwo,
     paragraphs: [
-      'Our annual function gives students a joyful platform to perform, celebrate achievement and build stage confidence through teamwork.',
+      'The Annual Function at Shri Pragya Public School is one of the most awaited and prestigious events of the academic year, celebrating the talent, creativity, achievements, and cultural spirit of students. The event provides a vibrant platform for students to showcase their skills, confidence, and artistic abilities through a variety of performances and presentations.',
+      'Students enthusiastically participate in cultural programs, music, dance, drama, group performances, and creative activities that reflect teamwork, discipline, dedication, and cultural values. The Annual Function encourages students to express themselves confidently while enhancing their stage presence, communication skills, and leadership qualities.',
+      'The event also serves as an opportunity to recognize and appreciate the achievements of students in academics, sports, co-curricular activities, and other fields of excellence. Parents, guests, and the school community come together to celebrate the accomplishments and overall development of students.',
+      'The Annual Function reflects the school\'s commitment to holistic education by promoting creativity, cultural awareness, confidence, and overall personality development in a joyful and inspiring environment.',
     ],
   },
   'interschool-co-curricular-activity': {
@@ -1001,7 +1301,10 @@ const contentPages = {
     title: 'Music',
     image: classStudents,
     paragraphs: [
-      'Music develops expression, rhythm, concentration and confidence while enriching every student experience beyond textbooks.',
+      'Shri Pragya Public School believes that music is an essential part of holistic education and plays a significant role in nurturing creativity, confidence, emotional expression, and cultural awareness among students. The school provides students with opportunities to explore and develop their musical talents in a supportive and inspiring environment.',
+      'Students are encouraged to participate in vocal and instrumental music activities, cultural programs, competitions, and school events that help enhance their artistic skills, stage confidence, discipline, and teamwork. Through regular practice and guidance, students develop rhythm, concentration, creativity, and self-expression.',
+      'The school promotes appreciation for both Indian classical and contemporary music traditions, helping students connect with cultural values while developing their individual talents and interests.',
+      'Music education at Shri Pragya Public School contributes to the overall personality development of students by fostering creativity, confidence, emotional well-being, and a lifelong appreciation for the arts.',
     ],
   },
   dance: {
@@ -1009,7 +1312,10 @@ const contentPages = {
     title: 'Dance',
     image: classStudentsTwo,
     paragraphs: [
-      'Dance activities encourage creativity, coordination, teamwork and self-expression during school celebrations and programs.',
+      'Shri Pragya Public School recognizes dance as an important form of creative expression that contributes to the physical, emotional, and cultural development of students. The school encourages students to participate in various dance activities and cultural performances to nurture confidence, creativity, discipline, and artistic talent.',
+      'Students are provided opportunities to learn and perform different forms of dance during cultural programs, competitions, annual functions, and special events. Dance activities help students develop coordination, rhythm, teamwork, stage confidence, and self-expression in an engaging and enjoyable manner.',
+      'The school promotes cultural values and artistic appreciation through dance while encouraging students to showcase their talents and creativity. Under proper guidance and training, students enhance their performance skills and develop confidence to express themselves on stage.',
+      'At Shri Pragya Public School, dance education forms an integral part of holistic development, helping students grow into confident, expressive, and well-rounded individuals.',
     ],
   },
   'house-system': {
@@ -1057,6 +1363,13 @@ const contentPages = {
       'School timing details may vary by section and season. Parents are requested to contact the school office for the current class-wise schedule.',
       'Helpline No.: 09461996117',
     ],
+    bullets: ['Section-wise timing guidance', 'Arrival and dispersal discipline', 'Transport coordination', 'Official change notifications'],
+    sections: [
+      {
+        heading: 'Punctuality and Safety',
+        paragraphs: ['Students should arrive according to communicated timings and follow school instructions for attendance, transport and dispersal.'],
+      },
+    ],
   },
   ptm: {
     eyebrow: 'More',
@@ -1067,13 +1380,31 @@ const contentPages = {
       'Parents are requested to follow school notices for the latest PTM schedule or contact the school office for details.',
     ],
     bullets: ['Academic progress discussion', 'Personal guidance', 'Parent feedback', 'Student wellbeing support'],
+    sections: [
+      {
+        heading: 'Preparing for a PTM',
+        paragraphs: ['Parents may discuss learning habits, assessment progress, attendance, areas of improvement and constructive support that can continue at home.'],
+      },
+      {
+        heading: 'Working Together',
+        paragraphs: ['Open communication between families and teachers helps students receive consistent encouragement and timely guidance.'],
+      },
+    ],
   },
   'admission-form': {
     eyebrow: 'Admission',
     title: 'Online Admission',
     image: campusHero,
     paragraphs: [
-      'Parents can submit an admission enquiry through the contact form. Please select the student class and share contact details so the school office can respond.',
+      'Welcome to the admission enquiry portal of Shri Pragya Public School. Parents can share student and contact details through the online form so the school office can guide them regarding the appropriate class and next steps.',
+      'Admission is subject to seat availability, applicable eligibility and submission of required documents. The school office will provide confirmed information for the relevant academic session.',
+    ],
+    bullets: ['Student birth certificate', 'Recent photographs', 'Previous report card, where applicable', 'Transfer certificate, where applicable', 'Parent identity proof', 'Address and contact details'],
+    sections: [
+      {
+        heading: 'Admission Guidance',
+        paragraphs: ['Parents may contact the school for campus visits, class availability, hostel or transport enquiries and support in completing the admission process.'],
+      },
     ],
   },
   gallery: {
@@ -1082,7 +1413,9 @@ const contentPages = {
     image: campusHero,
     paragraphs: [
       'Explore glimpses of school life, campus spaces, activities and learning moments at Shri Pragya Public School.',
+      'The gallery celebrates classroom engagement, practical learning, achievements, cultural participation and the everyday experiences that shape student life.',
     ],
+    bullets: ['Campus life', 'Classroom learning', 'Laboratory activities', 'Sports and fitness', 'Events and celebrations', 'Student achievements'],
   },
   'campus-gallery': {
     eyebrow: 'Gallery',
@@ -1129,8 +1462,17 @@ const contentPages = {
     title: 'Careers',
     image: teacherImage,
     paragraphs: [
-      'Join our teaching community.',
-      'We welcome passionate educators who believe in discipline, care and student-centered learning. Share your profile with the school office for current vacancies.',
+      'Shri Pragya Public School welcomes passionate, dedicated, and qualified professionals who are committed to excellence in education and student development. The school offers a positive and growth-oriented work environment where educators and staff members are encouraged to contribute their skills, knowledge, and creativity towards shaping future generations.',
+      'The institution regularly provides opportunities for teaching, administrative, sports, hostel, and support staff positions across various departments and academic levels.',
+    ],
+    sections: [
+      {
+        heading: 'Apply Online',
+        paragraphs: [
+          'Interested candidates can apply online by submitting their updated resume and required details through the school\'s official application platform. The recruitment process is designed to identify talented individuals who possess strong academic knowledge, professional ethics, communication skills, and a passion for education.',
+          'Applicants are encouraged to carefully review the eligibility criteria and submit accurate information for a smooth and efficient application process.',
+        ],
+      },
     ],
   },
   'current-openings': {
@@ -1138,27 +1480,37 @@ const contentPages = {
     title: 'Current Openings',
     image: teacherImage,
     paragraphs: [
-      'We welcome dedicated educators and professionals who share our commitment to learning, discipline and student wellbeing.',
-      'Please submit your application online or contact the school office for current vacancy details.',
+      'Shri Pragya Public School welcomes passionate, dedicated, and qualified professionals who are committed to excellence in education and student development. The school offers a positive and growth-oriented work environment where educators and staff members are encouraged to contribute their skills, knowledge, and creativity towards shaping future generations.',
+      'The institution regularly provides opportunities for teaching, administrative, sports, hostel, and support staff positions across various departments and academic levels.',
     ],
   },
   'employee-benefits': {
     eyebrow: 'Career',
     title: 'Employee Benefits',
     image: teacherImage,
-    bullets: ['Supportive academic environment', 'Professional development opportunities', 'Collaborative team culture', 'Meaningful work with learners'],
+    paragraphs: [
+      'Shri Pragya Public School values the dedication and contribution of its employees and strives to provide a supportive and rewarding work environment. The institution offers professional growth opportunities, a collaborative atmosphere, and a respectful workplace culture that encourages continuous learning and development.',
+      'Employees benefit from a positive academic environment, skill enhancement opportunities, training programs, and career growth support that help them achieve professional excellence and personal satisfaction.',
+    ],
   },
   'work-culture': {
     eyebrow: 'Career',
     title: 'Work Culture',
     image: teacherImage,
-    paragraphs: ['Our work culture values professionalism, collaboration, respect, student care and continuous improvement in teaching.'],
+    paragraphs: [
+      'The school promotes a professional, collaborative, and inclusive work culture built on mutual respect, discipline, teamwork, integrity, and continuous improvement. Faculty members and staff work together in a positive environment that encourages innovation, creativity, leadership, and effective communication.',
+      'The institution believes in maintaining a healthy balance between professional responsibilities and personal growth while fostering a culture of dedication, excellence, and lifelong learning.',
+    ],
   },
   'teacher-training': {
     eyebrow: 'Career',
     title: 'Teacher Training Programs',
     image: digitalBoard,
-    paragraphs: ['Teachers are encouraged to strengthen pedagogy, technology use, classroom management and contemporary educational practices.'],
+    layoutVariant: 'training-programs',
+    paragraphs: [
+      'Shri Pragya Public School strongly believes in continuous professional development and regularly organizes teacher training programs, workshops, seminars, and skill enhancement sessions to keep educators updated with modern teaching methodologies and educational practices.',
+      'These programs focus on innovative teaching techniques, classroom management, technology integration, student engagement, communication skills, and overall professional growth. The school encourages teachers to continuously upgrade their knowledge and teaching practices to provide the best learning experience for students.',
+    ],
   },
   alumni: {
     eyebrow: 'Alumni',
@@ -1166,6 +1518,18 @@ const contentPages = {
     image: campusHero,
     paragraphs: [
       'Our alumni remain an important part of the Pragya family. This space will celebrate their journeys, memories and contributions.',
+      'Former students carry forward the values, friendships and confidence shaped during their school years, and their experiences can inspire current learners.',
+    ],
+    bullets: ['Alumni stories', 'School memories', 'Mentoring inspiration', 'Community connection'],
+    sections: [
+      {
+        heading: 'Stay Connected',
+        paragraphs: ['Alumni are welcome to reconnect with the school, share achievements and remain part of important school occasions and future initiatives.'],
+      },
+      {
+        heading: 'Inspire the Next Generation',
+        paragraphs: ['Stories from former students help present learners imagine possibilities in higher education, careers and responsible community life.'],
+      },
     ],
   },
   'student-council': {
@@ -1188,6 +1552,17 @@ const contentPages = {
       'Boys Hostel: Pragya Boys Hostel, Sathana Bazar, Bijainagar (Ajmer) Raj. +91 9799861201',
       'Girls Hostel: Shri Pragya Mahavidyalaya, Pragya Road Bijainagar (Ajmer) Raj. +91 9799861201',
       'Email id: officepragyaschool@gmail.com, shripragyaschool@gmail.com',
+    ],
+    bullets: ['Admission enquiries', 'Transport and hostel information', 'Academic support queries', 'Campus visit guidance'],
+    sections: [
+      {
+        heading: 'Admission and School Enquiries',
+        paragraphs: ['Parents may use the contact form below or call the school office for guidance regarding admission, campus visits and general school information.'],
+      },
+      {
+        heading: 'Connect with the Right Branch',
+        paragraphs: ['Please refer to the Main Branch and Junior Wing contact details above when planning a visit or seeking location-specific assistance.'],
+      },
     ],
   },
 }
@@ -1252,7 +1627,7 @@ function AdmissionForm({ onSubmit, message }) {
   const update = (key, value) => setForm({ ...form, [key]: value })
 
   return (
-    <form onSubmit={(event) => onSubmit(event, form, 'admission')} className="mt-10 grid gap-4 rounded-lg bg-white p-6 shadow-sm">
+    <form onSubmit={(event) => onSubmit(event, form, 'admission')} className="motion-form scroll-reveal mt-10 grid gap-4 rounded-lg bg-white p-6 shadow-sm">
       <div className="grid gap-4 md:grid-cols-2">
         <input value={form.student_name} onChange={(event) => update('student_name', event.target.value)} required placeholder="Student full name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
         <select value={form.class_applied} onChange={(event) => update('class_applied', event.target.value)} required className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]">
@@ -1285,7 +1660,7 @@ function ContactForm({ onSubmit, message, compact = false }) {
   const update = (key, value) => setForm({ ...form, [key]: value })
 
   return (
-    <form onSubmit={(event) => onSubmit(event, form, 'contact')} className={`${compact ? '' : 'mt-10 '}grid gap-4 rounded-lg bg-white p-6 shadow-sm`}>
+    <form onSubmit={(event) => onSubmit(event, form, 'contact')} className={`motion-form scroll-reveal ${compact ? '' : 'mt-10 '}grid gap-4 rounded-lg bg-white p-6 shadow-sm`}>
       <div className="grid gap-4 md:grid-cols-2">
         <input value={form.name} onChange={(event) => update('name', event.target.value)} required placeholder="Name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
         <input value={form.phone} onChange={(event) => update('phone', event.target.value)} required placeholder="Phone number" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
@@ -1300,7 +1675,6 @@ function ContactForm({ onSubmit, message, compact = false }) {
 }
 
 function CareerForm({ onSubmit, message }) {
-  const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -1313,31 +1687,27 @@ function CareerForm({ onSubmit, message }) {
   const update = (key, value) => setForm({ ...form, [key]: value })
 
   return (
-    <div className="mt-10">
-      <button
-        type="button"
-        onClick={() => setShowForm(true)}
-        className="inline-flex items-center gap-3 rounded-md bg-[#a8171d] px-7 py-4 font-black text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-[#06284d]"
-      >
-        Join Now <Icon name="arrow" />
-      </button>
-
-      {showForm ? (
-        <form onSubmit={(event) => onSubmit(event, form, 'career')} className="mt-6 grid gap-4 rounded-lg bg-white p-6 shadow-sm">
+    <section id="career-application" className="scroll-reveal mt-10 overflow-hidden rounded-2xl bg-white shadow-xl">
+      <div className="bg-[#06284d] px-6 py-5 text-white sm:px-8">
+        <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">Apply Online</p>
+        <h2 className="mt-2 text-2xl font-black">Career Application Form</h2>
+      </div>
+      <form onSubmit={(event) => onSubmit(event, form, 'career')} className="motion-form grid gap-4 p-6 sm:p-8">
           <div className="grid gap-4 md:grid-cols-2">
-            <input value={form.name} onChange={(event) => update('name', event.target.value)} required placeholder="Full name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-            <input value={form.phone} onChange={(event) => update('phone', event.target.value)} required placeholder="Phone number" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-            <input value={form.email} onChange={(event) => update('email', event.target.value)} type="email" placeholder="Email address" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-            <input value={form.position} onChange={(event) => update('position', event.target.value)} required placeholder="Position applied for" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-            <input value={form.qualification} onChange={(event) => update('qualification', event.target.value)} placeholder="Highest qualification" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
-            <input value={form.experience} onChange={(event) => update('experience', event.target.value)} placeholder="Experience" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+            <input value={form.name} onChange={(event) => update('name', event.target.value)} required placeholder="Full name" className="rounded-lg border border-slate-300 bg-[#fffaf0] px-4 py-4 font-semibold outline-none focus:border-[#a8171d] focus:bg-white" />
+            <input value={form.phone} onChange={(event) => update('phone', event.target.value)} required placeholder="Phone number" className="rounded-lg border border-slate-300 bg-[#fffaf0] px-4 py-4 font-semibold outline-none focus:border-[#a8171d] focus:bg-white" />
+            <input value={form.email} onChange={(event) => update('email', event.target.value)} type="email" placeholder="Email address" className="rounded-lg border border-slate-300 bg-[#fffaf0] px-4 py-4 font-semibold outline-none focus:border-[#a8171d] focus:bg-white" />
+            <input value={form.position} onChange={(event) => update('position', event.target.value)} required placeholder="Position applied for" className="rounded-lg border border-slate-300 bg-[#fffaf0] px-4 py-4 font-semibold outline-none focus:border-[#a8171d] focus:bg-white" />
+            <input value={form.qualification} onChange={(event) => update('qualification', event.target.value)} placeholder="Highest qualification" className="rounded-lg border border-slate-300 bg-[#fffaf0] px-4 py-4 font-semibold outline-none focus:border-[#a8171d] focus:bg-white" />
+            <input value={form.experience} onChange={(event) => update('experience', event.target.value)} placeholder="Experience" className="rounded-lg border border-slate-300 bg-[#fffaf0] px-4 py-4 font-semibold outline-none focus:border-[#a8171d] focus:bg-white" />
           </div>
-          <textarea value={form.message} onChange={(event) => update('message', event.target.value)} rows="4" placeholder="Subject expertise / message" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+          <textarea value={form.message} onChange={(event) => update('message', event.target.value)} rows="5" placeholder="Subject expertise / message" className="rounded-lg border border-slate-300 bg-[#fffaf0] px-4 py-4 font-semibold outline-none focus:border-[#a8171d] focus:bg-white" />
           {message ? <p className="rounded-md bg-[#fffaf0] p-3 text-sm font-bold text-slate-700">{message}</p> : null}
-          <button className="rounded-md bg-[#a8171d] px-6 py-4 font-bold text-white">Submit Application</button>
-        </form>
-      ) : null}
-    </div>
+          <button className="inline-flex w-fit items-center gap-3 rounded-lg bg-[#a8171d] px-7 py-4 font-black text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-[#06284d]">
+            Submit Application <Icon name="arrow" />
+          </button>
+      </form>
+    </section>
   )
 }
 
@@ -1377,7 +1747,444 @@ function CountUpStat({ value, label }) {
   )
 }
 
-function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [], resultPhotos = [], studentCouncilRecords = [] }) {
+function ImageFrame({ image, alt, className = '', imageClassName = '' }) {
+  return (
+    <figure className={`responsive-image-frame relative overflow-hidden rounded-2xl bg-[#fffaf0] shadow-xl ${className}`}>
+      <img src={image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-25 blur-xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/45 to-[#ffc400]/10" />
+      <img src={image} alt={alt} className={`relative z-10 h-full w-full object-contain object-center p-3 ${imageClassName}`} />
+    </figure>
+  )
+}
+
+function PageIntroLayout({ page, visualTheme, layoutKind }) {
+  if (page.contentMode === 'html' && page.html) {
+    return <div className="scroll-reveal cms-html-content rounded-lg bg-white p-6 text-slate-700 shadow-sm" dangerouslySetInnerHTML={{ __html: page.html }} />
+  }
+
+  const paragraphs = page.paragraphs || [visualTheme.copy]
+
+  if (page.layoutVariant === 'principal-message') {
+    return (
+      <section className="scroll-reveal overflow-hidden rounded-2xl bg-white shadow-lg">
+        <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="bg-[#fffaf0] p-5 sm:p-8">
+            <figure className="overflow-hidden rounded-xl bg-white shadow-xl">
+              <div className="aspect-[3/2] overflow-hidden">
+                <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="h-full w-full object-cover object-center" />
+              </div>
+              <figcaption className="px-2 pb-2 pt-4 text-center">
+                <p className="text-xl font-black text-[#102344]">Mrs Nidhi Mathur</p>
+                <p className="mt-1 font-bold text-[#a8171d]">Principal</p>
+              </figcaption>
+            </figure>
+          </div>
+          <div className="p-7 sm:p-10">
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Principal Message</p>
+            <h2 className="mt-3 text-3xl font-black leading-tight text-[#102344] sm:text-4xl">Guiding students with excellence, values and care.</h2>
+            <div className="mt-7 grid max-h-[620px] gap-5 overflow-y-auto pr-2 text-lg leading-8 text-slate-700">
+              {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (page.layoutVariant === 'about-school') {
+    return (
+      <section className="scroll-reveal overflow-hidden rounded-2xl bg-white shadow-lg">
+        <figure className="relative overflow-hidden bg-[#06284d]">
+          <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="h-72 w-full object-cover object-center sm:h-[28rem] lg:h-[34rem]" />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#06284d]/95 via-[#06284d]/45 to-transparent px-6 pb-7 pt-28 text-white sm:px-10">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">About School</p>
+            <h2 className="mt-3 max-w-3xl text-2xl font-black leading-tight sm:text-4xl">{page.title}</h2>
+          </div>
+        </figure>
+        <div className="p-7 sm:p-10">
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">School Overview</p>
+          <div className="mt-6 grid gap-5 text-lg leading-8 text-slate-700">
+            {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (page.layoutVariant === 'infrastructure-image-first') {
+    return (
+      <section className="scroll-reveal overflow-hidden rounded-2xl bg-white shadow-lg">
+        <figure className="relative overflow-hidden bg-[#06284d]">
+          <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="h-72 w-full object-cover object-center sm:h-[28rem] lg:h-[32rem]" />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#06284d]/95 via-[#06284d]/45 to-transparent px-6 pb-7 pt-28 text-white sm:px-10">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">School Infrastructure</p>
+            <h2 className="mt-3 max-w-3xl text-2xl font-black leading-tight sm:text-4xl">{page.title}</h2>
+          </div>
+        </figure>
+        <div className="p-7 sm:p-10">
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Overview</p>
+          <div className="mt-6 grid gap-5 text-lg leading-8 text-slate-700">
+            {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (page.layoutVariant === 'training-programs') {
+    return (
+      <section className="scroll-reveal overflow-hidden rounded-2xl bg-white shadow-lg">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="p-7 sm:p-10">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Professional Development</p>
+            <h2 className="mt-3 text-2xl font-black leading-tight text-[#102344] sm:text-4xl">{page.title}</h2>
+            <div className="mt-6 grid gap-5 text-lg leading-8 text-slate-700">
+              {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
+          </div>
+          <figure className="relative min-h-80 overflow-hidden bg-[#06284d]">
+            <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="absolute inset-0 h-full w-full object-cover object-center opacity-85" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#06284d]/80 via-transparent to-transparent" />
+            <figcaption className="absolute inset-x-0 bottom-0 p-6 text-lg font-black text-white">Modern teaching, better learning outcomes.</figcaption>
+          </figure>
+        </div>
+        <div className="grid gap-4 border-t border-slate-200 bg-[#fffaf0] p-6 sm:grid-cols-2 lg:grid-cols-4">
+          {['Teaching techniques', 'Classroom management', 'Technology integration', 'Student engagement'].map((item) => (
+            <div key={item} className="rounded-lg bg-white p-5 shadow-sm">
+              <Icon name="check" className="h-6 w-6 text-[#a8171d]" />
+              <p className="mt-3 font-black text-[#102344]">{item}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  if (layoutKind === 'values') {
+    return (
+      <section className="scroll-reveal relative overflow-hidden rounded-2xl bg-white px-6 py-12 text-center shadow-sm sm:px-12">
+        <div className="absolute left-1/2 top-0 h-1 w-28 -translate-x-1/2 bg-[#ffc400]" />
+        <p className="text-sm font-black uppercase tracking-[0.25em] text-[#a8171d]">What Guides Us</p>
+        <h2 className="mx-auto mt-4 max-w-4xl text-4xl font-black leading-tight text-[#102344]">{page.title}</h2>
+        <div className="mx-auto mt-7 grid max-w-4xl gap-5 text-lg leading-8 text-slate-700">
+          {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+        <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-3">
+          {visualTheme.highlights.map((highlight) => (
+            <span key={highlight} className="rounded-lg bg-[#fffaf0] px-5 py-4 font-extrabold text-[#a8171d]">{highlight}</span>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  if (layoutKind === 'leadership') {
+    const leadershipImageClass = page.imageFit === 'contain'
+      ? 'absolute inset-0 h-full w-full bg-[#fffaf0] object-contain object-center p-4'
+      : 'absolute inset-0 h-full w-full object-cover object-top'
+
+    return (
+      <section className="scroll-reveal overflow-hidden rounded-2xl bg-white shadow-lg lg:grid lg:grid-cols-[0.74fr_1.26fr]">
+        <div className="relative min-h-80">
+          <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className={leadershipImageClass} />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#06284d] to-transparent px-6 pb-6 pt-20 text-white">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">Leadership</p>
+            <p className="mt-2 text-2xl font-black">{page.title}</p>
+          </div>
+        </div>
+        <div className="p-7 sm:p-10">
+          <p className="text-5xl font-black leading-none text-[#ffc400]">&ldquo;</p>
+          <div className="mt-2 grid gap-5 text-lg leading-8 text-slate-700">
+            {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+          <div className="mt-8 h-1 w-20 bg-[#a8171d]" />
+          <p className="mt-4 text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Guiding the Pragya Community</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (layoutKind === 'academics') {
+    const classLine = paragraphs.find((paragraph) => /^classes?:/i.test(paragraph))
+    const detailParagraphs = paragraphs.filter((paragraph) => paragraph !== classLine)
+    const academicCards = (detailParagraphs.length > 0 ? detailParagraphs : [visualTheme.copy]).map((paragraph, index) => ({
+      text: paragraph,
+      title: index === 0 ? 'Learning Approach' : index === 1 ? 'Student Development' : index === 2 ? 'Academic Support' : 'Future Readiness',
+      icon: ['book', 'graduation', 'trophy', 'users'][index % 4],
+    }))
+    const focusItems = page.bullets?.slice(0, 6) || visualTheme.highlights
+
+    return (
+      <section className="academics-layout scroll-reveal overflow-hidden rounded-2xl bg-white shadow-lg">
+        <div className="grid gap-0 bg-gradient-to-br from-[#06284d] via-[#102344] to-[#a8171d] text-white lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
+          <div className="p-7 sm:p-10 lg:p-12">
+            <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ffc400]">Academic Pathway</p>
+            <h2 className="mt-3 max-w-3xl text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">{page.title}</h2>
+            {classLine ? <p className="mt-5 inline-flex rounded-full bg-[#ffc400] px-5 py-2 text-sm font-black text-[#102344]">{classLine.replace(/^classes?:\s*/i, 'Classes: ')}</p> : null}
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84">{visualTheme.copy}</p>
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              {focusItems.slice(0, 3).map((item) => (
+                <div key={item} className="academics-mini-card rounded-lg border border-white/15 bg-white/10 p-4 backdrop-blur">
+                  <Icon name="check" className="h-5 w-5 text-[#ffc400]" />
+                  <p className="mt-3 text-sm font-black leading-5 text-white">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="relative bg-white/8 p-5 sm:p-7 lg:p-8">
+            <ImageFrame image={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="academics-hero-image h-full min-h-72 rounded-xl shadow-2xl lg:min-h-[500px]" imageClassName="p-2 sm:p-3" />
+          </div>
+        </div>
+
+        <div className="bg-[#f8fafc] p-5 sm:p-8 lg:p-10">
+          <div className="stagger-grid is-visible grid gap-5 lg:grid-cols-2">
+            {academicCards.map((card, index) => (
+              <article key={card.text} className="academics-info-card motion-card rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+                <div className="flex gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#a8171d] text-white shadow-md shadow-[#a8171d]/20">
+                    <Icon name={card.icon} />
+                  </span>
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.18em] text-[#a8171d]">0{index + 1}</p>
+                    <h3 className="mt-1 text-xl font-black text-[#102344]">{card.title}</h3>
+                    <p className="mt-3 leading-7 text-slate-700">{card.text}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {visualTheme.photos.slice(1).map(([image, alt]) => (
+              <figure key={alt} className="academics-gallery-card group overflow-hidden rounded-xl bg-white p-3 shadow-sm">
+                <ImageFrame image={image} alt={alt} className="aspect-[16/10] rounded-lg shadow-none" imageClassName="p-2" />
+                <figcaption className="px-2 pt-3 text-sm font-black uppercase tracking-[0.14em] text-[#a8171d]">{alt}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (layoutKind === 'facilities') {
+    return (
+      <section className="scroll-reveal overflow-hidden rounded-2xl bg-white shadow-lg">
+        <figure className="relative overflow-hidden bg-[#06284d]">
+          <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="h-72 w-full object-cover object-center sm:h-[28rem] lg:h-[32rem]" />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#06284d]/95 via-[#06284d]/45 to-transparent px-6 pb-7 pt-28 text-white sm:px-10">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">Facilities</p>
+            <h2 className="mt-3 max-w-3xl text-2xl font-black leading-tight sm:text-4xl">{page.title}</h2>
+          </div>
+        </figure>
+        <div className="p-7 sm:p-10">
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Overview</p>
+          <div className="mt-6 grid gap-5 text-lg leading-8 text-slate-700">
+            {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (layoutKind === 'enquiry') {
+    return (
+      <section className="grid gap-7 lg:grid-cols-[1.12fr_0.88fr]">
+        <div className="scroll-reveal rounded-2xl border-l-4 border-[#ffc400] bg-white p-7 shadow-sm sm:p-9">
+          <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Connect with Pragya</p>
+          <h2 className="mt-3 text-3xl font-black text-[#102344]">{page.title}</h2>
+          <div className="mt-6 grid gap-5 text-lg leading-8 text-slate-700">
+            {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </div>
+        <figure className="scroll-reveal reveal-right relative overflow-hidden rounded-2xl shadow-lg">
+          <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="h-full min-h-80 w-full object-cover" />
+          <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#06284d]/95 to-transparent p-6 pt-20 text-lg font-bold text-white">We are here to guide students and families.</figcaption>
+        </figure>
+      </section>
+    )
+  }
+
+  if (layoutKind === 'activities') {
+    return (
+      <section className="grid gap-8 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
+        <div className="scroll-reveal">
+          <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Campus Moments</p>
+          <h2 className="mt-3 text-4xl font-black text-[#102344]">{page.title}</h2>
+          <div className="mt-6 grid gap-5 text-lg leading-8 text-slate-700">
+            {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </div>
+        <div className="scroll-reveal reveal-right grid grid-cols-2 gap-4">
+          <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="col-span-2 h-60 w-full rounded-2xl object-cover" />
+          {visualTheme.photos.slice(1).map(([image, alt]) => <img key={alt} src={image} alt={alt} className="h-40 w-full rounded-2xl object-cover" />)}
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className={`grid items-start gap-8 ${page.hideImages ? '' : 'lg:grid-cols-[1.05fr_0.95fr]'}`}>
+      <div className="scroll-reveal rounded-xl bg-white p-6 shadow-sm sm:p-8">
+        <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Discover {page.title}</p>
+        <div className="mt-5 grid gap-5 text-lg leading-8 text-slate-700">
+          {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      </div>
+      {page.hideImages ? null : (
+        <figure className="scroll-reveal reveal-right overflow-hidden rounded-xl bg-white p-3 shadow-xl">
+          <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="h-72 w-full rounded-lg object-cover sm:h-96" />
+          <figcaption className="px-3 pb-2 pt-4 text-sm font-bold uppercase tracking-[0.16em] text-[#a8171d]">{page.title} at Pragya</figcaption>
+        </figure>
+      )}
+    </section>
+  )
+}
+
+function PageClosingLayout({ layoutKind, visualTheme, page }) {
+  if (page?.hideImages) return null
+  if (page?.hideClosingImages) return null
+
+  if (layoutKind === 'values') {
+    return (
+      <section className="scroll-reveal mt-14 grid gap-5 sm:grid-cols-3">
+        {visualTheme.photos.map(([image, alt]) => (
+          <figure key={alt} className="group overflow-hidden rounded-2xl bg-white shadow-sm">
+            <img src={image} alt={alt} className="h-56 w-full object-cover transition duration-500 group-hover:scale-105" />
+            <figcaption className="p-5 text-center font-bold text-[#102344]">{alt}</figcaption>
+          </figure>
+        ))}
+      </section>
+    )
+  }
+
+  if (layoutKind === 'academics') {
+    return (
+      <section className="scroll-reveal mt-14 overflow-hidden rounded-2xl bg-[#06284d] text-white shadow-xl">
+        <div className="grid gap-7 p-7 sm:p-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
+          <div>
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Academic Environment</p>
+            <h2 className="mt-3 max-w-xl text-3xl font-black sm:text-4xl">{visualTheme.heading}</h2>
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-white/80">{visualTheme.copy}</p>
+            <a href="/admission-form/" className="motion-button mt-7 inline-flex w-fit items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">Admission Enquiry <Icon name="arrow" /></a>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {visualTheme.highlights.map((highlight, index) => (
+              <div key={highlight} className="academics-mini-card rounded-lg border border-white/15 bg-white/10 p-4 backdrop-blur">
+                <p className="text-2xl font-black text-[#ffc400]">0{index + 1}</p>
+                <p className="mt-1 font-bold text-white">{highlight}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (layoutKind === 'facilities') {
+    return null
+  }
+
+  if (layoutKind === 'leadership') {
+    return (
+      <section className="scroll-reveal mt-14 border-y border-[#ffc400]/60 py-10 text-center">
+        <p className="mx-auto max-w-4xl text-2xl font-semibold leading-10 text-[#102344]">Education at Pragya is a partnership of students, families and teachers working with discipline, compassion and purpose.</p>
+      </section>
+    )
+  }
+
+  return (
+    <section className="scroll-reveal mt-14 overflow-hidden rounded-2xl bg-[#06284d] text-white shadow-xl">
+      <div className="grid gap-8 p-7 sm:p-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <div>
+          <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Life at Pragya</p>
+          <h2 className="mt-3 text-3xl font-black sm:text-4xl">{visualTheme.heading}</h2>
+          <p className="mt-5 text-lg leading-8 text-white/80">{visualTheme.copy}</p>
+          <a href="/contact-us/" className="motion-button mt-7 inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">Connect With School <Icon name="arrow" /></a>
+        </div>
+        <div className="stagger-grid is-visible grid gap-4 sm:grid-cols-3">
+          {visualTheme.photos.map(([image, alt]) => (
+            <figure key={alt} className="overflow-hidden rounded-lg bg-white/10">
+              <img src={image} alt={alt} className="h-48 w-full object-cover transition duration-500 hover:scale-105" />
+              <figcaption className="p-3 text-sm font-semibold text-white/85">{alt}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function OriginHistoryPage({ page, visualTheme }) {
+  const story = contentPages['origin-history'].paragraphs.map((paragraph, index) => page.paragraphs?.[index] || paragraph)
+  const remainingStory = story.slice(4)
+
+  return (
+    <main>
+      <section className="relative min-h-[420px] overflow-hidden bg-[#06284d] text-white">
+        <img src={campusHero} alt="Shri Pragya Public School campus" className="hero-backdrop absolute inset-0 h-full w-full object-cover opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#06284d]/95 via-[#06284d]/82 to-transparent" />
+        <div className="relative mx-auto flex min-h-[420px] max-w-7xl items-center px-4 py-14 lg:px-8">
+          <div className="max-w-2xl">
+            <p className="hero-kicker text-sm font-black uppercase tracking-[0.24em] text-[#ffc400]">Our Legacy</p>
+            <h1 className="hero-title mt-4 text-3xl font-black leading-tight sm:text-4xl">{page.title || 'Our Legacy'}</h1>
+            <p className="hero-copy mt-6 max-w-xl text-lg leading-8 text-white/85">A journey of education, values and community trust from Pragya Bal Mandir to Shri Pragya Public School.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr]">
+          <div className="scroll-reveal">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Since 1976</p>
+            <h2 className="mt-3 text-2xl font-black leading-tight text-[#102344] sm:text-3xl">A legacy shaped by service and learning.</h2>
+            <p className="mt-6 text-lg leading-8 text-slate-700">{story[0]}</p>
+            <img src={visualTheme.photos[0][0]} alt={visualTheme.photos[0][1]} className="mt-8 h-72 w-full rounded-2xl object-cover shadow-xl" />
+          </div>
+          <div className="scroll-reveal reveal-right rounded-2xl bg-white p-6 shadow-sm sm:p-9">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Milestones</p>
+            <div className="relative mt-8 grid gap-8 before:absolute before:bottom-2 before:left-[3.1rem] before:top-2 before:w-px before:bg-[#ffc400]">
+              {historyMilestones.map(([year, title, text]) => (
+                <article key={year} className="relative grid grid-cols-[6.2rem_1fr] gap-5">
+                  <span className="relative z-10 grid h-12 w-24 place-items-center rounded-full bg-[#a8171d] text-lg font-black text-white">{year}</span>
+                  <div>
+                    <h3 className="text-xl font-black text-[#102344]">{title}</h3>
+                    <p className="mt-2 leading-7 text-slate-700">{text}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <section className="scroll-reveal mt-14 grid overflow-hidden rounded-2xl bg-[#06284d] text-white shadow-xl lg:grid-cols-2">
+          <div className="p-7 sm:p-10">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">Spiritual Foundation</p>
+            <h2 className="mt-3 text-2xl font-black">Inspired by purpose, strengthened by dedication.</h2>
+            <p className="mt-6 text-lg leading-8 text-white/82">{story[2]}</p>
+            <p className="mt-5 text-lg leading-8 text-white/82">{story[3]}</p>
+          </div>
+          <div className="grid grid-cols-2">
+            <img src={classStudentsTwo} alt="Students at Shri Pragya Public School" className="col-span-2 h-60 w-full object-cover" />
+            <img src={digitalTeaching} alt="Digital learning at the school" className="h-48 w-full object-cover" />
+            <img src={boysReading} alt="Students reading and learning" className="h-48 w-full object-cover" />
+          </div>
+        </section>
+
+        <section className="scroll-reveal mt-14 rounded-2xl bg-white p-8 text-center shadow-sm sm:p-12">
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Continuing the Journey</p>
+          <h2 className="mx-auto mt-4 max-w-3xl text-2xl font-black text-[#102344] sm:text-3xl">Building responsible learners for the future.</h2>
+          <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-slate-700">{story[1]}</p>
+          {remainingStory.map((paragraph) => (
+            <p key={paragraph} className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-slate-700">{paragraph}</p>
+          ))}
+        </section>
+      </section>
+    </main>
+  )
+}
+
+function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhotos = [], resultPhotos = [], studentCouncilRecords = [], jobPosts = [], alumniBatches = [] }) {
   const [openGalleryPhoto, setOpenGalleryPhoto] = useState(null)
   const galleryFolders = galleryPhotos.reduce((folders, photo) => {
     const folderName = photo.folder_title || 'Gallery'
@@ -1389,33 +2196,59 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
   const galleryFolderEntries = Object.entries(galleryFolders)
   const galleryRouteSlug = activePage.startsWith('gallery/') ? activePage.split('/')[1] : ''
   const activeGalleryFolder = galleryFolderEntries.find(([folderName]) => getSlug(folderName) === galleryRouteSlug)
+  const visualTheme = getPageVisualTheme(activePage, page)
+  const layoutKind = getPageLayoutKind(activePage, page)
+
+  if (layoutKind === 'history') {
+    return <OriginHistoryPage page={page} visualTheme={visualTheme} />
+  }
 
   return (
     <main>
-      <section className="relative overflow-hidden bg-[#06284d] py-10 text-white sm:py-12">
-        <img src={campusHero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" />
-        <div className="absolute inset-0 bg-[#06284d]/85" />
+      <section className="relative overflow-hidden bg-[#06284d] py-16 text-white sm:py-20">
+        {page.hideImages ? null : <img src={visualTheme.heroPhoto} alt="" className="hero-backdrop absolute inset-0 h-full w-full object-cover opacity-35" />}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#06284d]/95 via-[#06284d]/85 to-[#06284d]/60" />
         <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
-          <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#ffc400] sm:text-sm">{page.eyebrow}</p>
-          <h1 className="mt-3 max-w-4xl text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">{page.title}</h1>
+          <p className="hero-kicker text-xs font-extrabold uppercase tracking-[0.22em] text-[#ffc400] sm:text-sm">{page.eyebrow}</p>
+          <h1 className="hero-title mt-3 max-w-4xl text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">{page.title}</h1>
+          <div className="hero-actions mt-7 flex flex-wrap gap-3">
+            {visualTheme.highlights.map((highlight) => (
+              <span key={highlight} className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold text-white/95 backdrop-blur-sm">{highlight}</span>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-4 py-10 lg:px-8 lg:py-14">
-        {page.contentMode === 'html' && page.html ? (
-          <div className="cms-html-content rounded-lg bg-white p-6 text-slate-700 shadow-sm" dangerouslySetInnerHTML={{ __html: page.html }} />
-        ) : page.paragraphs ? (
-          <div className="grid gap-5 text-lg leading-8 text-slate-700">
-            {page.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-        ) : null}
+      <section className="mx-auto max-w-7xl px-4 py-10 lg:px-8 lg:py-14">
+        <PageIntroLayout page={page} visualTheme={visualTheme} layoutKind={layoutKind} />
 
-        {page.bullets ? (
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+        {page.bullets && layoutKind === 'academics' ? (
+          <section className="scroll-reveal mt-8 rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Key Components</p>
+                <h2 className="mt-2 text-2xl font-black text-[#102344]">What students receive</h2>
+              </div>
+              <span className="rounded-full bg-[#fff4c2] px-4 py-2 text-sm font-black text-[#102344]">{page.bullets.length} Focus Areas</span>
+            </div>
+            <div className="stagger-grid is-visible mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {page.bullets.map((item, index) => (
+                <article key={item} className="academics-feature-card motion-card rounded-xl border border-slate-200 bg-[#f8fafc] p-5">
+                  <div className="flex items-start gap-4">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#ffc400] font-black text-[#102344]">{index + 1}</span>
+                    <div>
+                      <h3 className="font-black text-[#102344]">{item}</h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">Structured support for confident academic growth.</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : page.bullets ? (
+          <ul className="scroll-reveal stagger-grid mt-8 grid gap-3 sm:grid-cols-2">
             {page.bullets.map((item) => (
-              <li key={item} className="flex gap-3 rounded-lg bg-white p-4 font-semibold text-slate-700 shadow-sm">
+              <li key={item} className="motion-card flex gap-3 rounded-lg bg-white p-4 font-semibold text-slate-700 shadow-sm">
                 <Icon name="check" className="mt-0.5 h-5 w-5 flex-none text-[#a8171d]" />
                 <span>{item}</span>
               </li>
@@ -1424,12 +2257,12 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
         ) : null}
 
         {page.people ? (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="scroll-reveal stagger-grid mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {page.people.map(([name, role, detail, photo]) => {
               const staffPhoto = photo || staffPhotosByName[name]
 
               return (
-                <article key={name} className="overflow-hidden rounded-lg bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                <article key={name} className="motion-card overflow-hidden rounded-lg bg-white shadow-sm">
                   {staffPhoto ? (
                     <img src={staffPhoto} alt={name} className="h-72 w-full object-cover object-top" />
                   ) : (
@@ -1449,7 +2282,7 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
 
 
         {(page.title === 'Gallery' || activePage.startsWith('gallery/')) ? (
-          <div className="mt-10 grid gap-8">
+          <div className="scroll-reveal mt-10 grid gap-8">
             {galleryRouteSlug ? (
               activeGalleryFolder ? (
                 <section className="rounded-lg bg-white p-5 shadow-sm">
@@ -1478,7 +2311,7 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
                 <p className="rounded-lg bg-white p-6 text-lg font-bold text-slate-700 shadow-sm">Gallery folder not found.</p>
               )
             ) : galleryFolderEntries.length > 0 ? (
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="scroll-reveal stagger-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {galleryFolderEntries.map(([folderName, photos]) => (
                   <a
                     key={folderName}
@@ -1489,7 +2322,7 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
                       window.dispatchEvent(new PopStateEvent('popstate'))
                       window.scrollTo({ top: 0, behavior: 'smooth' })
                     }}
-                    className="group overflow-hidden rounded-lg bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                    className="motion-card group overflow-hidden rounded-lg bg-white shadow-sm"
                   >
                     <img src={photos[0]?.image_url} alt={folderName} className="h-56 w-full object-cover transition duration-500 group-hover:scale-105" />
                     <div className="p-5">
@@ -1503,7 +2336,7 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
                 ))}
               </div>
             ) : (
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="scroll-reveal stagger-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {galleryImages.map(([image, alt]) => (
                   <button key={alt} type="button" onClick={() => setOpenGalleryPhoto({ title: alt, image_url: image })} className="overflow-hidden rounded-lg shadow-md">
                     <img src={image} alt={alt} className="h-72 w-full object-cover" />
@@ -1528,7 +2361,7 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
 
         {activePage === 'results' ? (
           resultPhotos.length > 0 ? (
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="scroll-reveal stagger-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {resultPhotos.map((result) => (
                 <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 shadow-md">
                   <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-80 w-full rounded-md object-contain" />
@@ -1545,7 +2378,7 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
             <p className="mt-10 rounded-lg bg-white p-6 text-lg font-bold text-slate-700 shadow-sm">No result photos added yet.</p>
           )
         ) : page.gallery ? (
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="scroll-reveal stagger-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {page.gallery.map(([image, alt]) => (
               <img key={alt} src={image} alt={alt} className="h-80 w-full rounded-lg object-contain bg-white p-3 shadow-md" />
             ))}
@@ -1554,13 +2387,71 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
 
         {activePage === 'admission-form' ? <AdmissionForm onSubmit={onFormSubmit} message={formMessage} /> : null}
         {activePage === 'contact-us' ? <ContactForm onSubmit={onFormSubmit} message={formMessage} /> : null}
+        {(activePage === 'careers' || activePage === 'current-openings') && jobPosts.length > 0 ? (
+          <section className="scroll-reveal mt-10 rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Current Job Postings</p>
+            <h2 className="mt-2 text-3xl font-black text-[#102344]">Open positions at Pragya</h2>
+            <div className="mt-6 grid gap-5 lg:grid-cols-2">
+              {jobPosts.map((job) => (
+                <article key={job.id} className="motion-card rounded-xl border border-slate-200 bg-[#fffaf0] p-5">
+                  <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                    <div>
+                      <h3 className="text-2xl font-black text-[#102344]">{job.job_name}</h3>
+                      {(job.start_date || job.end_date) ? (
+                        <p className="mt-2 text-sm font-bold text-[#a8171d]">
+                          {job.start_date ? `From ${new Date(job.start_date).toLocaleDateString()}` : ''}
+                          {job.start_date && job.end_date ? ' - ' : ''}
+                          {job.end_date ? `To ${new Date(job.end_date).toLocaleDateString()}` : ''}
+                        </p>
+                      ) : null}
+                    </div>
+                    <a href={activePage === 'careers' ? '#career-application' : '/careers/#career-application'} className="inline-flex shrink-0 items-center gap-2 rounded-md bg-[#a8171d] px-4 py-2 text-sm font-black text-white">
+                      Apply Now <Icon name="arrow" className="h-4 w-4" />
+                    </a>
+                  </div>
+                  <p className="mt-4 whitespace-pre-line leading-7 text-slate-700">{job.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
         {activePage === 'careers' ? <CareerForm onSubmit={onFormSubmit} message={formMessage} /> : null}
+
+        {activePage === 'alumni' && alumniBatches.length > 0 ? (
+          <section className="scroll-reveal mt-10 grid gap-8">
+            {Object.entries(alumniBatches.reduce((groups, batch) => {
+              const year = batch.batch_year || 'Alumni'
+              return { ...groups, [year]: [...(groups[year] || []), batch] }
+            }, {})).sort(([yearA], [yearB]) => String(yearB).localeCompare(String(yearA))).map(([year, batches]) => (
+              <div key={year} className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+                <p className="text-sm font-black uppercase tracking-[0.2em] text-[#a8171d]">Batch Wise Alumni</p>
+                <h2 className="mt-2 text-3xl font-black text-[#102344]">{year} Batch</h2>
+                <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {batches.map((batch) => (
+                    <article key={batch.id} className="motion-card overflow-hidden rounded-xl bg-[#fffaf0] shadow-sm">
+                      {batch.photo_url ? (
+                        <img src={batch.photo_url} alt={`${batch.batch_year} ${batch.class_name || ''}`} className="h-64 w-full object-cover" />
+                      ) : (
+                        <div className="grid h-64 place-items-center bg-[#06284d] text-4xl font-black text-[#ffc400]">{batch.batch_year}</div>
+                      )}
+                      <div className="p-5">
+                        <h3 className="text-2xl font-black text-[#102344]">{batch.class_name || 'Class'}</h3>
+                        <p className="mt-1 font-bold text-[#a8171d]">{batch.subject_name || 'Subject'}</p>
+                        {batch.description ? <p className="mt-3 whitespace-pre-line leading-7 text-slate-700">{batch.description}</p> : null}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </section>
+        ) : null}
 
         {activePage === 'student-council' ? (
           studentCouncilRecords.length > 0 ? (
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="scroll-reveal stagger-grid mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {studentCouncilRecords.map((member) => (
-                <article key={member.id} className="overflow-hidden rounded-lg bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                <article key={member.id} className="motion-card overflow-hidden rounded-lg bg-white shadow-sm">
                   {member.photo_url ? (
                     <img src={member.photo_url} alt={member.name} className="h-64 w-full object-cover" />
                   ) : (
@@ -1582,32 +2473,70 @@ function ContentPage({ page, activePage, onFormSubmit, formMessage, galleryPhoto
           )
         ) : null}
 
-        {page.sections ? (
-          <div className="mt-10 grid gap-6">
-            {page.sections.map((section) => (
-              <article key={section.heading} className="rounded-lg bg-white p-6 shadow-sm">
-                <h2 className="text-3xl font-black text-[#102344]">{section.heading}</h2>
-                {section.paragraphs ? (
-                  <div className="mt-4 grid gap-4 text-lg leading-8 text-slate-700">
-                    {section.paragraphs.map((paragraph) => (
-                      <p key={paragraph}>{paragraph}</p>
-                    ))}
-                  </div>
-                ) : null}
-                {section.bullets ? (
-                  <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                    {section.bullets.map((item) => (
-                      <li key={item} className="flex gap-3 rounded-md bg-[#fffaf0] p-3 font-semibold text-slate-700">
-                        <Icon name="check" className="mt-0.5 h-5 w-5 flex-none text-[#a8171d]" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
+        {page.sections && layoutKind === 'academics' ? (
+          <section className="scroll-reveal mt-12 overflow-hidden rounded-2xl bg-[#06284d] text-white shadow-xl">
+            <div className="p-7 sm:p-10">
+              <p className="text-sm font-black uppercase tracking-[0.2em] text-[#ffc400]">Structured Learning</p>
+              <h2 className="mt-3 max-w-3xl text-3xl font-black sm:text-4xl">A clear academic flow for every learner.</h2>
+              <div className="stagger-grid is-visible mt-8 grid gap-5">
+                {page.sections.map((section, index) => (
+                  <article key={section.heading} className="academics-roadmap-card motion-card grid gap-5 rounded-xl border border-white/12 bg-white/10 p-5 backdrop-blur lg:grid-cols-[11rem_1fr]">
+                    <div>
+                      <p className="text-4xl font-black text-[#ffc400]">{String(index + 1).padStart(2, '0')}</p>
+                      <h3 className="mt-3 text-xl font-black text-white">{section.heading}</h3>
+                    </div>
+                    <div className="grid gap-4">
+                      {section.paragraphs?.map((paragraph) => (
+                        <p key={paragraph} className="leading-7 text-white/82">{paragraph}</p>
+                      ))}
+                      {section.bullets ? (
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {section.bullets.map((item) => (
+                            <p key={item} className="flex gap-3 rounded-md bg-white/10 p-3 font-semibold text-white">
+                              <Icon name="check" className="mt-0.5 h-5 w-5 flex-none text-[#ffc400]" />
+                              <span>{item}</span>
+                            </p>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : page.sections ? (
+          <div className="scroll-reveal stagger-grid mt-12 grid gap-7">
+            {page.sections.map((section, index) => (
+              <article key={section.heading} className="motion-card overflow-hidden rounded-xl bg-white shadow-sm lg:grid lg:grid-cols-[1.15fr_0.85fr]">
+                <div className="p-6 sm:p-8">
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-[#a8171d]">Explore</p>
+                  <h2 className="mt-2 text-3xl font-black text-[#102344]">{section.heading}</h2>
+                  {section.paragraphs ? (
+                    <div className="mt-4 grid gap-4 text-lg leading-8 text-slate-700">
+                      {section.paragraphs.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
+                    </div>
+                  ) : null}
+                  {section.bullets ? (
+                    <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                      {section.bullets.map((item) => (
+                        <li key={item} className="flex gap-3 rounded-md bg-[#fffaf0] p-3 font-semibold text-slate-700">
+                          <Icon name="check" className="mt-0.5 h-5 w-5 flex-none text-[#a8171d]" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+                <img src={visualTheme.photos[(index + 1) % visualTheme.photos.length][0]} alt={`${section.heading} at Shri Pragya Public School`} className={`${index % 2 ? 'lg:order-first' : ''} h-full min-h-60 w-full object-cover`} />
               </article>
             ))}
           </div>
         ) : null}
+
+        <PageClosingLayout layoutKind={layoutKind} visualTheme={visualTheme} page={page} />
       </section>
     </main>
   )
@@ -1682,6 +2611,10 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
   const [studentCouncilForm, setStudentCouncilForm] = useState({ name: '', role: '', className: '', houseName: '', photoUrl: '', isActive: true })
   const [studentCouncilFile, setStudentCouncilFile] = useState(null)
   const [uploadingStudentCouncil, setUploadingStudentCouncil] = useState(false)
+  const [jobPostForm, setJobPostForm] = useState({ jobName: '', description: '', startDate: '', endDate: '', sortOrder: '0', isActive: true })
+  const [alumniBatchForm, setAlumniBatchForm] = useState({ batchYear: '', className: '', subjectName: '', description: '', photoUrl: '', sortOrder: '0', isActive: true })
+  const [alumniBatchFile, setAlumniBatchFile] = useState(null)
+  const [uploadingAlumniBatch, setUploadingAlumniBatch] = useState(false)
   const [houseForm, setHouseForm] = useState({ houseName: 'Blue House', houseColor: '#1d4ed8', captain: '', viceCaptain: '', juniorCaptain: '' })
   const [principalForm, setPrincipalForm] = useState({ name: '', role: '', detail: '', photoUrl: '' })
   const [admissionSubmissions, setAdmissionSubmissions] = useState([])
@@ -1693,11 +2626,15 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
   const [noticeRecords, setNoticeRecords] = useState([])
   const [galleryRecords, setGalleryRecords] = useState([])
   const [studentCouncilRecords, setStudentCouncilRecords] = useState([])
+  const [jobPostRecords, setJobPostRecords] = useState([])
+  const [alumniBatchRecords, setAlumniBatchRecords] = useState([])
   const [editingPrincipalId, setEditingPrincipalId] = useState(null)
   const [editingHouseId, setEditingHouseId] = useState(null)
   const [editingResultId, setEditingResultId] = useState(null)
   const [editingNoticeId, setEditingNoticeId] = useState(null)
   const [editingStudentCouncilId, setEditingStudentCouncilId] = useState(null)
+  const [editingJobPostId, setEditingJobPostId] = useState(null)
+  const [editingAlumniBatchId, setEditingAlumniBatchId] = useState(null)
   const [uploadingResult, setUploadingResult] = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
 
@@ -1724,6 +2661,8 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
   const adminTabs = [
     ['contacts', 'Contact Form Data'],
     ['careers', 'Career'],
+    ['job-postings', 'Current Job Postings'],
+    ['alumni-batches', 'Alumni Batches'],
     ['admissions', 'Student Admission Data'],
     ['student-council', 'Student Council Page'],
     ['campus-glimpses', 'Campus Glimpses'],
@@ -1744,6 +2683,8 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
   const filteredResultRecords = resultRecords.filter((record) => matchesSearch(record.title, record.result_year, record.image_url, record.is_active ? 'shown' : 'hidden'))
   const filteredNoticeRecords = noticeRecords.filter((record) => matchesSearch(record.notice_text, record.link_url, record.is_active ? 'active' : 'hidden'))
   const filteredStudentCouncilRecords = studentCouncilRecords.filter((record) => matchesSearch(record.name, record.role, record.class_name, record.house_name, record.is_active ? 'active' : 'hidden'))
+  const filteredJobPostRecords = jobPostRecords.filter((record) => matchesSearch(record.job_name, record.description, record.start_date, record.end_date, record.is_active ? 'active' : 'hidden'))
+  const filteredAlumniBatchRecords = alumniBatchRecords.filter((record) => matchesSearch(record.batch_year, record.class_name, record.subject_name, record.description, record.is_active ? 'active' : 'hidden'))
   const filteredHouseRecords = houseRecords.filter((record) => matchesSearch(record.house_name, record.captain_name, record.vice_captain_name, record.junior_captain_name))
   const filteredPrincipalRecords = principalRecords.filter((record) => matchesSearch(record.name, record.role, record.detail))
   const filteredAdmissionSubmissions = admissionSubmissions.filter((item) => matchesSearch(item.student_name, item.class_applied, item.father_name, item.mother_name, item.phone, item.address, item.message))
@@ -1763,6 +2704,8 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
     supabase.from('notices').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setNoticeRecords(data || []))
     supabase.from('gallery_photos').select('*').order('created_at', { ascending: false }).then(({ data }) => setGalleryRecords(data || []))
     supabase.from('student_council').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setStudentCouncilRecords(data || []))
+    supabase.from('job_postings').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setJobPostRecords(data || []))
+    supabase.from('alumni_batches').select('*').order('batch_year', { ascending: false }).order('sort_order', { ascending: true }).order('created_at', { ascending: false }).then(({ data }) => setAlumniBatchRecords(data || []))
   }, [])
 
   const openEditor = (page) => {
@@ -2045,6 +2988,127 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
       setStudentCouncilForm({ name: '', role: '', className: '', houseName: '', sortOrder: '0', isActive: true })
     }
     setCollectionMessage('Student council detail removed.')
+  }
+
+  const saveJobPost = async () => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    if (!jobPostForm.jobName.trim() || !jobPostForm.description.trim()) return setCollectionMessage('Job name and description required.')
+
+    const payload = {
+      job_name: jobPostForm.jobName.trim(),
+      description: jobPostForm.description.trim(),
+      start_date: jobPostForm.startDate || null,
+      end_date: jobPostForm.endDate || null,
+      sort_order: Number(jobPostForm.sortOrder) || 0,
+      is_active: jobPostForm.isActive,
+    }
+    const query = editingJobPostId
+      ? supabase.from('job_postings').update(payload).eq('id', editingJobPostId).select()
+      : supabase.from('job_postings').insert(payload).select()
+    const { data, error } = await query
+    if (error) return setCollectionMessage(error.message)
+
+    const record = data?.[0]
+    setJobPostRecords((records) => {
+      const nextRecords = editingJobPostId ? records.map((item) => item.id === editingJobPostId ? record : item) : [record, ...records]
+      return nextRecords.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+    })
+    setEditingJobPostId(null)
+    setJobPostForm({ jobName: '', description: '', startDate: '', endDate: '', sortOrder: '0', isActive: true })
+    setCollectionMessage('Job posting saved.')
+  }
+
+  const editJobPost = (record) => {
+    setEditingJobPostId(record.id)
+    setJobPostForm({
+      jobName: record.job_name || '',
+      description: record.description || '',
+      startDate: record.start_date || '',
+      endDate: record.end_date || '',
+      sortOrder: String(record.sort_order || 0),
+      isActive: record.is_active !== false,
+    })
+  }
+
+  const deleteJobPost = async (record) => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    const { error } = await supabase.from('job_postings').delete().eq('id', record.id)
+    if (error) return setCollectionMessage(error.message)
+
+    setJobPostRecords((records) => records.filter((item) => item.id !== record.id))
+    if (editingJobPostId === record.id) {
+      setEditingJobPostId(null)
+      setJobPostForm({ jobName: '', description: '', startDate: '', endDate: '', sortOrder: '0', isActive: true })
+    }
+    setCollectionMessage('Job posting removed.')
+  }
+
+  const saveAlumniBatch = async () => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    if (!alumniBatchForm.batchYear.trim() || !alumniBatchForm.className.trim()) return setCollectionMessage('Batch year and class name required.')
+
+    setUploadingAlumniBatch(true)
+    setCollectionMessage('')
+
+    try {
+      const uploadedUrl = alumniBatchFile ? await uploadAdminImage(alumniBatchFile, `alumni/${alumniBatchForm.batchYear.trim()}`) : alumniBatchForm.photoUrl.trim()
+      const payload = {
+        batch_year: alumniBatchForm.batchYear.trim(),
+        class_name: alumniBatchForm.className.trim(),
+        subject_name: alumniBatchForm.subjectName.trim() || null,
+        description: alumniBatchForm.description.trim() || null,
+        photo_url: uploadedUrl || null,
+        sort_order: Number(alumniBatchForm.sortOrder) || 0,
+        is_active: alumniBatchForm.isActive,
+      }
+      const query = editingAlumniBatchId
+        ? supabase.from('alumni_batches').update(payload).eq('id', editingAlumniBatchId).select()
+        : supabase.from('alumni_batches').insert(payload).select()
+      const { data, error } = await query
+      if (error) throw error
+
+      const record = data?.[0]
+      setAlumniBatchRecords((records) => {
+        const nextRecords = editingAlumniBatchId ? records.map((item) => item.id === editingAlumniBatchId ? record : item) : [record, ...records]
+        return nextRecords.sort((a, b) => String(b.batch_year || '').localeCompare(String(a.batch_year || '')) || (a.sort_order || 0) - (b.sort_order || 0))
+      })
+      setEditingAlumniBatchId(null)
+      setAlumniBatchForm({ batchYear: '', className: '', subjectName: '', description: '', photoUrl: '', sortOrder: '0', isActive: true })
+      setAlumniBatchFile(null)
+      setCollectionMessage('Alumni batch saved.')
+    } catch (error) {
+      setCollectionMessage(error.message)
+    } finally {
+      setUploadingAlumniBatch(false)
+    }
+  }
+
+  const editAlumniBatch = (record) => {
+    setEditingAlumniBatchId(record.id)
+    setAlumniBatchForm({
+      batchYear: record.batch_year || '',
+      className: record.class_name || '',
+      subjectName: record.subject_name || '',
+      description: record.description || '',
+      photoUrl: record.photo_url || '',
+      sortOrder: String(record.sort_order || 0),
+      isActive: record.is_active !== false,
+    })
+    setAlumniBatchFile(null)
+  }
+
+  const deleteAlumniBatch = async (record) => {
+    if (!supabase) return setCollectionMessage('Supabase env missing.')
+    const { error } = await supabase.from('alumni_batches').delete().eq('id', record.id)
+    if (error) return setCollectionMessage(error.message)
+
+    setAlumniBatchRecords((records) => records.filter((item) => item.id !== record.id))
+    if (editingAlumniBatchId === record.id) {
+      setEditingAlumniBatchId(null)
+      setAlumniBatchForm({ batchYear: '', className: '', subjectName: '', description: '', photoUrl: '', sortOrder: '0', isActive: true })
+      setAlumniBatchFile(null)
+    }
+    setCollectionMessage('Alumni batch removed.')
   }
 
   const saveGalleryPhotos = async () => {
@@ -2472,6 +3536,114 @@ function AdminPanel({ adminProfile, cmsPages, onLogout, onNavigate, onPageSaved,
           </div>
         ) : null}
 
+        {adminSection === 'job-postings' ? (
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Current Jobs</p>
+            <h2 className="mt-2 text-3xl font-black text-[#102344]">Manage Job Postings</h2>
+            <div className="mt-6 grid gap-4 lg:grid-cols-4">
+              <input value={jobPostForm.jobName} onChange={(event) => setJobPostForm({ ...jobPostForm, jobName: event.target.value })} placeholder="Job name" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="date" value={jobPostForm.startDate} onChange={(event) => setJobPostForm({ ...jobPostForm, startDate: event.target.value })} className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="date" value={jobPostForm.endDate} onChange={(event) => setJobPostForm({ ...jobPostForm, endDate: event.target.value })} className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="number" value={jobPostForm.sortOrder} onChange={(event) => setJobPostForm({ ...jobPostForm, sortOrder: event.target.value })} placeholder="Display order" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <textarea value={jobPostForm.description} onChange={(event) => setJobPostForm({ ...jobPostForm, description: event.target.value })} rows="5" placeholder="Full job description" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d] lg:col-span-4" />
+            </div>
+            <label className="mt-4 flex w-fit items-center gap-3 rounded-md bg-[#fffaf0] px-4 py-3 font-bold text-[#102344]">
+              <input type="checkbox" checked={jobPostForm.isActive} onChange={(event) => setJobPostForm({ ...jobPostForm, isActive: event.target.checked })} className="h-5 w-5 accent-[#a8171d]" />
+              Show this job on website
+            </label>
+            <button type="button" onClick={saveJobPost} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white">{editingJobPostId ? 'Update Job Posting' : 'Add Job Posting'}</button>
+
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full min-w-[980px] border-collapse text-left text-sm">
+                <thead className="bg-[#06284d] text-white">
+                  <tr>
+                    {['Job Name', 'Description', 'From', 'To', 'Order', 'Status', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredJobPostRecords.map((record) => (
+                    <tr key={record.id} className="border-b border-slate-200">
+                      <td className="p-3 font-bold text-[#102344]">{record.job_name}</td>
+                      <td className="max-w-[320px] truncate p-3">{record.description}</td>
+                      <td className="p-3">{record.start_date || '-'}</td>
+                      <td className="p-3">{record.end_date || '-'}</td>
+                      <td className="p-3">{record.sort_order || 0}</td>
+                      <td className="p-3">
+                        <span className={`rounded-full px-3 py-1 text-xs font-black ${record.is_active === false ? 'bg-slate-200 text-slate-600' : 'bg-green-100 text-green-700'}`}>
+                          {record.is_active === false ? 'Hidden' : 'Shown'}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => editJobPost(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button>
+                          <button type="button" onClick={() => deleteJobPost(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredJobPostRecords.length === 0 ? <p className="mt-4 font-semibold text-slate-600">No job postings found.</p> : null}
+            </div>
+          </div>
+        ) : null}
+
+        {adminSection === 'alumni-batches' ? (
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Alumni Gallery</p>
+            <h2 className="mt-2 text-3xl font-black text-[#102344]">Batch Wise Alumni Uploads</h2>
+            <div className="mt-6 grid gap-4 lg:grid-cols-4">
+              <input value={alumniBatchForm.batchYear} onChange={(event) => setAlumniBatchForm({ ...alumniBatchForm, batchYear: event.target.value })} placeholder="Batch year e.g. 2024" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input value={alumniBatchForm.className} onChange={(event) => setAlumniBatchForm({ ...alumniBatchForm, className: event.target.value })} placeholder="Class name e.g. Class 10" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input value={alumniBatchForm.subjectName} onChange={(event) => setAlumniBatchForm({ ...alumniBatchForm, subjectName: event.target.value })} placeholder="Subject name / stream" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="number" value={alumniBatchForm.sortOrder} onChange={(event) => setAlumniBatchForm({ ...alumniBatchForm, sortOrder: event.target.value })} placeholder="Row order" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d]" />
+              <input type="file" accept="image/*" onChange={(event) => setAlumniBatchFile(event.target.files?.[0] || null)} className="rounded-md border border-slate-300 px-4 py-3 text-sm font-semibold outline-none file:mr-3 file:rounded file:border-0 file:bg-[#ffc400] file:px-3 file:py-2 file:font-bold file:text-[#102344] focus:border-[#a8171d] lg:col-span-2" />
+              <textarea value={alumniBatchForm.description} onChange={(event) => setAlumniBatchForm({ ...alumniBatchForm, description: event.target.value })} rows="4" placeholder="Description (optional)" className="rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-[#a8171d] lg:col-span-2" />
+            </div>
+            <label className="mt-4 flex w-fit items-center gap-3 rounded-md bg-[#fffaf0] px-4 py-3 font-bold text-[#102344]">
+              <input type="checkbox" checked={alumniBatchForm.isActive} onChange={(event) => setAlumniBatchForm({ ...alumniBatchForm, isActive: event.target.checked })} className="h-5 w-5 accent-[#a8171d]" />
+              Show this batch on alumni page
+            </label>
+            <button type="button" onClick={saveAlumniBatch} disabled={uploadingAlumniBatch} className="mt-5 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70">
+              {uploadingAlumniBatch ? 'Saving...' : editingAlumniBatchId ? 'Update Alumni Batch' : 'Add Alumni Batch'}
+            </button>
+
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full min-w-[980px] border-collapse text-left text-sm">
+                <thead className="bg-[#06284d] text-white">
+                  <tr>
+                    {['Photo', 'Batch Year', 'Class', 'Subject', 'Description', 'Order', 'Status', 'Action'].map((head) => <th key={head} className="p-3">{head}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredAlumniBatchRecords.map((record) => (
+                    <tr key={record.id} className="border-b border-slate-200">
+                      <td className="p-3">{record.photo_url ? <img src={record.photo_url} alt="" className="h-14 w-20 rounded object-cover" /> : '-'}</td>
+                      <td className="p-3 font-bold text-[#102344]">{record.batch_year}</td>
+                      <td className="p-3">{record.class_name}</td>
+                      <td className="p-3">{record.subject_name || '-'}</td>
+                      <td className="max-w-[240px] truncate p-3">{record.description || '-'}</td>
+                      <td className="p-3">{record.sort_order || 0}</td>
+                      <td className="p-3">
+                        <span className={`rounded-full px-3 py-1 text-xs font-black ${record.is_active === false ? 'bg-slate-200 text-slate-600' : 'bg-green-100 text-green-700'}`}>
+                          {record.is_active === false ? 'Hidden' : 'Shown'}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => editAlumniBatch(record)} className="rounded bg-[#ffc400] px-3 py-2 font-bold text-[#102344]">Edit</button>
+                          <button type="button" onClick={() => deleteAlumniBatch(record)} className="rounded bg-red-600 px-3 py-2 font-bold text-white">Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredAlumniBatchRecords.length === 0 ? <p className="mt-4 font-semibold text-slate-600">No alumni batches found.</p> : null}
+            </div>
+          </div>
+        ) : null}
+
         {adminSection === 'student-council' ? (
           <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Student Council</p>
@@ -2888,6 +4060,8 @@ function App() {
   const [publicHouseRecords, setPublicHouseRecords] = useState([])
   const [publicNotices, setPublicNotices] = useState([])
   const [publicStudentCouncilRecords, setPublicStudentCouncilRecords] = useState([])
+  const [publicJobPosts, setPublicJobPosts] = useState([])
+  const [publicAlumniBatches, setPublicAlumniBatches] = useState([])
   const [formMessage, setFormMessage] = useState('')
   const [activeAdmissionSlide, setActiveAdmissionSlide] = useState(0)
 
@@ -2911,6 +4085,32 @@ function App() {
 
     return () => window.clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    if (loading) return undefined
+
+    const animatedElements = document.querySelectorAll('.scroll-reveal')
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    animatedElements.forEach((element) => element.classList.remove('is-visible'))
+
+    if (reduceMotion) {
+      animatedElements.forEach((element) => element.classList.add('is-visible'))
+      return undefined
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        }
+      })
+    }, { threshold: 0.12, rootMargin: '0px 0px -34px 0px' })
+
+    animatedElements.forEach((element) => observer.observe(element))
+
+    return () => observer.disconnect()
+  }, [activePage, loading, publicGalleryPhotos.length, publicNotices.length, publicResults.length, publicStudentCouncilRecords.length, publicJobPosts.length, publicAlumniBatches.length])
 
   useEffect(() => {
     if (activePage) return undefined
@@ -3000,6 +4200,23 @@ function App() {
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false })
       .then(({ data }) => setPublicStudentCouncilRecords(data || []))
+
+    supabase
+      .from('job_postings')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setPublicJobPosts(data || []))
+
+    supabase
+      .from('alumni_batches')
+      .select('*')
+      .eq('is_active', true)
+      .order('batch_year', { ascending: false })
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setPublicAlumniBatches(data || []))
   }, [])
 
   useEffect(() => {
@@ -3095,19 +4312,38 @@ function App() {
     : ''
   const dbPage = cmsPages[activePage]
   const defaultPage = contentPages[activePage]
+  const staleCmsFirstParagraphs = {
+    hostel: 'SPPS offers comfortable and convenient hostel facilities for girls and boys.',
+    laboratories: 'The school provides computer, chemistry, physics, biology and English language labs for practical learning.',
+    'music-sports-facilities': 'The school emphasizes studies along with sports and music for overall development.',
+    'interactive-classroom': 'Our classrooms are spacious, bright and well-furnished.',
+    transportation: 'School bus transport is a safe and convenient way for students to travel.',
+    academics: 'Our academic system supports concept clarity, regular practice, practical exposure and board readiness.',
+    activities: 'Activities help students lead, perform, collaborate and build confidence beyond the classroom.',
+    careers: 'Join our teaching community.',
+  }
+  const isStaleCmsPage =
+    Boolean(staleCmsFirstParagraphs[activePage] && dbPage?.paragraphs?.[0] === staleCmsFirstParagraphs[activePage]) ||
+    (activePage === 'about' && dbPage?.paragraphs?.[0] === contentPages.about.paragraphs[0] && (dbPage.paragraphs?.length || 0) < contentPages.about.paragraphs.length) ||
+    (activePage === 'origin-history' && dbPage?.paragraphs?.[0] === 'Shri Pragya Public School proudly carries a rich legacy of educational excellence, discipline, and value-based learning.' && (dbPage.paragraphs?.length || 0) < contentPages['origin-history'].paragraphs.length) ||
+    (activePage === 'origin-mission' && dbPage?.sections?.[1]?.bullets?.[0] === 'Deliver quality education through modern and innovative teaching methodologies') ||
+    (activePage === 'about' && dbPage?.paragraphs?.[0] === 'Shri Pragya Public School brings academics, values, sports and creative expression together in a structured environment.') ||
+    (activePage === 'origin-history' && dbPage?.paragraphs?.[0] === 'Our school has a rich legacy of providing quality education and fostering an environment of learning and growth.') ||
+    (activePage === 'origin-mission' && dbPage?.paragraphs?.[0] === 'We envision a world where every child is empowered with the skills and knowledge to succeed.')
+  const effectiveDbPage = isStaleCmsPage ? null : dbPage
   const page = activeGallerySlug
     ? {
         ...(cmsPages.gallery || contentPages.gallery),
         title: activeGalleryFolderName || 'Gallery',
       }
-    : dbPage
+    : effectiveDbPage
       ? {
           ...defaultPage,
-          ...dbPage,
-          paragraphs: dbPage.paragraphs && dbPage.paragraphs.length > 0 && dbPage.paragraphs[0].includes('The house system builds leadership') && dbPage.paragraphs.length < 2
+          ...effectiveDbPage,
+          paragraphs: effectiveDbPage.paragraphs && effectiveDbPage.paragraphs.length > 0 && effectiveDbPage.paragraphs[0].includes('The house system builds leadership') && effectiveDbPage.paragraphs.length < 2
             ? defaultPage?.paragraphs || dbPage.paragraphs
-            : dbPage.paragraphs,
-          sections: dbPage.sections || defaultPage?.sections,
+            : effectiveDbPage.paragraphs,
+          sections: effectiveDbPage.sections || defaultPage?.sections,
         }
       : defaultPage
   return (
@@ -3134,7 +4370,7 @@ function App() {
         <div className="bg-[#fffaf0]">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 lg:px-8">
             <a href="/" onClick={(event) => handleInternalLink(event, '/')} className="flex min-w-0 items-center gap-4">
-              <img src={logo} alt="Shri Pragya Public School logo" className="h-20 w-20 flex-none rounded-sm object-contain sm:h-24 sm:w-24" />
+              <img src={logo} alt="Shri Pragya Public School logo" className="floating-action h-20 w-20 flex-none rounded-sm object-contain sm:h-24 sm:w-24" />
               <div className="min-w-0">
                 <p className="text-xl font-extrabold uppercase leading-tight text-[#a8171d] sm:text-3xl">Shri Pragya Public School</p>
                 <p className="mt-1 text-sm font-medium text-slate-900 sm:text-lg">Bijainagar, Rajasthan 305624</p>
@@ -3144,7 +4380,7 @@ function App() {
             <a
               href="/admission-form/"
               onClick={(event) => handleInternalLink(event, '/admission-form/')}
-              className="hidden shrink-0 items-center gap-3 rounded-md bg-[#a8171d] px-6 py-3 font-black text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-[#06284d] lg:inline-flex"
+              className="motion-button admission-pulse hidden shrink-0 items-center gap-3 rounded-md bg-[#a8171d] px-6 py-3 font-black text-white shadow-lg shadow-slate-950/15 hover:bg-[#06284d] lg:inline-flex"
             >
               Admission Now <Icon name="arrow" />
             </a>
@@ -3184,7 +4420,7 @@ function App() {
                     {hasSubmenu ? <Icon name="chevron" className="h-4 w-4" /> : null}
                   </a>
                   {item.groups ? (
-                    <div className="invisible absolute left-1/2 top-full z-50 grid w-[min(92vw,54rem)] -translate-x-1/2 translate-y-2 grid-cols-3 gap-7 rounded-md bg-white p-6 text-slate-800 opacity-0 shadow-xl transition group-hover:visible group-hover:-translate-x-1/2 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:-translate-x-1/2 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                    <div className="menu-pop invisible absolute left-1/2 top-full z-50 grid w-[min(92vw,54rem)] -translate-x-1/2 translate-y-2 grid-cols-3 gap-7 rounded-md bg-white p-6 text-slate-800 opacity-0 shadow-xl transition group-hover:visible group-hover:-translate-x-1/2 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:-translate-x-1/2 group-focus-within:translate-y-0 group-focus-within:opacity-100">
                       {item.groups.map((group) => (
                         <div key={group.label}>
                           <p className="border-b border-[#ffc400] pb-2 text-sm font-black uppercase tracking-[0.11em] text-[#a8171d]">{group.label}</p>
@@ -3199,7 +4435,7 @@ function App() {
                       ))}
                     </div>
                   ) : item.children ? (
-                    <div className="grid gap-1 bg-[#061f3f] px-3 pb-3 lg:invisible lg:absolute lg:left-0 lg:top-full lg:z-50 lg:min-w-64 lg:translate-y-2 lg:rounded-md lg:bg-white lg:p-2 lg:text-slate-800 lg:opacity-0 lg:shadow-xl lg:transition lg:group-hover:visible lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:visible lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100">
+                    <div className="menu-pop grid gap-1 bg-[#061f3f] px-3 pb-3 lg:invisible lg:absolute lg:left-0 lg:top-full lg:z-50 lg:min-w-64 lg:translate-y-2 lg:rounded-md lg:bg-white lg:p-2 lg:text-slate-800 lg:opacity-0 lg:shadow-xl lg:transition lg:group-hover:visible lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:visible lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100">
                       {item.children.map(([childLabel, childHref]) => (
                         <a key={childLabel} href={childHref} onClick={(event) => handleInternalLink(event, childHref)} className="rounded px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#ffc400] hover:text-[#102344] lg:text-slate-800">
                           {childLabel}
@@ -3299,33 +4535,33 @@ function App() {
           <AdminPanel adminProfile={{ email: adminSession.user.email }} cmsPages={cmsPages} onLogout={handleAdminLogout} onNavigate={handleInternalLink} onPageSaved={handlePageSaved} onResultsChanged={setPublicResults} onHousesChanged={setPublicHouseRecords} onNoticesChanged={setPublicNotices} onGalleryChanged={setPublicGalleryPhotos} onStudentCouncilChanged={setPublicStudentCouncilRecords} />
         )
       ) : page ? (
-        <ContentPage page={page} activePage={activePage} onFormSubmit={handlePublicFormSubmit} formMessage={formMessage} galleryPhotos={publicGalleryPhotos} resultPhotos={publicResults} houseRecords={publicHouseRecords} studentCouncilRecords={publicStudentCouncilRecords} />
+        <ContentPage page={page} activePage={activePage} onFormSubmit={handlePublicFormSubmit} formMessage={formMessage} galleryPhotos={publicGalleryPhotos} resultPhotos={publicResults} houseRecords={publicHouseRecords} studentCouncilRecords={publicStudentCouncilRecords} jobPosts={publicJobPosts} alumniBatches={publicAlumniBatches} />
       ) : (
       <main id="home">
         <section className="relative min-h-[460px] overflow-hidden bg-[#06284d] lg:min-h-[520px]">
-          <img src={campusHero} alt="Aerial campus view of Shri Pragya Public School" className="absolute inset-0 h-full w-full object-cover" />
+          <img src={campusHero} alt="Aerial campus view of Shri Pragya Public School" className="hero-backdrop absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#06284d]/95 via-[#06284d]/60 to-transparent" />
           <div className="relative mx-auto flex min-h-[460px] max-w-7xl items-center px-4 py-12 lg:min-h-[520px] lg:px-8">
             <div className="max-w-2xl text-white">
               <p className="hero-kicker mb-4 text-base font-bold text-[#ffc400] sm:text-lg">Nurturing Minds. Building Futures.</p>
               <h1 className="hero-title max-w-3xl text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl">
                 <span className="block">Welcome to</span>
-                <span className="mt-2 block whitespace-nowrap text-[1.7rem] text-[#ffc400] sm:text-5xl lg:text-6xl">Shri Pragya Public School</span>
+                <span className="hero-title-accent mt-2 block max-w-full whitespace-nowrap text-[clamp(1rem,4vw,3rem)] leading-tight text-[#ffc400]">Shri Pragya Public School</span>
               </h1>
               <div className="hero-rule mt-5 h-1 w-20 bg-[#ffc400]" />
               <p className="hero-copy mt-5 max-w-lg text-base leading-7 text-white/95 sm:text-lg">Empowering students with knowledge, values, confidence and skills to excel in life and create a better tomorrow.</p>
               <div className="hero-actions mt-6 flex flex-wrap gap-4">
-                <a href="/about/" onClick={(event) => handleInternalLink(event, '/about/')} className="inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#101827] shadow-xl shadow-black/20 transition hover:bg-white">
+                <a href="/about/" onClick={(event) => handleInternalLink(event, '/about/')} className="motion-button inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#101827] shadow-xl shadow-black/20 hover:bg-white">
                   Explore More <Icon name="arrow" />
                 </a>
-                <a href="/admission-form/" onClick={(event) => handleInternalLink(event, '/admission-form/')} className="inline-flex items-center gap-3 rounded-md border border-white/50 px-6 py-3 font-bold text-white transition hover:bg-white hover:text-[#06284d]">Admission Enquiry</a>
+                <a href="/admission-form/" onClick={(event) => handleInternalLink(event, '/admission-form/')} className="motion-button inline-flex items-center gap-3 rounded-md border border-white/50 px-6 py-3 font-bold text-white hover:bg-white hover:text-[#06284d]">Admission Enquiry</a>
               </div>
             </div>
           </div>
         </section>
 
         <section aria-label="Welcome message" className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 lg:px-8">
-          <div className="welcome-card grid overflow-hidden rounded-xl border-t-4 border-[#ffc400] bg-white shadow-2xl shadow-slate-950/15 lg:grid-cols-[1.12fr_0.88fr]">
+          <div className="welcome-card scroll-reveal grid overflow-hidden rounded-xl border-t-4 border-[#ffc400] bg-white shadow-2xl shadow-slate-950/15 lg:grid-cols-[1.12fr_0.88fr]">
             <div className="p-7 sm:p-10 lg:p-12">
               <div className="flex items-center gap-4">
                 <span className="h-px w-12 bg-[#ffc400]" />
@@ -3361,7 +4597,7 @@ function App() {
 
 
 
-        <section id="about" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
+        <section id="about" className="scroll-reveal mx-auto max-w-7xl px-4 py-24 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">About Pragya</p>
@@ -3378,7 +4614,7 @@ function App() {
             </div>
           </div>
 
-          <div className="mt-14 grid overflow-hidden rounded-lg bg-[#fffaf0] shadow-xl shadow-slate-950/10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="scroll-reveal stagger-grid mt-14 grid overflow-hidden rounded-lg bg-[#fffaf0] shadow-xl shadow-slate-950/10 sm:grid-cols-2 lg:grid-cols-4">
             {highlights.map(([title, text, icon], index) => (
               <div key={title} className={`highlight-flip group flex items-center gap-5 p-7 ${index > 0 ? 'lg:border-l lg:border-slate-300' : ''}`}>
                 <span className="grid h-16 w-16 flex-none place-items-center rounded-full bg-[#a8171d] text-white"><Icon name={icon} className="h-8 w-8" /></span>
@@ -3390,9 +4626,9 @@ function App() {
             ))}
           </div>
 
-          <div className="mt-14 rounded-xl bg-[#06284d] p-6 text-white sm:p-9">
+          <div className="scroll-reveal mt-14 rounded-xl bg-[#06284d] p-6 text-white sm:p-9">
             <h3 className="text-center text-3xl font-black sm:text-4xl">Achievement Counters</h3>
-            <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="scroll-reveal stagger-grid mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {stats.map(([value, label]) => (
                 <CountUpStat key={label} value={value} label={label} />
               ))}
@@ -3417,13 +4653,13 @@ function App() {
 
         <section id="why-choose-us" className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center">
+            <div className="scroll-reveal mx-auto max-w-3xl text-center">
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Why Choose Us</p>
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Education that prepares students for life.</h2>
             </div>
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="scroll-reveal stagger-grid mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {whyChooseUs.map(([title, text, icon]) => (
-                <article key={title} className="rounded-lg border border-slate-100 bg-[#fffaf0] p-7 shadow-sm">
+                <article key={title} className="motion-card rounded-lg border border-slate-100 bg-[#fffaf0] p-7 shadow-sm">
                   <span className="grid h-14 w-14 place-items-center rounded-full bg-[#a8171d] text-white"><Icon name={icon} className="h-7 w-7" /></span>
                   <h3 className="mt-5 text-xl font-extrabold text-[#102344]">{title}</h3>
                   <p className="mt-3 leading-7 text-slate-700">{text}</p>
@@ -3433,15 +4669,15 @@ function App() {
           </div>
         </section>
 
-        <section id="academics" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
+        <section id="academics" className="scroll-reveal mx-auto max-w-7xl px-4 py-24 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Academic Highlights</p>
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Clear pathways from strong foundations to board readiness.</h2>
             </div>
-            <div className="grid gap-5">
+            <div className="scroll-reveal stagger-grid grid gap-5">
               {programs.map(([title, text]) => (
-                <article key={title} className="rounded-lg bg-white p-7 shadow-sm">
+                <article key={title} className="motion-card rounded-lg bg-white p-7 shadow-sm">
                   <h3 className="text-2xl font-extrabold text-[#a8171d]">{title}</h3>
                   <p className="mt-2 text-lg leading-8 text-slate-700">{text}</p>
                 </article>
@@ -3451,12 +4687,12 @@ function App() {
         </section>
 
         <section id="competitive-program" className="bg-[#06284d] py-24 text-white">
-          <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8">
+          <div className="scroll-reveal mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8">
             <div>
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">IIT-JEE &amp; NEET Program</p>
               <h2 className="mt-3 text-4xl font-black sm:text-5xl">Focused preparation for ambitious futures.</h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">Our senior students receive structured guidance that supports school academics while building the discipline and conceptual clarity needed for competitive examinations.</p>
-              <a href="/academics/" onClick={(event) => handleInternalLink(event, '/academics/')} className="mt-8 inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">
+              <a href="/academics/" onClick={(event) => handleInternalLink(event, '/academics/')} className="motion-button mt-8 inline-flex items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">
                 Explore Academics <Icon name="arrow" />
               </a>
             </div>
@@ -3471,13 +4707,13 @@ function App() {
           </div>
         </section>
 
-        <section id="hostel" className="mx-auto grid max-w-7xl gap-10 px-4 py-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
+        <section id="hostel" className="scroll-reveal mx-auto grid max-w-7xl gap-10 px-4 py-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
           <img src={boyHostel} alt="Hostel facilities at Shri Pragya Public School" className="h-80 w-full rounded-xl object-cover shadow-xl" />
           <div>
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Hostel</p>
             <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Comfortable residential care for students.</h2>
             <p className="mt-5 text-lg leading-8 text-slate-700">Our hostel facilities provide a supervised, disciplined and caring environment for boys and girls with accommodation, study support, meals and student wellbeing at the centre.</p>
-            <a href="/hostel/" onClick={(event) => handleInternalLink(event, '/hostel/')} className="mt-8 inline-flex items-center gap-3 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white">
+            <a href="/hostel/" onClick={(event) => handleInternalLink(event, '/hostel/')} className="motion-button mt-8 inline-flex items-center gap-3 rounded-md bg-[#a8171d] px-6 py-3 font-bold text-white">
               Explore Hostel Facilities <Icon name="arrow" />
             </a>
           </div>
@@ -3485,11 +4721,11 @@ function App() {
 
         <section id="facilities" className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="max-w-3xl">
+            <div className="scroll-reveal max-w-3xl">
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Facilities Overview</p>
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Spaces designed for learning, discipline and discovery.</h2>
             </div>
-            <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="scroll-reveal stagger-grid mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {facilities.map(([title, text, imageAlt, image, href]) => (
                 <a key={title} href={href} onClick={(event) => handleInternalLink(event, href)} className="facility-card group block overflow-hidden rounded-lg border border-slate-200 bg-[#fffaf0] shadow-sm">
                   <div className="relative overflow-hidden">
@@ -3516,15 +4752,15 @@ function App() {
 
         <section id="academic-calendar" className="bg-[#06284d] py-20 text-white">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div className="scroll-reveal flex flex-col justify-between gap-5 md:flex-row md:items-end">
               <div>
                 <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Results &amp; Achievements</p>
                 <h2 className="mt-3 text-4xl font-black">Celebrating student success.</h2>
               </div>
-              <a href="/results/" onClick={(event) => handleInternalLink(event, '/results/')} className="inline-flex w-fit items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">View All Results <Icon name="arrow" /></a>
+              <a href="/results/" onClick={(event) => handleInternalLink(event, '/results/')} className="motion-button inline-flex w-fit items-center gap-3 rounded-md bg-[#ffc400] px-6 py-3 font-bold text-[#102344]">View All Results <Icon name="arrow" /></a>
             </div>
             {publicResults.length > 0 ? (
-              <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="scroll-reveal stagger-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {publicResults.slice(0, 3).map((result) => (
                   <article key={result.id || result.image_url} className="result-card overflow-hidden rounded-lg bg-white p-3 text-[#102344] shadow-xl">
                     <img src={result.image_url} alt={result.title || 'Pragya school result'} className="h-72 w-full rounded-md object-contain" />
@@ -3545,13 +4781,13 @@ function App() {
 
         <section id="testimonials" className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center">
+            <div className="scroll-reveal mx-auto max-w-3xl text-center">
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Testimonials</p>
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Trusted by families and learners.</h2>
             </div>
-            <div className="mt-12 grid gap-5 lg:grid-cols-3">
+            <div className="scroll-reveal stagger-grid mt-12 grid gap-5 lg:grid-cols-3">
               {testimonials.map(([name, quote]) => (
-                <figure key={name} className="rounded-lg bg-[#fffaf0] p-7 shadow-sm">
+                <figure key={name} className="motion-card rounded-lg bg-[#fffaf0] p-7 shadow-sm">
                   <p className="text-4xl font-black leading-none text-[#ffc400]">&ldquo;</p>
                   <blockquote className="mt-3 text-lg leading-8 text-slate-700">{quote}</blockquote>
                   <figcaption className="mt-6 font-extrabold text-[#a8171d]">{name}</figcaption>
@@ -3562,15 +4798,15 @@ function App() {
         </section>
 
         <section id="news-events" className="mx-auto max-w-7xl px-4 py-24 lg:px-8">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div className="scroll-reveal flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Latest News &amp; Events</p>
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Stay connected with Pragya.</h2>
             </div>
           </div>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
+          <div className="scroll-reveal stagger-grid mt-10 grid gap-5 md:grid-cols-3">
             {(publicNotices.length > 0 ? publicNotices.slice(0, 3).map((notice) => [notice.id, 'School Update', notice.notice_text, notice.link_url]) : newsFallback.map(([title, text]) => [title, title, text, null])).map(([key, title, text, link]) => (
-              <article key={key} className="flex flex-col rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+              <article key={key} className="motion-card flex flex-col rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
                 <p className="text-sm font-black uppercase tracking-[0.18em] text-[#a8171d]">{title}</p>
                 <p className="mt-4 flex-1 text-lg leading-8 text-slate-700">{text}</p>
                 {link ? <a href={link} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 font-bold text-[#a8171d]">Read More <Icon name="arrow" /></a> : null}
@@ -3580,20 +4816,20 @@ function App() {
         </section>
 
         <section id="admission-open" className="bg-[#a8171d] py-16 text-white">
-          <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-4 lg:flex-row lg:items-center lg:px-8">
+          <div className="scroll-reveal mx-auto flex max-w-7xl flex-col justify-between gap-8 px-4 lg:flex-row lg:items-center lg:px-8">
             <div>
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#ffc400]">Admission Open</p>
               <h2 className="mt-3 text-4xl font-black sm:text-5xl">Begin your child&apos;s Pragya journey.</h2>
               <p className="mt-4 max-w-2xl text-lg leading-8 text-white/85">Enquiries are welcome for the upcoming academic session. Meet our team and discover an education built on knowledge, discipline and values.</p>
             </div>
-            <a href="/admission-form/" onClick={(event) => handleInternalLink(event, '/admission-form/')} className="inline-flex shrink-0 items-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-lg font-black text-[#102344] shadow-xl">
+            <a href="/admission-form/" onClick={(event) => handleInternalLink(event, '/admission-form/')} className="motion-button admission-pulse inline-flex shrink-0 items-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-lg font-black text-[#102344] shadow-xl">
               Apply For Admission <Icon name="arrow" />
             </a>
           </div>
         </section>
 
         <section id="contact-us" className="bg-white py-24">
-          <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-2 lg:px-8">
+          <div className="scroll-reveal mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-2 lg:px-8">
             <div>
               <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#a8171d]">Contact Quick Form</p>
               <h2 className="mt-3 text-4xl font-black text-[#102344] sm:text-5xl">Visit the campus or send a quick enquiry.</h2>
@@ -3613,11 +4849,11 @@ function App() {
         </section>
 
         <section aria-label="Admission highlights slider" className="bg-[#f8f3e9] px-4 py-16 lg:px-8">
-          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl">
+          <div className="scroll-reveal relative mx-auto max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl">
             <img
               src={admissionSlides[activeAdmissionSlide].image}
               alt="Admission at Shri Pragya Public School"
-              className="h-56 w-full object-cover transition-opacity duration-500 sm:h-72 lg:h-[420px]"
+              className="hero-backdrop h-56 w-full object-cover transition-opacity duration-500 sm:h-72 lg:h-[420px]"
             />
             <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 sm:bottom-8 sm:right-10">
               {admissionSlides.map((slide, index) => (
@@ -3638,7 +4874,7 @@ function App() {
             href="https://wa.me/919461996117"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-3 rounded-full bg-[#16a34a] px-4 py-3 font-bold text-white shadow-xl transition hover:-translate-y-1 hover:bg-[#15803d]"
+            className="floating-action flex items-center gap-3 rounded-full bg-[#16a34a] px-4 py-3 font-bold text-white shadow-xl transition hover:-translate-y-1 hover:bg-[#15803d]"
           >
             <Icon name="chat" className="h-5 w-5" />
             <span className="hidden sm:inline">WhatsApp Chat</span>
@@ -3646,14 +4882,14 @@ function App() {
           <a
             href="/admission-form/"
             onClick={(event) => handleInternalLink(event, '/admission-form/')}
-            className="flex items-center gap-3 rounded-full bg-[#a8171d] px-4 py-3 font-bold text-white shadow-xl transition hover:-translate-y-1 hover:bg-[#06284d]"
+            className="floating-action flex items-center gap-3 rounded-full bg-[#a8171d] px-4 py-3 font-bold text-white shadow-xl transition hover:-translate-y-1 hover:bg-[#06284d]"
           >
             <Icon name="graduation" className="h-5 w-5" />
             <span className="hidden sm:inline">Apply Now</span>
           </a>
           <a
             href="tel:09461996117"
-            className="flex items-center gap-3 rounded-full bg-[#ffc400] px-4 py-3 font-bold text-[#102344] shadow-xl transition hover:-translate-y-1 hover:bg-white"
+            className="floating-action flex items-center gap-3 rounded-full bg-[#ffc400] px-4 py-3 font-bold text-[#102344] shadow-xl transition hover:-translate-y-1 hover:bg-white"
           >
             <Icon name="phone" className="h-5 w-5" />
             <span className="hidden sm:inline">Call Now</span>
@@ -3663,7 +4899,7 @@ function App() {
       )}
 
       <footer className="bg-[#06284d] text-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] lg:px-8">
+        <div className="scroll-reveal mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] lg:px-8">
           <div>
             <div className="flex items-center gap-4">
               <img src={logo} alt="Shri Pragya Public School logo" className="h-20 w-20 rounded-sm bg-white object-contain p-1" />

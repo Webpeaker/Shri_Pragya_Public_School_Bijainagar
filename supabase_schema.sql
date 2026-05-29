@@ -170,6 +170,29 @@ create table if not exists public.career_applications (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.job_postings (
+  id uuid primary key default gen_random_uuid(),
+  job_name text not null,
+  description text not null,
+  start_date date,
+  end_date date,
+  sort_order integer not null default 0,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.alumni_batches (
+  id uuid primary key default gen_random_uuid(),
+  batch_year text not null,
+  class_name text not null,
+  subject_name text,
+  description text,
+  photo_url text,
+  sort_order integer not null default 0,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.student_council (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -225,6 +248,8 @@ alter table public.contact_details enable row level security;
 alter table public.admission_enquiries enable row level security;
 alter table public.contact_enquiries enable row level security;
 alter table public.career_applications enable row level security;
+alter table public.job_postings enable row level security;
+alter table public.alumni_batches enable row level security;
 alter table public.student_council enable row level security;
 alter table public.admission_classes enable row level security;
 
@@ -243,6 +268,8 @@ grant select on public.house_system to anon, authenticated;
 grant select on public.contact_details to anon, authenticated;
 grant select on public.student_council to anon, authenticated;
 grant select on public.admission_classes to anon, authenticated;
+grant select on public.job_postings to anon, authenticated;
+grant select on public.alumni_batches to anon, authenticated;
 
 grant insert on public.admission_enquiries to anon, authenticated;
 grant insert on public.contact_enquiries to anon, authenticated;
@@ -264,6 +291,8 @@ grant select, insert, update, delete on public.contact_details to authenticated;
 grant select, insert, update, delete on public.admission_enquiries to authenticated;
 grant select, insert, update, delete on public.contact_enquiries to authenticated;
 grant select, insert, update, delete on public.career_applications to authenticated;
+grant select, insert, update, delete on public.job_postings to authenticated;
+grant select, insert, update, delete on public.alumni_batches to authenticated;
 grant select, insert, update, delete on public.student_council to authenticated;
 grant select, insert, update, delete on public.admission_classes to authenticated;
 
@@ -390,6 +419,16 @@ create policy "Public can create career applications"
 on public.career_applications for insert
 with check (true);
 
+drop policy if exists "Public can read active job postings" on public.job_postings;
+create policy "Public can read active job postings"
+on public.job_postings for select
+using (is_active = true);
+
+drop policy if exists "Public can read active alumni batches" on public.alumni_batches;
+create policy "Public can read active alumni batches"
+on public.alumni_batches for select
+using (is_active = true);
+
 drop policy if exists "Admins can manage pages" on public.pages;
 drop policy if exists "Authenticated users can manage pages" on public.pages;
 create policy "Authenticated users can manage pages"
@@ -478,6 +517,18 @@ on public.career_applications for all
 using (auth.role() = 'authenticated')
 with check (auth.role() = 'authenticated');
 
+drop policy if exists "Authenticated users can manage job postings" on public.job_postings;
+create policy "Authenticated users can manage job postings"
+on public.job_postings for all
+using (auth.role() = 'authenticated')
+with check (auth.role() = 'authenticated');
+
+drop policy if exists "Authenticated users can manage alumni batches" on public.alumni_batches;
+create policy "Authenticated users can manage alumni batches"
+on public.alumni_batches for all
+using (auth.role() = 'authenticated')
+with check (auth.role() = 'authenticated');
+
 drop policy if exists "Authenticated users can manage student council" on public.student_council;
 create policy "Authenticated users can manage student council"
 on public.student_council for all
@@ -499,9 +550,9 @@ with check (auth.role() = 'authenticated');
 insert into public.pages (slug, title, eyebrow, body, is_published, sort_order)
 values
 ('home', 'Shri Pragya Public School', 'Home', jsonb_build_object('paragraphs', jsonb_build_array('Nurturing minds and building futures through knowledge, discipline and values.'), 'home_gallery_eyebrow', 'Gallery', 'home_gallery_title', 'Campus glimpses'), true, 0),
-('about', 'About Shri Pragya Public School', 'About', jsonb_build_object('paragraphs', jsonb_build_array('Shri Pragya Public School brings academics, values, sports and creative expression together in a structured environment.', 'The school is committed to disciplined learning, holistic development and strong parent-school communication.')), true, 1),
-('origin-history', 'Origin & History', 'About', jsonb_build_object('paragraphs', jsonb_build_array('Our school has a rich legacy of providing quality education and fostering an environment of learning and growth.', 'The foundation of our school was laid by Shri Pragya Jain Smarak Samiti in 1976 as Pragya Bal Mandir, which was later transformed into Shri Pragya Public School in 1997.', 'We are proud to be one of the reputed senior secondary schools in Bijainagar and its vicinity.')), true, 2),
-('origin-mission', 'Vision & Mission', 'About', jsonb_build_object('paragraphs', jsonb_build_array('We envision a world where every child is empowered with the skills and knowledge to succeed.', 'Our mission is to provide holistic education that nurtures physical, emotional, social and intellectual development.')), true, 3),
+('about', 'School Overview', 'About Us', jsonb_build_object('paragraphs', jsonb_build_array('Shri Pragya Public School is a premier educational institution committed to providing quality education and fostering an environment of learning, discipline, innovation, and holistic development.', 'With a rich legacy of academic excellence and value-based education, the school has emerged as one of the most reputed senior secondary schools in Bijainagar and its surrounding region.', 'The foundation of the institution was laid in 1976 by Shri Pragya Jain Smarak Samiti as Pragya Bal Mandir. With a vision to provide comprehensive and modern education, the institution was later transformed into Shri Pragya Public School in 1997.', 'Inspired by the spiritual guidance and blessings of Guru Dev Shri Pannalal Ji Maharaj Saheb, the supreme head of Jain Shwetamber Sthankwasi Nanak Vansh, the institution has grown with dedication, commitment, and excellence in the field of education.', 'At Shri Pragya Public School, we believe that education goes beyond textbooks. Our aim is to develop confident, responsible, compassionate, and future-ready individuals who contribute positively to society and the nation.'), 'bullets', jsonb_build_array('Learning and discipline', 'Innovation and smart learning', 'Holistic development', 'Value-based education', 'Future-ready guidance', 'Pragya family values'), 'sections', jsonb_build_array(jsonb_build_object('heading', 'Dedicated Faculty and Student Growth', 'paragraphs', jsonb_build_array('Our highly qualified faculty members and dedicated staff work tirelessly to nurture young minds and prepare students for future challenges and opportunities.', 'Through innovative teaching methodologies, smart learning practices, competitive exam preparation, sports, co-curricular activities, and personality development programs, the school focuses on the overall growth of every student.')), jsonb_build_object('heading', 'Milestones of Excellence', 'paragraphs', jsonb_build_array('The school achieved Secondary Level recognition in 2003 and Senior Secondary Level recognition in 2007, marking significant milestones in its journey of excellence.', 'We welcome you to explore our institution and become a part of the Pragya family, where learning inspires excellence and values shape character.')))), true, 1),
+('origin-history', 'Our Legacy', 'Our Legacy', jsonb_build_object('paragraphs', jsonb_build_array('Shri Pragya Public School proudly carries a rich legacy of educational excellence, discipline, and value-based learning.', 'Established under the esteemed guidance of Shri Pragya Jain Smarak Samiti, the institution has been dedicated to shaping young minds and empowering students with knowledge, confidence, and strong moral values for decades.', 'The journey began in 1976 with the establishment of Pragya Bal Mandir, founded with the vision of providing quality education and holistic development to students in Bijainagar and nearby regions. With continuous progress, dedication, and community trust, the institution was transformed into Shri Pragya Public School in 1997.', 'Inspired by the spiritual values and blessings of Guru Dev Shri Pannalal Ji Maharaj Saheb, the supreme head of Jain Shwetamber Sthankwasi Nanak Vansh, the institution has consistently upheld the ideals of discipline, integrity, compassion, and excellence.', 'Over the years, the school has achieved remarkable milestones, becoming a Secondary School in 2003 and a Senior Secondary School in 2007. Through its commitment to academic excellence, competitive preparation, sports, co-curricular activities, and character building, the school has earned a reputation as one of the leading educational institutions in the region.', 'Today, Shri Pragya Public School stands as a symbol of trust, tradition, innovation, and excellence, continuing its mission of nurturing future leaders and responsible citizens.')), true, 2),
+('origin-mission', 'Vision & Mission', 'About', jsonb_build_object('sections', jsonb_build_array(jsonb_build_object('heading', 'Vision', 'paragraphs', jsonb_build_array('At Shri Pragya Public School, our vision is to create an inspiring and progressive learning environment where every student is empowered to achieve academic excellence, develop strong moral values, and discover their true potential.', 'We aim to nurture confident, compassionate, innovative, and responsible individuals who are prepared to face global challenges with integrity and leadership.', 'We envision an institution that not only imparts knowledge but also inspires lifelong learning, creativity, discipline, and social responsibility, enabling students to become valuable contributors to society and the nation.')), jsonb_build_object('heading', 'Mission', 'paragraphs', jsonb_build_array('Our mission is to provide a comprehensive and holistic education that promotes intellectual, emotional, physical, social, and ethical development of every student.'), 'bullets', jsonb_build_array('Deliver quality education through modern and innovative teaching methodologies', 'Create a student-centered learning environment that encourages curiosity, creativity, and critical thinking', 'Instill moral values, discipline, integrity, and respect in students', 'Encourage participation in academics, sports, cultural, and co-curricular activities for overall personality development', 'Integrate technology and experiential learning to prepare students for future opportunities and challenges', 'Guide students towards academic excellence and success in competitive examinations', 'Build confident, responsible, and compassionate individuals who contribute positively to society', 'Maintain a safe, inclusive, and nurturing environment where every child feels valued and inspired to grow')))), true, 3),
 ('school-codes-policies', 'School Codes & Policies', 'About', jsonb_build_object('paragraphs', jsonb_build_array('We uphold principles and rules that maintain a positive and disciplined environment.'), 'bullets', jsonb_build_array('Respect elders, parents and teachers.', 'Speak politely and thoughtfully.', 'Be truthful and honest.', 'Speak in English within school premises.', 'Carry diary and identity card daily.', 'Wear proper school uniform.', 'Mobile phones are prohibited.', 'Keep the campus clean.')), true, 4),
 ('principal-teachers-details', 'Principal & Teachers Details', 'About', jsonb_build_object('people', jsonb_build_array(jsonb_build_array('Dr. Navalsingh Jain', 'Director', 'Pragya Group of Institute'), jsonb_build_array('Mr. Manjeet Singh', 'Head & Deputy Director', 'IIT JEE NEET'), jsonb_build_array('Mrs Nidhi Mathur', 'Principal', 'Head Academics'), jsonb_build_array('Mrs. Sunita Sharma', 'Head', 'Transportation'), jsonb_build_array('Mrs. Drakshi Garg', 'Head', 'Pre School'))), true, 5),
 ('facilities', 'Facilities', 'Facilities', jsonb_build_object('paragraphs', jsonb_build_array('Our campus provides spaces designed for learning, discipline and discovery.'), 'bullets', jsonb_build_array('Digital Classrooms', 'Science Labs', 'Library', 'Sports Grounds', 'Transport', 'Day Boarding')), true, 6),
